@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+It comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of update-mime-database under the terms of the GNU General
+Public License. For more information about these matters, see the file named
+COPYING.
+-->
+<!--
+Notes:
+- the mime types in this file are valid with the version 0.40 of the
+  shared-mime-info package.
+- the "fdo #xxxxx" are the wish in the freedesktop.org bug database to include
+  the mime type there.
+-->
+
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="text/x-srecord">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Motorola S-Records</comment>
+    <comment xml:lang="ca">Registres S de Motorola</comment>
+    <comment xml:lang="ca@valencia">Registres S de Motorola</comment>
+    <comment xml:lang="de">Motorola-S-Records</comment>
+    <comment xml:lang="en_GB">Motorola S-Records</comment>
+    <comment xml:lang="es">Motorola S-Records</comment>
+    <comment xml:lang="et">Motorola S-Records</comment>
+    <comment xml:lang="fi">Motorolan S-Records</comment>
+    <comment xml:lang="fr">Motorola « S-Record »</comment>
+    <comment xml:lang="ia">Motorola S-Records</comment>
+    <comment xml:lang="it">S-Records Motorola</comment>
+    <comment xml:lang="nl">Motorola S-records</comment>
+    <comment xml:lang="nn">Motorola S-Records</comment>
+    <comment xml:lang="pl">Motorola S-Records</comment>
+    <comment xml:lang="pt_BR">Motorola S-Records</comment>
+    <comment xml:lang="sk">Motorola S-Records</comment>
+    <comment xml:lang="sl">Motorola S-Records</comment>
+    <comment xml:lang="sv">Motorola S-Records</comment>
+    <comment xml:lang="uk">S-записи Motorola</comment>
+    <comment xml:lang="zh_CN">Motorola S-Record</comment>
+    <magic priority="70">
+      <match offset="0" value="S0" type="string">
+        <match offset="4" value="0000" type="string"/>
+      </match>
+    </magic>
+    <glob pattern="*.srec"/>
+<!-- Should these be stand-alone mimetypes?  -->
+    <glob pattern="*.s19"/>
+    <glob pattern="*.s28"/>
+    <glob pattern="*.s37"/>
+  </mime-type>
+
+  <mime-type type="text/x-ihex">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+<!--     <generic-icon name="application-octet-stream"/> -->
+    <comment>Intel hexadecimal object file</comment>
+    <comment xml:lang="ca">Fitxer objecte hexadecimal d'Intel</comment>
+    <comment xml:lang="ca@valencia">Fitxer objecte hexadecimal d'Intel</comment>
+    <comment xml:lang="cs">Hexadecimální objektový soubor Intel®</comment>
+    <comment xml:lang="de">Intel-Hexadezimal-Objektdatei</comment>
+    <comment xml:lang="en_GB">Intel hexadecimal object file</comment>
+    <comment xml:lang="es">Archivo objeto hexadecimal de Intel</comment>
+    <comment xml:lang="et">Inteli 16nd-objektfail</comment>
+    <comment xml:lang="fi">Intelin heksadesimaalinen objektitiedosto</comment>
+    <comment xml:lang="fr">Fichier objet hexadécimal « Intel® »</comment>
+    <comment xml:lang="ia">File objecto hexadecimal de Intel</comment>
+    <comment xml:lang="it">File oggetto esadecimale Intel</comment>
+    <comment xml:lang="nl">Intel hexadecimaal objectbestand</comment>
+    <comment xml:lang="nn">Intel-heksobjektfil</comment>
+    <comment xml:lang="pl">Plik obiektu szesnastkowego Intel</comment>
+    <comment xml:lang="pt_BR">Arquivo de objeto hexadecimal Intel</comment>
+    <comment xml:lang="sk">Intel hexadecimálny objektový súbor</comment>
+    <comment xml:lang="sl">Intelova šestnajstiška predmetna datoteka</comment>
+    <comment xml:lang="sv">Intel hexadecimal objektfil</comment>
+    <comment xml:lang="uk">шістнадцятковий об’єктний файл Intel®</comment>
+    <comment xml:lang="zh_CN">Intel 十六进制对象文件</comment>
+<!--  Intel MCS-86 Object is alternative name?  -->
+    <magic priority="70">
+      <match type="string" offset="0" value=":">
+<!--         <match type="string" offset="from end, how to do?" value=":00000001FF"/> -->
+      </match>
+    </magic>
+    <glob pattern="*.hex"/>
+    <glob pattern="*.ihex"/>
+  </mime-type>
+
+  <mime-type type="application/base64">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Base64 encoded data</comment>
+    <comment xml:lang="ca">Dades codificades en Base64</comment>
+    <comment xml:lang="ca@valencia">Dades codificades en Base64</comment>
+    <comment xml:lang="cs">Data kódovaná Base64</comment>
+    <comment xml:lang="de">Base64-kodierte Daten</comment>
+    <comment xml:lang="en_GB">Base64 encoded data</comment>
+    <comment xml:lang="es">Datos codificados en Base64</comment>
+    <comment xml:lang="et">Base64 kodeeringus andmed</comment>
+    <comment xml:lang="fi">Base64-koodattu tieto</comment>
+    <comment xml:lang="fr">Données encodées en « Base64 »</comment>
+    <comment xml:lang="ia">Datos codificate Base64</comment>
+    <comment xml:lang="it">Dati codificati in Base64</comment>
+    <comment xml:lang="nl">Base64 gecodeerde gegevens</comment>
+    <comment xml:lang="nn">Base64-koda data</comment>
+    <comment xml:lang="pl">Dane zakodowane Base64</comment>
+    <comment xml:lang="pt_BR">Dados codificados Base64</comment>
+    <comment xml:lang="sk">Dáta zakódované Base64</comment>
+    <comment xml:lang="sl">Podatki kodirani z Base64</comment>
+    <comment xml:lang="sv">Base64-kodad data</comment>
+    <comment xml:lang="uk">дані у кодуванні Base64</comment>
+    <comment xml:lang="zh_CN">Base64 编码的数据</comment>
+    <glob pattern="*.base64"/>
+    <glob pattern="*.b64"/>
+  </mime-type>
+
+  <mime-type type="text/x-base32">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Base32 encoded data</comment>
+    <comment xml:lang="ca">Dades codificades en Base32</comment>
+    <comment xml:lang="ca@valencia">Dades codificades en Base32</comment>
+    <comment xml:lang="cs">Data kódovaná Base32</comment>
+    <comment xml:lang="de">Base32-kodierte Daten</comment>
+    <comment xml:lang="en_GB">Base32 encoded data</comment>
+    <comment xml:lang="es">Datos codificados en Base32</comment>
+    <comment xml:lang="et">Base32 kodeeringus andmed</comment>
+    <comment xml:lang="fi">Base32-koodattu tieto</comment>
+    <comment xml:lang="fr">Données encodées en « Base32 »</comment>
+    <comment xml:lang="ia">Datos codificate Base32</comment>
+    <comment xml:lang="it">Dati codificati in Base32</comment>
+    <comment xml:lang="nl">Base32 gecodeerde gegevens</comment>
+    <comment xml:lang="nn">Base32-koda data</comment>
+    <comment xml:lang="pl">Dane zakodowane Base32</comment>
+    <comment xml:lang="pt_BR">Dados codificados Base32</comment>
+    <comment xml:lang="sk">Dáta zakódované Base32</comment>
+    <comment xml:lang="sl">Podatki kodirani z Base32</comment>
+    <comment xml:lang="sv">Base32-kodad data</comment>
+    <comment xml:lang="uk">дані у кодуванні Base32</comment>
+    <comment xml:lang="zh_CN">Base32 编码的数据</comment>
+    <glob pattern="*.base32"/>
+  </mime-type>
+
+  <mime-type type="application/btoa">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Btoa Encoded File</comment>
+    <comment xml:lang="ca">Fitxer BTOA codificat</comment>
+    <comment xml:lang="ca@valencia">Fitxer BTOA codificat</comment>
+    <comment xml:lang="cs">Data kódovaná Btoa</comment>
+    <comment xml:lang="de">Btoa-kodierte Datei</comment>
+    <comment xml:lang="en_GB">Btoa Encoded File</comment>
+    <comment xml:lang="es">Archivo codificado en Btoa</comment>
+    <comment xml:lang="et">Btoa kodeeringus fail</comment>
+    <comment xml:lang="fi">Btoa-koodattu tiedosto</comment>
+    <comment xml:lang="fr">Fichier encodé en « Btoa »</comment>
+    <comment xml:lang="ia">File codificate Btoa</comment>
+    <comment xml:lang="it">File codificato in Btoa</comment>
+    <comment xml:lang="nl">Btoa gecodeerd bestand</comment>
+    <comment xml:lang="nn">Btoa-koda fil</comment>
+    <comment xml:lang="pl">Dane zakodowane Btoa</comment>
+    <comment xml:lang="pt_BR">Arquivo codificado Btoa</comment>
+    <comment xml:lang="sk">Súbor zakódovaný Btoa</comment>
+    <comment xml:lang="sl">Datoteka kodirana z Btoa</comment>
+    <comment xml:lang="sv">BTOA-kodad data</comment>
+    <comment xml:lang="uk">файл у кодуванні Btoa</comment>
+    <comment xml:lang="zh_CN">Btoa 编码的文件</comment>
+    <magic priority="50">
+      <match type="string" offset="0" value="xbtoa Begin"/>
+    </magic>
+    <glob pattern="*.b2a"/>
+    <glob pattern="*.btoa"/>
+  </mime-type>
+
+  <mime-type type="text/x-ascii85">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Ascii85 encoded data</comment>
+    <comment xml:lang="ca">Dades codificades en ASCII85</comment>
+    <comment xml:lang="ca@valencia">Dades codificades en ASCII85</comment>
+    <comment xml:lang="cs">Data kódovaná Ascii85</comment>
+    <comment xml:lang="de">ASCII85-kodierte Daten</comment>
+    <comment xml:lang="en_GB">Ascii85 encoded data</comment>
+    <comment xml:lang="es">Datos codificados en Ascii85</comment>
+    <comment xml:lang="et">Ascii85 kodeeringus andmed</comment>
+    <comment xml:lang="fi">Ascii85-koodattu tieto</comment>
+    <comment xml:lang="fr">Fichier encodé en « Ascii85 »</comment>
+    <comment xml:lang="ia">Datos codificate Ascii85</comment>
+    <comment xml:lang="it">File codificato in Ascii85</comment>
+    <comment xml:lang="nl">Ascii85 gecodeerde gegevens</comment>
+    <comment xml:lang="nn">Ascii85-koda data</comment>
+    <comment xml:lang="pl">Dane zakodowane Ascii85</comment>
+    <comment xml:lang="pt_BR">Dados codificados Ascii85</comment>
+    <comment xml:lang="sk">Dáta zakódované Ascii85</comment>
+    <comment xml:lang="sl">Podatki kodirani z Ascii85</comment>
+    <comment xml:lang="sv">ASCII85-kodad data</comment>
+    <comment xml:lang="uk">дані у кодуванні Ascii85</comment>
+    <comment xml:lang="zh_CN">Ascii85 编码的数据</comment>
+    <magic priority="50">
+      <match type="string" offset="0" value="$lt;~"/>
+    </magic>
+    <glob pattern="*.ascii85"/>
+  </mime-type>
+
+  <mime-type type="text/x-uuencode">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Uuencoded file</comment>
+    <comment xml:lang="ca">Fitxer «uuencoded»</comment>
+    <comment xml:lang="ca@valencia">Fitxer «uuencoded»</comment>
+    <comment xml:lang="de">UUencode-Datei</comment>
+    <comment xml:lang="en_GB">Uuencoded file</comment>
+    <comment xml:lang="es">Archivo codificado con Uuencode</comment>
+    <comment xml:lang="et">Uuencode-fail</comment>
+    <comment xml:lang="fi">UU-koodattu tiedosto</comment>
+    <comment xml:lang="fr">Fichier encodé en « Uuencode »</comment>
+    <comment xml:lang="ia">file codificate Uu</comment>
+    <comment xml:lang="it">File con codifica UUencode</comment>
+    <comment xml:lang="nl">Uuencoded bestand</comment>
+    <comment xml:lang="nn">Uuencoding-koda fil</comment>
+    <comment xml:lang="pl">Plik Uuencoded</comment>
+    <comment xml:lang="pt_BR">Arquivo Uuencoded</comment>
+    <comment xml:lang="sk">Uuencoded súbor</comment>
+    <comment xml:lang="sl">Datoteka uuencoded</comment>
+    <comment xml:lang="sv">Uuencoded fil</comment>
+    <comment xml:lang="uk">файл даних у форматі UUE</comment>
+    <comment xml:lang="zh_CN">Uuencoding 编码的文件</comment>
+    <magic priority="50">
+      <match type="string" offset="0" value="begin"/>
+      <match type="string" offset="0" value="begin-base64"/>
+    </magic>
+    <glob pattern="*.uue"/>
+    <glob pattern="*.uu"/>
+    <glob pattern="*.enc"/>
+  </mime-type>
+
+  <mime-type type="text/x-xxencode">
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-hex"/>
+    <comment>Xxencoded file</comment>
+    <comment xml:lang="ca">Fitxer «xxencoded»</comment>
+    <comment xml:lang="ca@valencia">Fitxer «xxencoded»</comment>
+    <comment xml:lang="de">Xxencode-Datei</comment>
+    <comment xml:lang="en_GB">Xxencoded file</comment>
+    <comment xml:lang="es">Archivo codificado con Xxencode</comment>
+    <comment xml:lang="et">Xxencode-fail</comment>
+    <comment xml:lang="fi">XX-koodattu tiedosto</comment>
+    <comment xml:lang="fr">Fichier encodé en « Xxencode »</comment>
+    <comment xml:lang="ia">File codificate Xx</comment>
+    <comment xml:lang="it">File con codifica Xxencoded</comment>
+    <comment xml:lang="nl">Xxencoded bestand</comment>
+    <comment xml:lang="nn">Xxencoding-koda fil</comment>
+    <comment xml:lang="pl">Plik Xxencoded</comment>
+    <comment xml:lang="pt_BR">Arquivo Xxencoded</comment>
+    <comment xml:lang="sk">Xxencoded súbor</comment>
+    <comment xml:lang="sl">Datoteka xxencoded</comment>
+    <comment xml:lang="sv">Xxencoded fil</comment>
+    <comment xml:lang="uk">файл даних у форматі xxe</comment>
+    <comment xml:lang="zh_CN">Xxencoding 编码的文件</comment>
+    <magic priority="50">
+      <match type="string" offset="0" value="begin"/>
+    </magic>
+    <glob pattern="*.xxe"/>
+  </mime-type>
+
+  <mime-type type="application/x-vnd.kde.okteta.structure">
+    <sub-class-of type="application/xml"/>
+    <comment>Okteta Structure definition</comment>
+    <comment xml:lang="ca">Definició d'estructura de l'Okteta</comment>
+    <comment xml:lang="ca@valencia">Definició d'estructura de l'Okteta</comment>
+    <comment xml:lang="cs">Definice struktury Okteta</comment>
+    <comment xml:lang="de">Okteta-Strukturdefinition</comment>
+    <comment xml:lang="en_GB">Okteta Structure definition</comment>
+    <comment xml:lang="es">Definición de estructura de Okteta</comment>
+    <comment xml:lang="et">Okteta struktuuridefinitsioon</comment>
+    <comment xml:lang="fi">Oktetan rakennemääritelmä</comment>
+    <comment xml:lang="fr">Définition de structure pour Okteta</comment>
+    <comment xml:lang="ia">Definition de structura Okteta</comment>
+    <comment xml:lang="it">Definizione di struttura di Okteta</comment>
+    <comment xml:lang="nl">Okteta structuurdefinitie</comment>
+    <comment xml:lang="nn">Okteta strukturdefinisjon</comment>
+    <comment xml:lang="pl">Definicja struktury Okteta</comment>
+    <comment xml:lang="pt_BR">Definição de estrutura Okteta</comment>
+    <comment xml:lang="sk">Definícia štruktúry Okteta</comment>
+    <comment xml:lang="sl">Določilo zgradbe za Okteto</comment>
+    <comment xml:lang="sv">Okteta strukturdefinition</comment>
+    <comment xml:lang="uk">визначення структури Okteta</comment>
+    <comment xml:lang="zh_CN">Okteta 结构体定义</comment>
+    <glob pattern="*.osd"/>
+  </mime-type>
+</mime-info>

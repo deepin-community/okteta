@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+
+TESTS_HOME=$(CURDIR)/debian/tests.home
+
+# Disable fixfilepath, as it causes build failures.
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+
+libpkgs_gen_strict_local_shlibs = $(libpkgs_all_packages)
+include /usr/share/pkg-kde-tools/qt-kde-team/3/library-packages.mk
+
+%:
+	dh $@ --with kf5,pkgkde_symbolshelper,sodeps
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	mkdir -p "$(TESTS_HOME)"
+	HOME=$(TESTS_HOME) xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test --no-parallel
+	rm -rf "$(TESTS_HOME)"
+endif
+
+override_dh_gencontrol-arch: libpkgs_gen_strict_local_shlibs
+	dh_gencontrol -a

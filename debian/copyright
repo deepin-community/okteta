@@ -1,0 +1,253 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: okteta
+Upstream-Contact: Friedrich W. H. Kossebau <kossebau@kde.org>
+Source: https://invent.kde.org/utilities/okteta
+
+Files: *
+Copyright: 2016, Aaron Bishop <erroneous@gmail.com>
+           2012, Alessandro Di Federico <ale@clearmind.me>
+           2009-2013, Alex Richardson <alex.richardson@gmx.de>
+           2003-2019, 2021, Friedrich W. H. Kossebau <kossebau@kde.org>
+           2019, Lars Maier <lars.maier@tefax.net>
+License: LGPL-2.1+3+KDEeV
+
+Files: cmake/OktetaInternalMacros.cmake
+Copyright: 2018-2019, Friedrich W. H. Kossebau <kossebau@kde.org>
+License: BSD-3-clause
+
+Files: designer/examples/main.cpp
+Copyright: 2009-2015, Friedrich W. H. Kossebau <kossebau@kde.org>
+License: public-domain
+ These files have no copyright restrictions.
+
+Files: doc/*
+       po/es/docs/*
+       po/it/docs/*
+       po/nl/docs/*
+       po/pt/docs/*
+       po/pt_BR/docs/*
+       po/sr@latin/docs/*
+       po/sr/docs/*
+       po/sv/docs/*
+       po/uk/docs/*
+Copyright: 2008-2011, Alex Richardson <alex.richardson@gmx.de>
+           2008-2011, Friedrich W. H. Kossebau <kossebau@kde.org>
+License: GFDL-1.2+
+
+Files: kasten/controllers/test/allprimitivetypestest.cpp
+       kasten/controllers/test/arraydatainformationtest.cpp
+       kasten/controllers/test/basicdatainformationtest.cpp
+       kasten/controllers/test/customtostringtest.cpp
+       kasten/controllers/test/jsparsertest.cpp
+       kasten/controllers/test/locktooffsettest.cpp
+       kasten/controllers/test/osdparsertest.cpp
+       kasten/controllers/test/primitivearraytest.cpp
+       kasten/controllers/test/primitivedatainformationtest.cpp
+       kasten/controllers/test/scriptclassestest.cpp
+       kasten/controllers/test/scriptvalueconvertertest.cpp
+       kasten/controllers/test/testutils.hpp
+       kasten/controllers/test/uniondatainformationtest.cpp
+Copyright: 2011-2013, Alex Richardson <alex.richardson@gmx.de>
+License: LGPL-2.1+
+
+Files: kasten/controllers/view/structures/modeltest.cpp
+       kasten/controllers/view/structures/modeltest.h
+Copyright: 2007, Trolltech ASA
+License: GPL-2-Trolltech
+
+Files: po/ca/liboktetagui.po
+       po/ca/liboktetacore.po
+       po/uk/*.po
+       po/ca@valencia/liboktetagui.po
+       po/ca@valencia/liboktetacore.po
+Copyright: 2007-2020, This_file_is_part_of_KDE
+License: LGPL-2.1+3+KDEeV-translations
+
+Files: po/ca/libkasten.po
+       po/ca/liboktetakasten.po
+       po/ca/okteta.po
+       po/ca@valencia/libkasten.po
+       po/ca@valencia/liboktetakasten.po
+       po/ca@valencia/okteta.po
+Copyright: 2008-2020, This_file_is_part_of_KDE
+License: LGPL-2+translations
+
+Files: program/about.cpp
+       program/about.hpp
+       program/main.cpp
+       program/mainwindow.cpp
+       program/mainwindow.hpp
+       program/program.cpp
+       program/program.hpp
+Copyright: 2006-2014, Friedrich W. H. Kossebau <kossebau@kde.org>
+License: GPL-2+3+KDEeV
+
+Files: program/org.kde.okteta.appdata.xml
+Copyright: none
+License: CC0-1.0
+
+Files: debian/*
+Copyright: 2007-2021, Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+License: GPL-2+
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice,
+ this list of conditions and the following disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ .
+ 3. Neither the name of the copyright holder nor the names of its contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: CC0-1.0
+ To the extent possible under law, the author(s) have dedicated all copyright
+ and related and neighboring rights to this software to the public domain
+ worldwide. This software is distributed without any warranty.
+ .
+ You should have received a copy of the CC0 Public Domain Dedication along
+ with this software. If not, see
+ <https://creativecommons.org/publicdomain/zero/1.0/>.
+ --
+ On Debian systems, the complete text of the CC0 Public Domain Dedication
+ can be found in `/usr/share/common-licenses/CC0-1.0’.
+
+License: GFDL-1.2+
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.2
+ or any later version published by the Free Software Foundation;
+ with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+ A copy of the license is included in the section entitled "GNU
+ Free Documentation License".
+ .
+ On Debian systems, the complete text of the GNU Free Documentation
+ License version 1.2 can be found in `/usr/share/common-licenses/GFDL-1.2’.
+
+License: GPL-2-Trolltech
+ This file may be used under the terms of the GNU General Public
+ License version 2.0 as published by the Free Software Foundation
+ and appearing in the file LICENSE.GPL included in the packaging of
+ this file.  Please review the following information to ensure GNU
+ General Public Licensing requirements will be met:
+ http://www.trolltech.com/products/qt/opensource.html
+ .
+ If you are unsure which license is appropriate for your use, please
+ review the following information:
+ http://www.trolltech.com/products/qt/licensing.html or contact the
+ sales department at sales@trolltech.com.
+ .
+ This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ --
+ On Debian systems, the full text of the GNU General Public License
+ versions 2 can be found in `/usr/share/common-licenses/GPL-2’.
+
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ --
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in `/usr/share/common-licenses/GPL-2’.
+
+License: GPL-2+3+KDEeV
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 2 of
+ the License or (at your option) version 3 or any later version
+ accepted by the membership of KDE e.V. (or its successor approved
+  by the membership of KDE e.V.), which shall act as a proxy
+ defined in Section 14 of version 3 of the license.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License.
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
+ --
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in `/usr/share/common-licenses/GPL-2’, likewise, the
+ complete text of the GNU General Public License version 3 can be found in
+ `/usr/share/common-licenses/GPL-3’.
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ --
+ On Debian systems, the complete text of the GNU Lesser General Public License
+ versions 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’.
+
+License: LGPL-2+translations
+ This file is distributed under the license LGPL version 2 or later.
+ --
+ On Debian systems, the complete text of the GNU Lesser General Public License
+ versions 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’.
+
+License: LGPL-2.1+3+KDEeV
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) version 3, or any
+ later version accepted by the membership of KDE e.V. (or its
+ successor approved by the membership of KDE e.V.), which shall
+ act as a proxy defined in Section 6 of version 3 of the license.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library.  If not, see <https://www.gnu.org/licenses/>.
+ --
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License version 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’,
+ likewise, the complete text of the GNU Lesser General Public License version
+ 3 can be found in `/usr/share/common-licenses/LGPL-3’.
+
+License: LGPL-2.1+3+KDEeV-translations
+ This file is distributed under the license LGPL version 2.1 or
+ version 3 or later versions approved by the membership of KDE e.V.
+ --
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License version 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’,
+ likewise, the complete text of the GNU Lesser General Public License version
+ 3 can be found in `/usr/share/common-licenses/LGPL-3’.

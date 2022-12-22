@@ -1,0 +1,98 @@
+# SymbolsHelper-Confirmed: 5:0.26.2 amd64
+libKasten4Okteta2Core.so.0 libkasten4okteta2core0 #MINVER#
+* Build-Depends-Package: okteta-dev
+ _ZN6Kasten17ByteArrayDocument11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument11setReadOnlyEb@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument15onModelModifiedEb@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument18headVersionChangedEi@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument22headVersionDataChangedERKNS_19DocumentVersionDataE@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument22revertToVersionByIndexEi@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument22revertedToVersionIndexEi@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument31onHeadVersionDescriptionChangedERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocument8setTitleERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentC1EPN6Okteta24PieceTableByteArrayModelERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentC1ERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentC2EPN6Okteta24PieceTableByteArrayModelERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentC2ERK7QString@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentD0Ev@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentD1Ev@Base 4:14.12.0
+ _ZN6Kasten17ByteArrayDocumentD2Ev@Base 4:14.12.0
+ _ZN6Kasten18ByteArraySelection8setRangeERKN6Okteta11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Kasten18ByteArraySelectionC1Ev@Base 4:14.12.0
+ _ZN6Kasten18ByteArraySelectionC2Ev@Base 4:14.12.0
+ _ZN6Kasten18ByteArraySelectionD0Ev@Base 4:14.12.0
+ _ZN6Kasten18ByteArraySelectionD1Ev@Base 4:14.12.0
+ _ZN6Kasten18ByteArraySelectionD2Ev@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory14createFromDataEPK9QMimeDatab@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory17canCreateFromDataEPK9QMimeData@Base 4:14.12.0
+ _ZN6Kasten24ByteArrayDocumentFactory6createEv@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer11onUrlChangeERK4QUrl@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer11setDocumentEPNS_17ByteArrayDocumentE@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer12startConnectEPNS_16AbstractDocumentERK4QUrlNS_25AbstractModelSynchronizer13ConnectOptionE@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer15onModelModifiedEb@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer17startSyncToRemoteEv@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer19startSyncFromRemoteEv@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer19startSyncWithRemoteERK4QUrlNS_25AbstractModelSynchronizer13ConnectOptionE@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizer9startLoadERK4QUrl@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizerC1Ev@Base 4:14.12.0
+ _ZN6Kasten28ByteArrayRawFileSynchronizerC2Ev@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactory11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactory11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactory16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactoryC1Ev@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactoryC2Ev@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactoryD0Ev@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactoryD1Ev@Base 4:14.12.0
+ _ZN6Kasten35ByteArrayRawFileSynchronizerFactoryD2Ev@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument10isReadOnlyEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument10metaObjectEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument11versionDataEi@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument12contentFlagsEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument12isModifiableEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument12versionCountEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument12versionIndexEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument5titleEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument7contentEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument8mimeTypeEv@Base 4:14.12.0
+ _ZNK6Kasten17ByteArrayDocument8typeNameEv@Base 4:14.12.0
+ _ZNK6Kasten18ByteArraySelection5rangeEv@Base 4:14.12.0
+ _ZNK6Kasten18ByteArraySelection7isValidEv@Base 4:14.12.0
+ _ZNK6Kasten24ByteArrayDocumentFactory10metaObjectEv@Base 4:14.12.0
+ _ZNK6Kasten28ByteArrayRawFileSynchronizer10metaObjectEv@Base 4:14.12.0
+ _ZNK6Kasten28ByteArrayRawFileSynchronizer14localSyncStateEv@Base 4:14.12.0
+ _ZNK6Kasten28ByteArrayRawFileSynchronizer8documentEv@Base 4:14.12.0
+ _ZNK6Kasten35ByteArrayRawFileSynchronizerFactory10metaObjectEv@Base 4:14.12.0
+ _ZNK6Kasten35ByteArrayRawFileSynchronizerFactory17supportedWorkTypeEv@Base 4:14.12.0
+ _ZNK6Kasten35ByteArrayRawFileSynchronizerFactory18createSynchronizerEv@Base 4:14.12.0
+ _ZNK6Kasten35ByteArrayRawFileSynchronizerFactory19supportedRemoteTypeEv@Base 4:14.12.0
+ _ZTIN6Kasten17ByteArrayDocumentE@Base 4:15.04.0
+ _ZTIN6Kasten18ByteArraySelectionE@Base 4:15.04.0
+ _ZTIN6Kasten24ByteArrayDocumentFactoryE@Base 4:15.04.0
+ _ZTIN6Kasten28ByteArrayRawFileSynchronizerE@Base 4:15.04.0
+ _ZTIN6Kasten35ByteArrayRawFileSynchronizerFactoryE@Base 4:15.04.0
+ _ZTSN6Kasten17ByteArrayDocumentE@Base 4:15.04.0
+ _ZTSN6Kasten18ByteArraySelectionE@Base 4:15.04.0
+ _ZTSN6Kasten24ByteArrayDocumentFactoryE@Base 4:15.04.0
+ _ZTSN6Kasten28ByteArrayRawFileSynchronizerE@Base 4:15.04.0
+ _ZTSN6Kasten35ByteArrayRawFileSynchronizerFactoryE@Base 4:15.04.0
+ _ZTVN6Kasten17ByteArrayDocumentE@Base 4:14.12.0
+ _ZTVN6Kasten18ByteArraySelectionE@Base 4:14.12.0
+ _ZTVN6Kasten24ByteArrayDocumentFactoryE@Base 4:14.12.0
+ _ZTVN6Kasten28ByteArrayRawFileSynchronizerE@Base 4:14.12.0
+ _ZTVN6Kasten35ByteArrayRawFileSynchronizerFactoryE@Base 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::headVersionChanged(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::headVersionDataChanged(Kasten::DocumentVersionData const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::revertToVersionByIndex(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::revertedToVersionIndex(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::versionCount() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::versionData(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::versionIndex() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Kasten::ByteArrayDocument::~ByteArrayDocument()@Base" 4:14.12.0

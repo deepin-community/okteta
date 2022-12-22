@@ -1,0 +1,14 @@
+usr/bin/okteta
+usr/bin/struct2osd
+usr/lib/*/qt5/plugins/kf5/parts/oktetapart.so
+usr/share/applications/org.kde.okteta.desktop
+usr/share/config.kcfg/structureviewpreferences.kcfg
+usr/share/doc/HTML/*/okteta/
+usr/share/icons/hicolor/*/apps/okteta.png
+usr/share/knsrcfiles/
+usr/share/kservices5/oktetapart.desktop
+usr/share/locale/*/LC_MESSAGES/okteta.mo
+usr/share/locale/*/LC_MESSAGES/oktetapart.mo
+usr/share/metainfo/org.kde.okteta.appdata.xml
+usr/share/mime/packages/okteta.xml
+usr/share/okteta/

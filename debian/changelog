@@ -1,0 +1,881 @@
+okteta (5:0.26.6-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Update symbols files.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 15 Aug 2021 16:30:19 +0200
+
+okteta (5:0.26.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Update symbols files.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 02 Feb 2021 22:29:08 +0100
+
+okteta (5:0.26.5-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Update copyright.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 02 Feb 2021 20:38:12 +0100
+
+okteta (5:0.26.4-2) unstable; urgency=medium
+
+  [ Vagrant Cascadian ]
+  * Disable fixfilepath reproducibility feature, as it triggers build failures
+    when enabled. (Closes: #972298)
+
+  [ Aurélien COUDERC ]
+  * Refresh copyright information.
+  * Bump Standards-Version to 4.5.1, no change required.
+  * Refresh upstream metadata.
+  * Update project homepage.
+  * Removed George Kiagiadakis, Maximiliano Curia, Modestas Vainius from
+    the uploaders, thanks for your work on the package!
+  * Added myself to the uploaders.
+  * Build with hardening=+all build hardening flag.
+  * Drop kde-l10n migration rules, not needed anymore after 2 stable releases.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 11 Jan 2021 23:28:57 +0100
+
+okteta (5:0.26.4-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Update copyright.
+  * Update symbols files.
+  * Switch from dhmk to the dh sequencer:
+    - invoke the dh sequencer using the kf5, and pkgkde_symbolshelper addons
+    - manually force the generation of the substvars for the kde-l10n breaks,
+      and strict shlibs handling
+  * Bump the debhelper compatibility to 13:
+    - switch the debhelper build dependency to debhelper-compat 13
+    - remove debian/compat
+  * Add Rules-Requires-Root: no.
+  * CI: disable build path variations, as not well handled with okteta by the
+    current toolchain.
+
+ -- Pino Toscano <pino@debian.org>  Thu, 30 Jul 2020 17:08:55 +0200
+
+okteta (5:0.26.3-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Mark all the library package as Multi-Arch: same, and libokteta-l10n as
+    Multi-Arch: foreign.
+  * Add also the GPG key 0x0A48BC961075B4BA8523E3790A345FB086E797D9 as upstream
+    signing key.
+  * Small update to copyright.
+  * Update install files.
+  * Unregister okteta-structures.knsrc as conffile, as it is no more in /etc.
+  * Add the configuration for the CI on salsa.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 03 Feb 2020 20:43:56 +0100
+
+okteta (5:0.26.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Update symbols files from logs of buildds.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 11 Aug 2019 10:01:17 +0200
+
+okteta (5:0.26.2-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Disable the ABIManager, as the library handled got an SONAME bump
+    - drop patch enable_debianabimanager.diff
+  * Rename packages according to the SONAME bumps:
+    - libkasten3controllers3 -> libkasten4controllers0
+    - libkasten3core3 -> libkasten4core0
+    - libkasten3gui3 -> libkasten4gui0
+    - libkasten3okteta1controllers1abi1 -> libkasten4okteta2controllers0
+    - libkasten3okteta1core1 -> libkasten4okteta2core0
+    - libkasten3okteta1gui1 -> libkasten4okteta2gui0
+    - libokteta2core2 -> libokteta3core0
+    - libokteta2gui2 -> libokteta3gui0
+  * Update install files.
+  * Update symbols files.
+  * Split the libokteta/libkasten translations to a new libokteta-l10n
+    package, to ease the migration to new SONAMEs in the future:
+    - add to libokteta-l10n breaks/replaces of the old SONAMEs, since the new
+      ones are part of this revision
+    - move also the kde-l10n breaks/replaces to libokteta-l10n
+    - depend on libokteta-l10n where were translations before
+  * Update the build dependencies according to the upstream build system:
+    - bump the KF packages to >= 5.48.0
+    - explicitly add gettext
+    - adjust the dependencies for okteta-dev accordingly
+  * Remove the mention of being part of "KDE Software Development Kit" in the
+    descriptions, as okteta is no more part of kdesdk.
+  * Bump Standards-Version to 4.4.0, no changes required.
+  * Update Homepage to https://kde.org/applications/utilities/okteta.
+  * Update copyright.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 09 Aug 2019 09:35:54 +0200
+
+okteta (5:0.25.5-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 31 Dec 2018 18:17:46 +0100
+
+okteta (5:0.25.4-3) unstable; urgency=medium
+
+  * Team upload.
+  * Update symbols files from logs of buildds.
+  * Bump Standards-Version to 4.3.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Wed, 26 Dec 2018 10:02:16 +0100
+
+okteta (5:0.25.4-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Update symbols files from logs of buildds.
+
+ -- Pino Toscano <pino@debian.org>  Thu, 20 Dec 2018 22:26:44 +0100
+
+okteta (5:0.25.4-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release, independent from KDE Applications; because of that,
+    bump the epoch to detach from the KDE Application versioning, which does
+    not apply anymore.
+  * Update the watch file, and the upstream GPG key.
+  * Switch Vcs-* fields to salsa.debian.org.
+  * Update build dependencies, and dependencies according to the upstream
+    build system:
+    - bump cmake to 3.0
+    - bump all the Qt packages to 5.9.0
+    - add qtdeclarative5-dev as new build dependency
+    - bump all the Frameworks packages, including extra-cmake-modules, to
+      5.38.0
+  * Bump the debhelper compatibility to 11:
+    - bump the debhelper build dependency to 11~
+    - bump compat to 11
+  * Update install files.
+  * Move the designer plugin from okteta to okteta-dev, since it is useful
+    mostly for development; no need to add breaks/replaces as the file name
+    changed
+    - use the ${shlibs:Depends} substvar in okteta-dev
+  * libkasten3okteta1controllers1 had an ABI break with no SONAME bump, so:
+    - apply the Debian ABI manager; patch enable_debianabimanager.diff
+    - rename libkasten3okteta1controllers1 to libkasten3okteta1controllers1abi1
+  * Update symbols files.
+  * Tighten the inter-library dependencies.
+  * Use https for Format in copyright.
+  * Run the test suite during the build:
+    - add the xauth, and xvfb build dependencies
+    - run xvfb-run with the proper arguments, using a fake home directory
+    - do not run the tests in parallel, as there seems to be some conflict/race
+      between the tests
+  * Remove the 'testsuite' autopkgtest, no more needed with the in-build
+    testsuite.
+  * Remove the unused 'acc' autopkgtest.
+
+ -- Pino Toscano <pino@debian.org>  Thu, 15 Nov 2018 20:41:31 +0100
+
+okteta (4:17.08.3-1) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+
+  [ Maximiliano Curia ]
+  * Bump kde-l10n breaks/replaces versions
+  * Update uploaders list as requested by MIA team (Closes: #879416)
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Bump Standards-Version to 4.1.2, no changes required.
+  * Simplify watch file, and switch it to https.
+  * Remove DEB_CFLAGS_MAINT_STRIP and DEB_CXXFLAGS_MAINT_STRIP from rules,
+    as not much useful and most likely some workaround for an old bug.
+  * Adjust l10npkgs_firstversion_ok to the version where kde-l10n will
+    drop translations.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 09 Dec 2017 09:39:15 +0100
+
+okteta (4:17.08.1-1) experimental; urgency=medium
+
+  * New upstream release (17.08.1)
+  * Bump Standards-Version to 4.1.0.
+  * Update upstream metadata
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files.
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 13 Sep 2017 15:44:18 +0200
+
+okteta (4:17.08.1-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Tue, 05 Sep 2017 14:06:43 +0000
+
+okteta (4:17.08.0-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Thu, 17 Aug 2017 09:43:10 +0000
+
+okteta (4:17.04.3-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 12 Jul 2017 10:26:39 +0000
+
+okteta (4:17.04.2-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 07 Jun 2017 12:24:42 +0000
+
+okteta (4:17.04.1-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Thu, 11 May 2017 18:28:29 +0000
+
+okteta (4:17.04.0-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 19 Apr 2017 13:07:17 +0000
+
+okteta (4:16.12.3-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 08 Mar 2017 13:51:40 +0000
+
+okteta (4:16.12.2-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 08 Feb 2017 17:04:38 +0000
+
+okteta (4:16.12.1-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 11 Jan 2017 13:26:04 +0000
+
+okteta (4:16.12.0-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 14 Dec 2016 16:34:18 +0000
+
+okteta (4:16.08.3-1) unstable; urgency=medium
+
+  * New upstream release (16.08.3)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 22:04:25 +0100
+
+okteta (4:16.08.3-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Mon, 21 Nov 2016 13:55:18 +0000
+
+okteta (4:16.08.2-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update symbols files from buildds logs (4:16.08.0-2).
+  * Update build-deps and deps with the info from cmake
+
+  [ Maximiliano Curia ]
+  * New upstream release (16.08.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 18 Oct 2016 13:56:13 +0200
+
+okteta (4:16.08.2-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Fri, 14 Oct 2016 13:41:59 +0000
+
+okteta (4:16.08.1-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Fri, 16 Sep 2016 13:08:52 +0000
+
+okteta (4:16.08.0-2) unstable; urgency=medium
+
+  * Team upload.
+  * Update symbols files.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 27 Aug 2016 22:14:18 +0200
+
+okteta (4:16.08.0-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Update okteta description from upstream. (Closes: #749674)
+  * Update symbols files.
+  * Bump the pkg-kde-tools build dependency to >= 0.15.23, so dh_sodeps can
+    determine again the dependencies for okteta-dev.
+  * Remove DEB_CFLAGS_MAINT_STRIP and DEB_CXXFLAGS_MAINT_STRIP from rules,
+    as not much useful and most likely some workaround for an old bug.
+  * Watch only stable releases.
+  * Update install files.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 27 Aug 2016 10:46:21 +0200
+
+okteta (4:16.08.0-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Wed, 17 Aug 2016 11:50:34 +0000
+
+okteta (4:16.04.3-0neon) xenial; urgency=medium
+
+  * New release
+
+ -- Neon CI <neon@kde.org>  Tue, 12 Jul 2016 11:36:48 +0000
+
+okteta (4:16.04.2-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update symbols files from buildds logs (4:16.04.1-2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 23 Jun 2016 09:48:37 +0200
+
+okteta (4:16.04.1-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 31 May 2016 16:37:44 +0200
+
+okteta (4:16.04.1-1) experimental; urgency=medium
+
+  [ Automatic packaging ]
+  * Bump Standards-Version to 3.9.8
+  * Refresh patches
+  * Update symbols files with the logs from the buildds
+  * Update symbols files.
+
+  [ Maximiliano Curia ]
+  * New upstream release (15.12.2).
+  * Drop patch: install_missing_header
+  * Add upstream metadata (DEP-12)
+  * debian/control: Update Vcs-Browser and Vcs-Git fields
+  * Update testsuite script
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 26 May 2016 13:16:49 +0200
+
+okteta (4:15.12.0-2) experimental; urgency=medium
+
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 02 Feb 2016 16:01:06 +0100
+
+okteta (4:15.12.0-1) experimental; urgency=medium
+
+  * New upstream release (15.12.0).
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 01 Feb 2016 10:22:10 +0100
+
+okteta (4:15.08.3-1) experimental; urgency=medium
+
+  * New upstream release (15.08.3).
+  * Update symbols files from buildds logs (4:15.08.0-1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 02 Dec 2015 12:38:30 +0100
+
+okteta (4:15.08.0-1) experimental; urgency=medium
+
+  * New upstream release (15.04.0).
+  * Add missing dev dependency (thanks to acc headers check)
+  * New patch: install_missing_header
+  * Update symbols files.
+  * New upstream release (15.04.1).
+  * Update symbols files.
+  * New upstream release (15.04.2).
+  * New upstream release (15.04.3).
+  * New upstream release (15.08.0).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 09 Sep 2015 15:09:57 +0200
+
+okteta (4:15.08.0-0ubuntu1) wily; urgency=medium
+
+  * new upstream release
+
+ -- Clive Johnston <clivejo@aol.com>  Wed, 26 Aug 2015 18:19:59 +0100
+
+okteta (4:15.07.90-0ubuntu1) wily; urgency=medium
+
+  [ José Manuel Santamaría Lema ]
+  * Update symbols files:
+    - Remove the .amd64 suffix allowing to use the files for other architectures
+    - Mark as optional the symbols gone after building with GCC 5
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 18 Aug 2015 12:25:28 +0100
+
+okteta (4:15.04.2-0ubuntu3) wily; urgency=medium
+
+  * Fix version number for symbols file updates.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 12 Aug 2015 19:45:31 +0200
+
+okteta (4:15.04.2-0ubuntu2) wily; urgency=medium
+
+  * Update symbols files.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 12 Aug 2015 19:21:29 +0200
+
+okteta (4:15.04.2-0ubuntu1) wily; urgency=medium
+
+  [ Scarlett Clark ]
+  * New upstream release
+
+  [ José Manuel Santamaría Lema ]
+  * Delete upstream_cmake-IconThemes.diff, applied upstream.
+
+  [ Scarlett Clark ]
+  * New upstream release
+  * Vivid backport
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 09 Jun 2015 22:34:19 +0200
+
+okteta (4:14.12.3-1) experimental; urgency=medium
+
+  * New upstream release (14.12.3).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 29 Mar 2015 15:13:45 +0200
+
+okteta (4:14.12.3-0ubuntu4) vivid; urgency=medium
+
+  * Move symbols files to amd64 only, I can't work out the other arches
+    alas
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 15 Apr 2015 23:11:10 +0200
+
+okteta (4:14.12.3-0ubuntu3) vivid; urgency=medium
+
+  * Update symbols file
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 15 Apr 2015 21:01:07 +0200
+
+okteta (4:14.12.3-0ubuntu2) vivid; urgency=medium
+
+  * Add upstream_cmake-IconThemes.diff to fix compile
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 15 Apr 2015 16:27:07 +0200
+
+okteta (4:14.12.3-0ubuntu1) vivid; urgency=medium
+
+  [ Scarlett Clark ]
+  * New upstream release
+
+  [ Harald Sitter ]
+  * Rip out ABIManager patch and versioning.
+    + KF5 based release had no ABI breakage yet so the symbols distrotion
+      caused by the ABI manager is more useless than anything
+    + The package is now CI'd by Kubuntu CI which means we'll be able to catch
+      BIC before release making sure upstream does a so-version bump
+
+  [ Scarlett Clark ]
+  * Add missing libqca-qt5-2-dev to build depends.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Fri, 13 Mar 2015 13:21:57 -0700
+
+okteta (4:14.12.2-1) experimental; urgency=medium
+
+  * New upstream release (14.12.2).
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Update copyright information.
+  * New upstream patch: upstream_fix_installation_path_for_kasten
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 21 Feb 2015 11:02:20 +0100
+
+okteta (4:14.12.2-0ubuntu3) vivid; urgency=medium
+
+  * Update symbols files from build logs.
+
+ -- Dmitry Shachnev <mitya57@ubuntu.com>  Mon, 16 Feb 2015 17:46:05 +0300
+
+okteta (4:14.12.2-0ubuntu2) vivid; urgency=medium
+
+  * Remove two Qt symbols for Qt 5.4.
+
+ -- Dmitry Shachnev <mitya57@ubuntu.com>  Mon, 16 Feb 2015 16:48:53 +0300
+
+okteta (4:14.12.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * batchpatch new symbols.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 10 Feb 2015 08:37:27 -0800
+
+okteta (4:14.12.0-0ubuntu5) vivid; urgency=medium
+
+  * Update symbols files for multiple platforms
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 14 Jan 2015 11:01:12 +0100
+
+okteta (4:14.12.0-0ubuntu4) vivid; urgency=medium
+
+  * More .symbol file updates
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 18 Dec 2014 19:40:59 +0100
+
+okteta (4:14.12.0-0ubuntu3) vivid; urgency=medium
+
+  * Update .symbols files
+  * Add back change in debian/rules, work around a link failure
+    when built with -O3 on ppc64el.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 18 Dec 2014 19:28:06 +0100
+
+okteta (4:14.12.0-0ubuntu2) vivid; urgency=medium
+
+  * Update .symbols files
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 18 Dec 2014 18:30:35 +0100
+
+okteta (4:14.12.0-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * Merge with Debian, remaining changes:
+  * Experimentally drop change in debian/rules, work around a link failure
+    when built with -O3 on ppc64el.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 17 Dec 2014 12:29:15 +0100
+
+okteta (4:4.14.2-3) unstable; urgency=medium
+
+  * Update symbols files from buildds logs (4:4.14.2-2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Sep 2015 13:40:21 +0200
+
+okteta (4:4.14.2-2) unstable; urgency=medium
+
+  * Add libsoprano-dev build dep.
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 31 Aug 2015 16:14:02 +0200
+
+okteta (4:4.14.2-1) unstable; urgency=medium
+
+  * New upstream release (4.14.2).
+  * Update install files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 20 Oct 2014 17:13:38 +0200
+
+okteta (4:4.14.1-1) unstable; urgency=medium
+
+  * New upstream release (4.14.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 17 Sep 2014 09:44:20 +0200
+
+okteta (4:4.14.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update symbols with 4:4.13.3-1 buildds logs.
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 20 Aug 2014 05:13:34 +0200
+
+okteta (4:4.13.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update symbols with 4:4.13.1-1 build logs.
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 18 Jul 2014 08:45:58 +0200
+
+okteta (4:4.14.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * Add new file to install.
+  * Change std shortname in copyright to LGP2.1-KDEeV.
+  * Fix copyright to use GPL-KDEeV as short license.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Fri, 10 Oct 2014 06:30:05 -0700
+
+okteta (4:4.14.1-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <scarlett@scarlettgatelyclark.com>  Mon, 22 Sep 2014 17:51:13 +0200
+
+okteta (4:4.14.0-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 20 Aug 2014 13:35:56 +0200
+
+okteta (4:4.13.97-0ubuntu2) utopic; urgency=medium
+
+  * Work around a link failure when built with -O3 on ppc64el.
+
+ -- Matthias Klose <doko@ubuntu.com>  Tue, 05 Aug 2014 12:56:54 +0200
+
+okteta (4:4.13.97-0ubuntu1) utopic; urgency=medium
+
+  * New upstream beta release RC
+
+ -- Scarlett Clark <scarlett@scarlettgatelyclark.com>  Thu, 31 Jul 2014 12:51:12 -0700
+
+okteta (4:4.13.95-0ubuntu1) utopic; urgency=medium
+
+  [ Scarlett Clark ]
+  * New upstream beta release
+
+  [ Jonathan Riddell ]
+  * Update symbols files for new gcc
+
+ -- Scarlett Clark <scarlett@scarlettgatelyclark.com>  Wed, 30 Jul 2014 18:51:36 +0200
+
+okteta (4:4.13.90-0ubuntu1) utopic; urgency=medium
+
+  * New upstream beta release
+
+ -- Scarlett Clark <scarlett@scarlettgatelyclark.com>  Thu, 24 Jul 2014 23:39:46 +0200
+
+okteta (4:4.13.2-0ubuntu2) utopic; urgency=medium
+
+  * Drop X-Debian-ABI if set to 0 (so we don't have to re-generate all
+    symbol files)
+  * Refresh libkasten2core2.symbols
+
+ -- Philip Muškovac <yofel@kubuntu.org>  Tue, 24 Jun 2014 20:26:02 +0200
+
+okteta (4:4.13.2-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release
+  * Merge with Debian
+   - Add Debian ABI version to libkasten2controllers2abi1
+     due to upstream API abreak
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 17 Jun 2014 10:42:03 +0100
+
+okteta (4:4.13.1-1) unstable; urgency=medium
+
+  [ Adrien Grellier ]
+  * typo in the package's descriptions (Closes: #747153)
+
+  [ Maximiliano Curia ]
+  * New upstream release.
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 22 May 2014 14:38:55 +0200
+
+okteta (4:4.12.4-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Apr 2014 12:23:43 +0200
+
+okteta (4:4.12.3-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Remove patches: okteta-fix_forwarding_to_meanwhile okteta-
+    fix_wrong_include okteta-install_missing_headers
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 04 Mar 2014 00:05:22 +0100
+
+okteta (4:4.12.2-1) experimental; urgency=medium
+
+  * New upstream release.
+
+  [ Pino Toscano ]
+  * Use the sodeps dh addon to simplify the list of library dependencies in
+    okteta-dev.
+  * Add the pkg-config build dependency.
+  * Remove extra okteta dependency from okteta-dev.
+
+  [ Maximiliano Curia ]
+  * Bump Standards-Version to 3.9.5, no changes needed.
+  * Add autopkgtests.
+  * Add abi-compliance-checker info.
+  * Update install files.
+  * New upstream patch: okteta-fix_wrong_include
+  * New upstream patch: okteta-fix_forwarding_to_meanwhile
+  * New upstream patch: okteta-install_missing_headers
+  * Patch bytearraydocument.h after build.
+  * Bump kde-sc-dev-latest build dependency.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 10 Feb 2014 11:31:27 +0100
+
+okteta (4:4.11.3-3) unstable; urgency=low
+
+  * Update armhf symbols.
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 22 Nov 2013 14:45:27 +0100
+
+okteta (4:4.11.3-2) unstable; urgency=low
+
+  * Disable auto test. (Closes: #730037)
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 21 Nov 2013 12:56:26 +0100
+
+okteta (4:4.11.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Typo in libkasten2gui2 symbols file.
+  * Update build dependencies.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 09 Nov 2013 14:25:55 +0100
+
+okteta (4:4.11.2-1) experimental; urgency=low
+
+  * First release of kdesdk after being split by upstream.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 08 Oct 2013 10:59:34 +0200
+
+okteta (4:4.13.0-0ubuntu1) trusty; urgency=medium
+
+  * New upstream KDE Software Compilation release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 10 Apr 2014 22:25:09 +0100
+
+okteta (4:4.12.97-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release candidate
+
+ -- Philip Muškovac <yofel@kubuntu.org>  Wed, 02 Apr 2014 11:52:59 +0200
+
+okteta (4:4.12.95-0ubuntu1) trusty; urgency=medium
+
+  * New upstream beta release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Sun, 23 Mar 2014 12:52:08 +0100
+
+okteta (4:4.12.90-0ubuntu1) trusty; urgency=medium
+
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 19 Mar 2014 11:59:25 +0000
+
+okteta (4:4.12.3-0ubuntu1) trusty; urgency=medium
+
+  * New upstream bugfix release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Tue, 04 Mar 2014 21:13:36 +0100
+
+okteta (4:4.12.2-0ubuntu1) trusty; urgency=medium
+
+  * New upstream bugfix release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Wed, 05 Feb 2014 00:24:31 +0000
+
+okteta (4:4.12.1-0ubuntu1) trusty; urgency=low
+
+  * New upstream bugfix release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Thu, 16 Jan 2014 08:38:04 +0000
+
+okteta (4:4.12.0-0ubuntu1) trusty; urgency=low
+
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 18 Dec 2013 17:40:32 +0000
+
+okteta (4:4.11.97-0ubuntu1) trusty; urgency=low
+
+  * New upstream RC release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 29 Nov 2013 13:39:30 +0000
+
+okteta (4:4.11.95-0ubuntu1) trusty; urgency=low
+
+  * New upstream beta release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Mon, 25 Nov 2013 18:35:24 +0100
+
+okteta (4:4.11.80-0ubuntu1) trusty; urgency=low
+
+  * New upstream beta release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Sat, 23 Nov 2013 17:56:40 +0100
+
+okteta (4:4.11.2-0ubuntu1) saucy; urgency=low
+
+  * New upstream bugfix release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 30 Sep 2013 14:51:15 +0100
+
+okteta (4:4.11.1-0ubuntu1) saucy; urgency=low
+
+  * New upstream bugfix release.
+
+ -- Philip Muškovac <yofel@kubuntu.org>  Fri, 06 Sep 2013 22:37:55 +0100
+
+okteta (4:4.11.0-0ubuntu1) saucy; urgency=low
+
+  [ Howard Chan ]
+  * New upstream release
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 14 Aug 2013 00:40:25 +0100
+
+okteta (4:4.10.97-0ubuntu1) saucy; urgency=low
+
+  * New upstream RC 2 release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 26 Jul 2013 20:01:29 +0100
+
+okteta (4:4.10.95-0ubuntu1) saucy; urgency=low
+
+  * New upstream RC release
+
+ -- Rohan Garg <rohangarg@kubuntu.org>  Fri, 19 Jul 2013 12:33:29 +0000
+
+okteta (4:4.10.90-0ubuntu3) saucy; urgency=low
+
+  * Fix libkasten2gui2.symbols for !armhf
+
+ -- Philip Muškovac <yofel@kubuntu.org>  Sun, 14 Jul 2013 17:58:24 +0200
+
+okteta (4:4.10.90-0ubuntu2) saucy; urgency=low
+
+  * Update debian/libkasten2core2.symbols
+    for all architectures.
+
+ -- Howard Chan <smartboyhw@gmail.com>  Sat, 29 Jun 2013 21:03:37 +0800
+
+okteta (4:4.10.90-0ubuntu1) saucy; urgency=low
+
+  [ Michał Zając ]
+  * New upstream bet release
+
+  [ Philip Muškovac ]
+  * Update debian/libkasten2core2.symbols
+
+ -- Michał Zając <quintasan@kubuntu.org>  Fri, 28 Jun 2013 18:29:11 +0100
+
+okteta (4:4.10.80-0ubuntu2) saucy; urgency=low
+
+  * Update libkasten2core2.symbols for symbols not on ARM
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 25 Jun 2013 15:41:22 +0100
+
+okteta (4:4.10.80-0ubuntu1) saucy; urgency=low
+
+  * New upstream release
+  * Initial package, split from okteta
+  * Add Debian ABI version to libkasten2controllers2abi1 and
+    libkasten2okteta1controllers1abi1 due to upstream API abreak
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 21 Jun 2013 02:30:29 +0100

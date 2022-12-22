@@ -1,0 +1,32 @@
+#!/bin/sh
+
+if [ -z "`which castxml 2> /dev/null`" ]; then
+	echo "You need castxml to use this script.";
+	echo "It is available at https://github.com/CastXML/CastXML";
+	exit;
+fi;
+
+if [ -z "`which xsltproc 2> /dev/null`" ]; then
+	echo "You need xsltporc to use this script.";
+	echo "You can find it in the libxslt package.";
+	exit;
+fi;
+
+if [ $# -lt 2 ]; then
+	echo "Usage: $0 input.cpp output.osd [struct1 struct2 ...]";
+	exit;
+fi;
+
+XSL_CONVERTER="@KDE_INSTALL_DATADIR@/okteta/structures/gccxml-to-osd.xsl"
+
+INPUT_FILE="$1";
+OSD_FILE="$2";
+GCCXML_FILE="${OSD_FILE%.*}.gcc.xml";
+
+shift 2;
+STRUCTS="$@"
+
+castxml --castxml-gccxml "$INPUT_FILE" -o "$GCCXML_FILE" || { echo "castxml failed"; exit; };
+xsltproc --stringparam "structs" "$STRUCTS" "$XSL_CONVERTER" "$GCCXML_FILE" > "$OSD_FILE" || echo "xsltproc failed";
+
+rm "$GCCXML_FILE";

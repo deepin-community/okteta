@@ -1,0 +1,233 @@
+# SymbolsHelper-Confirmed: 5:0.26.2 amd64
+libOkteta3Core.so.0 libokteta3core0 #MINVER#
+* Build-Depends-Package: okteta-dev
+ _ZN6Okteta10ValueCodec11createCodecENS_11ValueCodingE@Base 4:14.12.0
+ _ZN6Okteta10ValueCodecD0Ev@Base 4:14.12.0
+ _ZN6Okteta10ValueCodecD1Ev@Base 4:14.12.0
+ _ZN6Okteta10ValueCodecD2Ev@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel10setMaxSizeEi@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel11setBookmarkEjRKNS_8BookmarkE@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel11setModifiedEb@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel11setReadOnlyEb@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel12addBookmarksERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel13setAutoDeleteEb@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel14bookmarksAddedERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel14setKeepsMemoryEb@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel15removeBookmarksERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel16bookmarksRemovedERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel17bookmarksModifiedERK7QVectorIiE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel17bookmarksModifiedEb@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel18removeAllBookmarksEv@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel21signalContentsChangedEii@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel4fillEhii@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel4swapEiRKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel6insertEiPKhi@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel6removeERKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel7replaceERKNS_11NumberRangeIiiEEPKhi@Base 5:0.26.2
+ _ZN6Okteta14ByteArrayModel7setByteEih@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModel7setDataEPhiib@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC1EPKhiP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC1EPhiibP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC1EiiP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC2EPKhiP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC2EPhiibP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelC2EiiP7QObject@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelD0Ev@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelD1Ev@Base 4:14.12.0
+ _ZN6Okteta14ByteArrayModelD2Ev@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:17.08.1
+ _ZN6Okteta18FileByteArrayModel11qt_metacastEPKc@Base 4:17.08.1
+ _ZN6Okteta18FileByteArrayModel11setModifiedEb@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel11setReadOnlyEb@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel16staticMetaObjectE@Base 4:17.08.1
+ _ZN6Okteta18FileByteArrayModel4fillEhii@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel4openERK7QString@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel4swapEiRKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta18FileByteArrayModel5closeEv@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel6insertEiPKhi@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModel6removeERKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta18FileByteArrayModel7replaceERKNS_11NumberRangeIiiEEPKhi@Base 5:0.26.2
+ _ZN6Okteta18FileByteArrayModel7setByteEih@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModelC1EiiP7QObject@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModelC2EiiP7QObject@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModelD0Ev@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModelD1Ev@Base 4:14.12.0
+ _ZN6Okteta18FileByteArrayModelD2Ev@Base 4:14.12.0
+ _ZN6Okteta21TextByteArrayAnalyzerC1EPKNS_22AbstractByteArrayModelEPKNS_9CharCodecE@Base 5:0.26.2
+ _ZN6Okteta21TextByteArrayAnalyzerC2EPKNS_22AbstractByteArrayModelEPKNS_9CharCodecE@Base 5:0.26.2
+ _ZN6Okteta21TextByteArrayAnalyzerD1Ev@Base 5:0.26.2
+ _ZN6Okteta21TextByteArrayAnalyzerD2Ev@Base 5:0.26.2
+ _ZN6Okteta22AbstractByteArrayModel11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel11setReadOnlyEb@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel15contentsChangedERKNS_22ArrayChangeMetricsListE@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel15modifiedChangedEb@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel15readOnlyChangedEb@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel6insertEiPKhi@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModel6removeERKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta22AbstractByteArrayModelC1EP7QObject@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModelC1EPNS_29AbstractByteArrayModelPrivateEP7QObject@Base 5:0.26.2
+ _ZN6Okteta22AbstractByteArrayModelC2EP7QObject@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModelC2EPNS_29AbstractByteArrayModelPrivateEP7QObject@Base 5:0.26.2
+ _ZN6Okteta22AbstractByteArrayModelD0Ev@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModelD1Ev@Base 4:14.12.0
+ _ZN6Okteta22AbstractByteArrayModelD2Ev@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel11changesDoneERK7QVectorINS_15ByteArrayChangeEEii@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel11qt_metacastEPKc@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel11setBookmarkEjRKNS_8BookmarkE@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel11setModifiedEb@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel11setReadOnlyEb@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel12addBookmarksERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel14bookmarksAddedERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel15removeBookmarksERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel16bookmarksRemovedERK7QVectorINS_8BookmarkEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel17bookmarksModifiedERK7QVectorIiE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel17bookmarksModifiedEb@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel17openGroupedChangeERK7QString@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel18closeGroupedChangeERK7QString@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel18headVersionChangedEi@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel18removeAllBookmarksEv@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel19cancelGroupedChangeEv@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel22revertToVersionByIndexEi@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel22revertedToVersionIndexEi@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel29headVersionDescriptionChangedERK7QString@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel4fillEhii@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel4swapEiRKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel6insertEiPKhi@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel6removeERKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel7replaceERKNS_11NumberRangeIiiEEPKhi@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModel7setByteEih@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel7setDataERK10QByteArray@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModel9doChangesERK7QVectorINS_15ByteArrayChangeEEii@Base 5:0.26.2
+ _ZN6Okteta24PieceTableByteArrayModelC1ERK10QByteArrayP7QObject@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelC1EihP7QObject@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelC2ERK10QByteArrayP7QObject@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelC2EihP7QObject@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelD0Ev@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelD1Ev@Base 4:14.12.0
+ _ZN6Okteta24PieceTableByteArrayModelD2Ev@Base 4:14.12.0
+ _ZN6Okteta9CharCodec10codecNamesEv@Base 4:14.12.0
+ _ZN6Okteta9CharCodec11createCodecENS_10CharCodingE@Base 4:14.12.0
+ _ZN6Okteta9CharCodec11createCodecERK7QString@Base 4:14.12.0
+ _ZNK6Okteta10ValueCodec6decodeEPhRK7QStringj@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel10autoDeleteEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel10bookmarkAtEj@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel10isModifiedEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel10isReadOnlyEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel10metaObjectEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel11bookmarkForEi@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel11keepsMemoryEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel14bookmarksCountEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel19containsBookmarkForEi@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel28createBookmarksConstIteratorEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel4byteEi@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel4dataEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel4sizeEv@Base 4:14.12.0
+ _ZNK6Okteta14ByteArrayModel7maxSizeEv@Base 4:14.12.0
+ _ZNK6Okteta18FileByteArrayModel10isModifiedEv@Base 4:14.12.0
+ _ZNK6Okteta18FileByteArrayModel10isReadOnlyEv@Base 4:14.12.0
+ _ZNK6Okteta18FileByteArrayModel10metaObjectEv@Base 4:17.08.1
+ _ZNK6Okteta18FileByteArrayModel4byteEi@Base 4:14.12.0
+ _ZNK6Okteta18FileByteArrayModel4sizeEv@Base 4:14.12.0
+ _ZNK6Okteta18FileByteArrayModel6isOpenEv@Base 4:14.12.0
+ _ZNK6Okteta21TextByteArrayAnalyzer10isWordCharEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer11wordSectionEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer14indexOfWordEndEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer16indexOfWordStartEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer20indexOfNextWordStartEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer21indexOfLeftWordSelectEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer22indexOfRightWordSelectEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer24indexOfPreviousWordStartEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer26indexOfBeforeNextWordStartEi@Base 5:0.26.2
+ _ZNK6Okteta21TextByteArrayAnalyzer4textEii@Base 5:0.26.2
+ _ZNK6Okteta22AbstractByteArrayModel10isReadOnlyEv@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel10metaObjectEv@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel11lastIndexOfEPKhiii@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel13searchedBytesEi@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel22indexOfCaseInsensitiveEPKNS_9CharCodecERK10QByteArrayii@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel26lastIndexOfCaseInsensitiveEPKNS_9CharCodecERK10QByteArrayii@Base 4:14.12.0
+ _ZNK6Okteta22AbstractByteArrayModel6copyToEPhRKNS_11NumberRangeIiiEE@Base 5:0.26.2
+ _ZNK6Okteta22AbstractByteArrayModel7indexOfEPKhiii@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel10bookmarkAtEj@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel10isModifiedEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel10isReadOnlyEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel10metaObjectEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel11bookmarkForEi@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel11initialDataEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel12versionCountEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel12versionIndexEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel14bookmarksCountEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel18versionDescriptionEi@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel19containsBookmarkForEi@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel28createBookmarksConstIteratorEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel4byteEi@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel4sizeEv@Base 4:14.12.0
+ _ZNK6Okteta24PieceTableByteArrayModel7changesEii@Base 4:14.12.0
+ _ZTI11QSharedData@Base 4:15.04.0
+ _ZTIN6Okteta10ValueCodecE@Base 4:15.04.0
+ _ZTIN6Okteta14ByteArrayModelE@Base 4:15.04.0
+ _ZTIN6Okteta18FileByteArrayModelE@Base 4:15.04.0
+ _ZTIN6Okteta22AbstractByteArrayModelE@Base 4:15.04.0
+ _ZTIN6Okteta24PieceTableByteArrayModelE@Base 4:15.04.0
+ _ZTIN6Okteta9CharCodecE@Base 4:15.04.0
+ _ZTS11QSharedData@Base 4:15.04.0
+ _ZTSN6Okteta10ValueCodecE@Base 4:15.04.0
+ _ZTSN6Okteta14ByteArrayModelE@Base 4:15.04.0
+ _ZTSN6Okteta18FileByteArrayModelE@Base 4:15.04.0
+ _ZTSN6Okteta22AbstractByteArrayModelE@Base 4:15.04.0
+ _ZTSN6Okteta24PieceTableByteArrayModelE@Base 4:15.04.0
+ _ZTSN6Okteta9CharCodecE@Base 4:15.04.0
+ _ZTVN6Okteta10ValueCodecE@Base 4:14.12.0
+ _ZTVN6Okteta14ByteArrayModelE@Base 4:14.12.0
+ _ZTVN6Okteta18FileByteArrayModelE@Base 4:14.12.0
+ _ZTVN6Okteta22AbstractByteArrayModelE@Base 4:14.12.0
+ _ZTVN6Okteta24PieceTableByteArrayModelE@Base 4:14.12.0
+ (arch=!armel !armhf)_ZTVN6Okteta9CharCodecE@Base 5:0.25.4
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::addBookmarks(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarkAt(unsigned int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarkFor(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarksAdded(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarksCount() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarksModified(QVector<int> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarksModified(bool)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::bookmarksRemoved(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::containsBookmarkFor(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::createBookmarksConstIterator() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::removeAllBookmarks()@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::removeBookmarks(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::setBookmark(unsigned int, Okteta::Bookmark const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::ByteArrayModel::~ByteArrayModel()@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::addBookmarks(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarkAt(unsigned int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarkFor(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarksAdded(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarksCount() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarksModified(QVector<int> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarksModified(bool)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::bookmarksRemoved(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::cancelGroupedChange()@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::changes(int, int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::changesDone(QVector<Okteta::ByteArrayChange> const&, int, int)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::closeGroupedChange(QString const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::containsBookmarkFor(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::createBookmarksConstIterator() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::doChanges(QVector<Okteta::ByteArrayChange> const&, int, int)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::headVersionChanged(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::headVersionDescriptionChanged(QString const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::initialData() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::openGroupedChange(QString const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::removeAllBookmarks()@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::removeBookmarks(QVector<Okteta::Bookmark> const&)@Base" 5:0.26.2
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::revertToVersionByIndex(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::revertedToVersionIndex(int)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::setBookmark(unsigned int, Okteta::Bookmark const&)@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::versionCount() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::versionDescription(int) const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::versionIndex() const@Base" 4:14.12.0
+ (c++)"non-virtual thunk to Okteta::PieceTableByteArrayModel::~PieceTableByteArrayModel()@Base" 4:14.12.0

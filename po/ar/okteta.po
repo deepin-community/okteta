@@ -1,0 +1,99 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Youness BOUTYOUR <niceboy@linuxac.org>, 2008.
+# Youness BOUTYOUR <niceboy120@gmail.com>, 2008.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010.
+# Abdalrahim Fakhouri <abdilra7eem@yahoo.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: okteta\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-02-02 09:50+0100\n"
+"PO-Revision-Date: 2012-02-09 17:27+0200\n"
+"Last-Translator: Abdalrahim Fakhouri <abdilra7eem@yahoo.com>\n"
+"Language-Team: Arabic <linuxac-kde-arabic-team@googlegroups.com>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 1.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "يونس بوطيور,زايد السعيدي"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "niceboy120@gmail.com,zayed.alsaidi@gmail.com"
+
+#: about.cpp:16
+#, kde-format
+msgid "Okteta"
+msgstr "أكتيتا"
+
+#: about.cpp:18
+#, kde-format
+msgid "Hex editor"
+msgstr "محرّر ستّ-عشريّ"
+
+#: about.cpp:20
+#, fuzzy, kde-format
+#| msgid "Friedrich W. H. Kossebau"
+msgid "2006-%1 Friedrich W. H. Kossebau"
+msgstr "Friedrich W. H. Kossebau"
+
+#: about.cpp:21
+#, kde-format
+msgid "Edit the raw data of files"
+msgstr "حرر البيانات الخام للملفات"
+
+#: about.cpp:26
+#, kde-format
+msgid "Friedrich W. H. Kossebau"
+msgstr "Friedrich W. H. Kossebau"
+
+#: about.cpp:27
+#, kde-format
+msgid "Author"
+msgstr "المؤلف"
+
+#: about.cpp:29
+#, kde-format
+msgctxt "Author"
+msgid "Alexander Richardson"
+msgstr "Alexander Richardson"
+
+#: about.cpp:30
+#, kde-format
+msgctxt "Task description"
+msgid "Structures tool"
+msgstr "أداة البنى"
+
+#. i18n: ectx: Menu (permission)
+#: oktetaui.rc:15
+#, kde-format
+msgctxt "@title:menu"
+msgid "Permissions"
+msgstr "الصلاحيات"
+
+#. i18n: ectx: Menu (windows)
+#: oktetaui.rc:69
+#, kde-format
+msgid "&Windows"
+msgstr "ال&نوافذ"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: oktetaui.rc:82
+#, kde-format
+msgid "Main Toolbar"
+msgstr "شريط الأدوات الرئيسي"
+
+#: program.cpp:90
+#, fuzzy, kde-format
+#| msgid "File(s) to load"
+msgid "File(s) to load."
+msgstr "ملف(ات) للتحميل"
