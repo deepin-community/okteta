@@ -40,10 +40,6 @@ oktetagui_add_sublibrary(libcolumnsview
         AbstractColumnRenderer
         ColumnsView
         PixelMetrics # TODO: this header needs to be redone
-
-    PRIVATE
-        AbstractColumnStylist
-        AbstractColumnRenderer
 )
 
 okteta_add_sublibrary(Gui  NAMESPACE Okteta
@@ -79,6 +75,7 @@ okteta_add_sublibrary(Gui  NAMESPACE Okteta
     PRIVATE
         ByteArrayTableCursor
         Cursor
+        FontScalingZoomState
 )
 
 
@@ -117,6 +114,6 @@ okteta_add_pkgconfig(Gui NAMESPACE Okteta
 )
 
 if(BUILD_TESTING)
-  add_subdirectory( test )
+    add_subdirectory(tests)
 #   add_library( testoktetacore STATIC ${oktetagui_LIB_SRCS} )
 endif()

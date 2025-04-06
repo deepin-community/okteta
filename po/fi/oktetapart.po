@@ -4,13 +4,13 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2014.
-# Tommi Nieminen <translator@legisign.org>, 2019, 2020.
+# Tommi Nieminen <translator@legisign.org>, 2019, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: oktetapart\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
-"PO-Revision-Date: 2020-08-14 20:52+0300\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
+"PO-Revision-Date: 2021-11-10 18:20+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -18,8 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-POT-Import-Date: 2012-12-01 22:25:35+0000\n"
-"X-Generator: Lokalize 20.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -77,10 +75,9 @@ msgid "Embedded hex editor"
 msgstr "Upotettu heksadesimaalimuokkain"
 
 #: partfactory.cpp:37
-#, fuzzy, kde-format
-#| msgid "Copyright 2003-2020 Friedrich W. H. Kossebau"
+#, kde-format
 msgid "Copyright 2003-%1 Friedrich W. H. Kossebau"
-msgstr "2003–2020 Friedrich W. H. Kossebau"
+msgstr "Tekijänoikeudet 2003–%1 Friedrich W. H. Kossebau"
 
 #: partfactory.cpp:39
 #, kde-format
@@ -91,3 +88,100 @@ msgstr "Friedrich W. H. Kossebau"
 #, kde-format
 msgid "Author"
 msgstr "Tekijä"
+
+#, fuzzy
+#~| msgid "&Value Coding"
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "&Arvojen koodaus"
+
+#, fuzzy
+#~| msgid "&Hexadecimal"
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "&Heksadesimaalinen"
+
+#, fuzzy
+#~| msgid "&Decimal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "&Desimaalinen"
+
+#, fuzzy
+#~| msgid "&Octal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "&Oktaalinen"
+
+#, fuzzy
+#~| msgid "&Binary"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "&Binäärinen"
+
+#, fuzzy
+#~| msgid "&Char Encoding"
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "&Merkkikoodaus"
+
+#, fuzzy
+#~| msgid "Show &Unprintable Chars (<32)"
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "Näytä t&ulostuskelvottomat merkit (<32)"
+
+#, fuzzy
+#~| msgid "&Line Offset"
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "&Rivin siirros"
+
+#, fuzzy
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "&Arvojen sarake"
+
+#, fuzzy
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "&Merkkien sarake"
+
+#, fuzzy
+#~| msgid "&Resize Style"
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "&Muuta tyylin kokoa"
+
+#, fuzzy
+#~| msgid "&No Resize"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "&Älä salli koon muutosta"
+
+#, fuzzy
+#~| msgid "&Lock Groups"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "&Lukitse ryhmät"
+
+#, fuzzy
+#~| msgid "&Full Size Usage"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "&Täysikokoinen käyttö"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "&Sarakkeet"
+
+#, fuzzy
+#~| msgid "&Both Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "&Molemmat sarakkeet"

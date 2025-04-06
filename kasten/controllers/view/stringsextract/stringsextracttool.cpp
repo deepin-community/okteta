@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2007-2009, 2012 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2007-2009, 2012, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -19,20 +19,30 @@
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/ArrayChangeMetricsList>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QApplication>
 
 namespace Kasten {
 
-static constexpr int DefaultMinLength = 3;
+// C++11 needs a definition for static constexpr members
+constexpr char StringsExtractTool::ConfigGroupId[];
+constexpr char StringsExtractTool::MinimumLengthConfigKey[];
+
+constexpr int StringsExtractTool::DefaultMinLength;
+
 
 StringsExtractTool::StringsExtractTool()
     : mExtractedStringsUptodate(false)
     , mSourceByteArrayModelUptodate(false)
-    , mMinLength(DefaultMinLength)
 {
     setObjectName(QStringLiteral("Strings"));
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    mMinLength = configGroup.readEntry(MinimumLengthConfigKey, DefaultMinLength);
 }
 
 StringsExtractTool::~StringsExtractTool() = default;
@@ -57,11 +67,21 @@ QString StringsExtractTool::title() const { return i18nc("@title:window of the t
 // voll strings, auch mit Leerzeichen
 void StringsExtractTool::setTargetModel(AbstractModel* model)
 {
-    if (mByteArrayView) {
-        mByteArrayView->disconnect(this);
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (mByteArrayView) {
+        // disconnect explicitly from all connects but QObject::detroyed,
+        // for the case mSourceByteArrayView is mByteArrayView
+        disconnect(mByteArrayView,  &ByteArrayView::selectedDataChanged,
+                   this, &StringsExtractTool::onSelectionChanged);
+        disconnect(mByteArrayView, &ByteArrayView::offsetCodingChanged,
+                   this, &StringsExtractTool::offsetCodingChanged);
+    }
+
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -93,7 +113,15 @@ int StringsExtractTool::offsetCoding() const { return (mByteArrayView ? mByteArr
 
 void StringsExtractTool::setMinLength(int minLength)
 {
+    if (mMinLength == minLength) {
+        return;
+    }
+
     mMinLength = minLength;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(MinimumLengthConfigKey, mMinLength);
+
     checkUptoDate();
     emit uptodateChanged(mExtractedStringsUptodate);
 }
@@ -197,3 +225,5 @@ void StringsExtractTool::extractStrings()
 }
 
 }
+
+#include "moc_stringsextracttool.cpp"

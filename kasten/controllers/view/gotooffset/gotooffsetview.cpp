@@ -10,19 +10,51 @@
 
 // tool
 #include "gotooffsettool.hpp"
-// Okteta Kasten gui
-#include <Kasten/Okteta/AddressComboBox>
-#include <Kasten/Okteta/AddressValidator>
+// libconfigentries
+#include <addresscomboboxcodingconfigentry.hpp>
+#include <directionconfigentry.hpp>
 // KF
-#include <QPushButton>
 #include <KGuiItem>
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
+#include <QPushButton>
 #include <QCheckBox>
 #include <QLabel>
-#include <QLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
+
+template <>
+inline Kasten::GotoOffsetView::GotoDirection KConfigGroup::readEntry(const char *key, const Kasten::GotoOffsetView::GotoDirection &defaultValue) const
+{
+    return static_cast<Kasten::GotoOffsetView::GotoDirection>(KConfigGroup::readEntry(key, static_cast<Kasten::Direction>(defaultValue)));
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const Kasten::GotoOffsetView::GotoDirection &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    writeEntry(key, static_cast<Kasten::Direction>(value), flags);
+}
+
 
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char GotoOffsetView::ConfigGroupId[];
+
+constexpr char GotoOffsetView::OffsetCodingConfigKey[];
+constexpr char GotoOffsetView::FromCursorConfigKey[];
+constexpr char GotoOffsetView::ExtendSelectionConfigKey[];
+constexpr char GotoOffsetView::DirectionConfigKey[];
+
+constexpr bool GotoOffsetView::DefaultFromCursor;
+constexpr bool GotoOffsetView::DefaultExtendSelection;
+constexpr GotoOffsetView::GotoDirection GotoOffsetView::DefaultDirection;
+constexpr Okteta::AddressComboBox::Coding GotoOffsetView::DefaultOffsetCoding;
+
 
 GotoOffsetView::GotoOffsetView(GotoOffsetTool* tool, QWidget* parent)
     : AbstractToolWidget(parent)
@@ -35,7 +67,7 @@ GotoOffsetView::GotoOffsetView(GotoOffsetTool* tool, QWidget* parent)
     auto* offsetLayout = new QHBoxLayout();
     offsetLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel* label = new QLabel(i18nc("@label:listbox", "O&ffset:"), this);
+    auto* label = new QLabel(i18nc("@label:listbox", "O&ffset:"), this);
     mAddressEdit = new Okteta::AddressComboBox(this);
     connect(mAddressEdit, &Okteta::AddressComboBox::addressChanged,
             mTool, &GotoOffsetTool::setTargetOffset);
@@ -108,6 +140,20 @@ GotoOffsetView::GotoOffsetView(GotoOffsetTool* tool, QWidget* parent)
     setTabOrder(mBackwardsCheckBox, mExtendSelectionCheckBox);
     setTabOrder(mExtendSelectionCheckBox, mGotoButton);
 
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    const bool fromCursor = configGroup.readEntry(FromCursorConfigKey, DefaultFromCursor);
+    mAtCursorCheckBox->setChecked(fromCursor);
+
+    const GotoDirection direction = configGroup.readEntry(DirectionConfigKey, DefaultDirection);
+    mBackwardsCheckBox->setChecked(direction == GotoBackward);
+
+    const bool extendSelection = configGroup.readEntry(ExtendSelectionConfigKey, DefaultExtendSelection);
+    mExtendSelectionCheckBox->setChecked(extendSelection);
+
+    const Okteta::AddressComboBox::Coding offsetCoding = configGroup.readEntry(OffsetCodingConfigKey, DefaultOffsetCoding);
+    mAddressEdit->setFormat(offsetCoding);
+
     connect(mTool, &GotoOffsetTool::isApplyableChanged,
             this, &GotoOffsetView::onApplyableChanged);
 
@@ -128,28 +174,35 @@ void GotoOffsetView::onGotoButtonClicked()
     // TODO: collect recently used offset in tool instead?
     mAddressEdit->rememberCurrentAddress();
 
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(OffsetCodingConfigKey, static_cast<Okteta::AddressComboBox::Coding>(mAddressEdit->format()));
+    configGroup.writeEntry(DirectionConfigKey,
+                           mBackwardsCheckBox->isChecked() ? GotoBackward : GotoForward);
+    configGroup.writeEntry(ExtendSelectionConfigKey, mExtendSelectionCheckBox->isChecked());
+    configGroup.writeEntry(FromCursorConfigKey, mAtCursorCheckBox->isChecked());
+
     mTool->gotoOffset();
 //     emit toolUsed();
 }
 
 void GotoOffsetView::onAddressTypeChanged(int addressType)
 {
-    const bool isNotExpression = (mAddressEdit->format() != 2);
+    const bool isNotExpression = (mAddressEdit->format() != Okteta::AddressComboBox::ExpressionCoding);
     if (isNotExpression
-        || addressType == Okteta::AddressValidator::InvalidAddressType) {
+        || addressType == Okteta::AddressComboBox::InvalidAddressType) {
         return;
     }
 
     bool fromCursor = false;
     bool backwards = false;
 
-    if (addressType == Okteta::AddressValidator::AbsoluteAddress) {
+    if (addressType == Okteta::AddressComboBox::AbsoluteAddress) {
         fromCursor = false;
         backwards = false; // TODO: there is no way yet for: absolute from end
-    } else if (addressType == Okteta::AddressValidator::RelativeForwards) {
+    } else if (addressType == Okteta::AddressComboBox::RelativeForwards) {
         fromCursor = true;
         backwards = false;
-    } else if (addressType == Okteta::AddressValidator::RelativeBackwards) {
+    } else if (addressType == Okteta::AddressComboBox::RelativeBackwards) {
         fromCursor = true;
         backwards = true;
     }
@@ -162,11 +215,12 @@ void GotoOffsetView::onAddressTypeChanged(int addressType)
 
 void GotoOffsetView::onFormatChanged(int formatIndex)
 {
-    // TODO: make sure Expr is always at index 2
-    const bool isNotExpression = (formatIndex != 2);
+    const bool isNotExpression = (formatIndex != Okteta::AddressComboBox::ExpressionCoding);
 
     mAtCursorCheckBox->setEnabled(isNotExpression);
     mBackwardsCheckBox->setEnabled(isNotExpression);
 }
 
 }
+
+#include "moc_gotooffsetview.cpp"

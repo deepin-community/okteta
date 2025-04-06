@@ -10,7 +10,6 @@
 
 // lib
 #include "bytearraytableranges.hpp"
-#include "bytearraytablecursor.hpp"
 #include "bytearraytablelayout.hpp"
 #include "helper.hpp"
 // lib
@@ -271,7 +270,7 @@ void ByteArrayRowColumnRendererPrivate::recalcX()
 {
     Q_Q(ByteArrayRowColumnRenderer);
 
-    mSpacingTrigger = noOfGroupedBytes() > 0 ? noOfGroupedBytes() - 1 : mLastLinePos + 1; // last ensures to never trigger the spacing
+    const int spacingTrigger = noOfGroupedBytes() > 0 ? noOfGroupedBytes() - 1 : mLastLinePos + 1; // last ensures to never trigger the spacing
 
     PixelX newWidth = 0;
     Size groupedBytes = 0;
@@ -284,7 +283,7 @@ void ByteArrayRowColumnRendererPrivate::recalcX()
         *PRX = newWidth - 1;
 
         // is there a space behind the actual byte (if it is not the last)?
-        if (groupedBytes == mSpacingTrigger) {
+        if (groupedBytes == spacingTrigger) {
             newWidth += mGroupSpacingWidth;
             groupedBytes = -1;
         } else {
@@ -576,7 +575,10 @@ void ByteArrayRowColumnRendererPrivate::renderLinePositions(QPainter* painter, L
                 markingFlag &= ~StartsBefore;
             }
             // TODO: hack: needed because otherwise the spacing will be plain
-            else if (positionsPart.start() == firstLinePosition && selectedRange.includes(byteIndizesPart.start())) {
+            else if ((positionsPart.start() == firstLinePosition) &&
+                     selectedRange.includes(byteIndizesPart.start()) &&
+                     (selectedRange.startsBefore(byteIndizesPart) ||
+                      (selectionFlag & StartsBefore))) {
                 renderSelectionSpaceBehind(painter, firstLinePosition - 1);
             }
 
@@ -584,7 +586,10 @@ void ByteArrayRowColumnRendererPrivate::renderLinePositions(QPainter* painter, L
                 markingFlag &= ~EndsLater;
             }
             // TODO: hack: needed because otherwise the spacing will be plain
-            else if (positionsPart.end() == linePositions.end() && selectedRange.includes(byteIndizesPart.end())) {
+            else if ((positionsPart.end() == linePositions.end()) &&
+                     selectedRange.includes(byteIndizesPart.end()) &&
+                     (selectedRange.endsBehind(byteIndizesPart) ||
+                      (selectionFlag & EndsLater))) {
                 renderSelectionSpaceBehind(painter, positionsPart.end());
             }
 
@@ -671,7 +676,7 @@ void ByteArrayRowColumnRendererPrivate::renderPlain(QPainter* painter, const Lin
     }
 }
 
-void ByteArrayRowColumnRendererPrivate::renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag)
+void ByteArrayRowColumnRendererPrivate::renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag)
 {
     BookmarksConstIterator bit;
     Address nextBookmarkOffset = -1;
@@ -723,7 +728,7 @@ void ByteArrayRowColumnRendererPrivate::renderSelectionSpaceBehind(QPainter* pai
     renderSpaceBehind(painter, colorScheme.background(), linePosition);
 }
 
-void ByteArrayRowColumnRendererPrivate::renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag)
+void ByteArrayRowColumnRendererPrivate::renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag)
 {
     const QPalette& palette = mStylist->palette();
 
@@ -752,7 +757,7 @@ void ByteArrayRowColumnRendererPrivate::renderBookmark(QPainter* painter, const 
     painter->fillRect(1, 1, mByteWidth - 2, q->lineHeight() - 2, brush);
 }
 
-void ByteArrayRowColumnRendererPrivate::renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, int flag)
+void ByteArrayRowColumnRendererPrivate::renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, unsigned int flag)
 {
     Q_Q(ByteArrayRowColumnRenderer);
 
@@ -848,7 +853,6 @@ void ByteArrayRowColumnRendererPrivate::renderFramedByte(QPainter* painter,
 
 void ByteArrayRowColumnRendererPrivate::renderCursor(QPainter* painter, Address byteIndex, AbstractByteArrayView::CodingTypeId codingId)
 {
-    Q_UNUSED(codingId)
     const Byte byte = (byteIndex > -1) ? mByteArrayModel->byte(byteIndex) : EmptyByte;
     const Character byteChar = mCharCodec->decode(byte);
 

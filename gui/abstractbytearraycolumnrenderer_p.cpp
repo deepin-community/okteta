@@ -11,7 +11,6 @@
 // lib
 #include "oktetagui.hpp"
 #include "bytearraytableranges.hpp"
-#include "bytearraytablecursor.hpp"
 #include "bytearraytablelayout.hpp"
 #include "helper.hpp"
 // lib
@@ -140,7 +139,7 @@ void AbstractByteArrayColumnRendererPrivate::recalcX()
 {
     Q_Q(AbstractByteArrayColumnRenderer);
 
-    mSpacingTrigger = noOfGroupedBytes() > 0 ? noOfGroupedBytes() - 1 : mLastLinePos + 1; // last ensures to never trigger the spacing
+    const int spacingTrigger = noOfGroupedBytes() > 0 ? noOfGroupedBytes() - 1 : mLastLinePos + 1; // last ensures to never trigger the spacing
 
     PixelX newWidth = 0;
     Size groupedBytes = 0;
@@ -153,7 +152,7 @@ void AbstractByteArrayColumnRendererPrivate::recalcX()
         *PRX = newWidth - 1;
 
         // is there a space behind the actual byte (if it is not the last)?
-        if (groupedBytes == mSpacingTrigger) {
+        if (groupedBytes == spacingTrigger) {
             newWidth += mGroupSpacingWidth;
             groupedBytes = -1;
         } else {
@@ -430,7 +429,10 @@ void AbstractByteArrayColumnRendererPrivate::renderLinePositions(QPainter* paint
                 markingFlag &= ~StartsBefore;
             }
             // TODO: hack: needed because otherwise the spacing will be plain
-            else if (positionsPart.start() == firstLinePosition && selectedRange.includes(byteIndizesPart.start())) {
+            else if ((positionsPart.start() == firstLinePosition) &&
+                     selectedRange.includes(byteIndizesPart.start()) &&
+                     (selectedRange.startsBefore(byteIndizesPart) ||
+                      (selectionFlag & StartsBefore))) {
                 renderSelectionSpaceBehind(painter, firstLinePosition - 1);
             }
 
@@ -438,7 +440,10 @@ void AbstractByteArrayColumnRendererPrivate::renderLinePositions(QPainter* paint
                 markingFlag &= ~EndsLater;
             }
             // TODO: hack: needed because otherwise the spacing will be plain
-            else if (positionsPart.end() == linePositions.end() && selectedRange.includes(byteIndizesPart.end())) {
+            else if ((positionsPart.end() == linePositions.end()) &&
+                     selectedRange.includes(byteIndizesPart.end()) &&
+                     (selectedRange.endsBehind(byteIndizesPart) ||
+                      (selectionFlag & EndsLater))) {
                 renderSelectionSpaceBehind(painter, positionsPart.end());
             }
 
@@ -525,7 +530,7 @@ void AbstractByteArrayColumnRendererPrivate::renderPlain(QPainter* painter, cons
     }
 }
 
-void AbstractByteArrayColumnRendererPrivate::renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag)
+void AbstractByteArrayColumnRendererPrivate::renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag)
 {
     BookmarksConstIterator bit;
     Address nextBookmarkOffset = -1;
@@ -577,7 +582,7 @@ void AbstractByteArrayColumnRendererPrivate::renderSelectionSpaceBehind(QPainter
     renderSpaceBehind(painter, colorScheme.background(), linePosition);
 }
 
-void AbstractByteArrayColumnRendererPrivate::renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag)
+void AbstractByteArrayColumnRendererPrivate::renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag)
 {
     const QPalette& palette = mStylist->palette();
 
@@ -606,7 +611,7 @@ void AbstractByteArrayColumnRendererPrivate::renderBookmark(QPainter* painter, c
     painter->fillRect(1, 1, mByteWidth - 2, q->lineHeight() - 2, brush);
 }
 
-void AbstractByteArrayColumnRendererPrivate::renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, int flag)
+void AbstractByteArrayColumnRendererPrivate::renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, unsigned int flag)
 {
     Q_Q(AbstractByteArrayColumnRenderer);
 

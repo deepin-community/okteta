@@ -12,18 +12,16 @@
 // Qt
 #include <QWidget>
 
-class ContainedStringTableModel;
-
-class QPushButton;
-
 class QTreeView;
 class QSortFilterProxyModel;
 class QModelIndex;
 class QSpinBox;
+class QAction;
 
 namespace Kasten {
 
 class StringsExtractTool;
+class ContainedStringTableModel;
 
 class StringsExtractView : public QWidget
 {
@@ -50,9 +48,6 @@ private Q_SLOTS: // tool
     void onApplyableChanged(bool isApplyable);
     void onCanHighlightStringChanged(bool isSelectable);
 
-private Q_SLOTS:
-    void setFixedFontByGlobalSettings();
-
 private:
     StringsExtractTool* mTool;
 
@@ -61,9 +56,9 @@ private:
 
     QTreeView* mContainedStringTableView;
     QSpinBox* mMinLengthSpinBox;
-    QPushButton* mUpdateButton;
-    QPushButton* mCopyButton;
-    QPushButton* mGotoButton;
+    QAction* mUpdateAction;
+    QAction* mCopyAction;
+    QAction* mGotoAction;
 };
 
 inline StringsExtractTool* StringsExtractView::tool() const { return mTool; }

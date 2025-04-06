@@ -9,10 +9,9 @@
 #include "mousepaster.hpp"
 
 // lib
-#include <bytearraycolumnview.hpp>
+#include <abstractbytearrayview.hpp>
 #include <bytearraytableranges.hpp>
 #include <bytearraytablecursor.hpp>
-#include <bytearraytablelayout.hpp>
 // Qt
 #include <QMouseEvent>
 

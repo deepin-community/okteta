@@ -24,15 +24,19 @@ SetRemoteController::SetRemoteController(DocumentSyncManager* syncManager, KXMLG
     : mSyncManager(syncManager)
 {
     mSaveAsAction = KStandardAction::saveAs(this, &SetRemoteController::saveAs, this);
+    mSaveAsAction->setEnabled(false);
 
     guiClient->actionCollection()->addAction(mSaveAsAction->objectName(), mSaveAsAction);
-
-    setTargetModel(nullptr);
 }
 
 void SetRemoteController::setTargetModel(AbstractModel* model)
 {
-    mDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
+        return;
+    }
+
+    mDocument = document;
 
     const bool canBeSaved = mDocument ?
                             (mDocument->synchronizer() ||
@@ -48,3 +52,5 @@ void SetRemoteController::saveAs()
 }
 
 }
+
+#include "moc_setremotecontroller.cpp"

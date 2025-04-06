@@ -13,6 +13,7 @@
 #include <Okteta/OktetaCore>
 // Qt
 #include <QAbstractTableModel>
+#include <QFont>
 
 namespace Okteta {
 class CharCodec;
@@ -33,6 +34,10 @@ public:
         CountId = 2,
         PercentId = 3,
         NoOfIds = 4 // TODO: what pattern is usually used to mark number of ids?
+    };
+
+    enum Roles {
+        SortRole = Qt::UserRole,
     };
 
 public:
@@ -58,8 +63,11 @@ Q_SIGNALS:
     void headerChanged();
     void sizeChanged(int size);
 
+public:
+    const QFont &fixedFont() const;
+
 private:
-    int mSize;
+    int mSize = -1;
     int* mByteCount;
 
     Okteta::ValueCoding mValueCoding;
@@ -67,7 +75,13 @@ private:
     Okteta::CharCodec* mCharCodec;
     QChar mSubstituteChar;
     QChar mUndefinedChar;
+    QFont mFixedFont;
 };
+
+inline const QFont &StatisticTableModel::fixedFont() const
+{
+    return mFixedFont;
+}
 
 }
 

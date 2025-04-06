@@ -30,7 +30,6 @@ class QPoint;
 namespace Kasten {
 class ByteArrayViewProfileSynchronizer;
 class ByteArrayDocument;
-class KCursorProxy;
 
 class OKTETAKASTENGUI_EXPORT ByteArrayView : public AbstractView
                                            , public If::Zoomable
@@ -55,7 +54,6 @@ public:
     ByteArrayView(ByteArrayDocument* document, ByteArrayViewProfileSynchronizer* synchronizer);
     ByteArrayView(ByteArrayView* other, ByteArrayViewProfileSynchronizer* synchronizer,
                   Qt::Alignment alignment = {});
-    ByteArrayView() = delete;
 
     ~ByteArrayView() override;
 
@@ -74,10 +72,10 @@ public: // AbstractView API
     bool hasFocus() const override;
 
 public: // If::Zoomable API TODO: make all such methods slots?
-    void setZoomLevel(double Level) override;
+    void setZoomLevel(double zoomScale) override;
     double zoomLevel() const override;
 Q_SIGNALS:
-    void zoomLevelChanged(double Level) override;
+    void zoomLevelChanged(double zoomScale) override;
 
 public: // If::DataSelectable API
     void selectAllData(bool selectAll) override;
@@ -168,6 +166,9 @@ Q_SIGNALS:
     void undefinedCharChanged(QChar undefinedChar);
     void noOfGroupedBytesChanged(int noOfGroupedBytes);
 
+Q_SIGNALS:
+    void zoomLevelsChanged();
+
 public:
     void setViewModus(int viewModus);
     int viewModus() const;
@@ -181,18 +182,17 @@ public:
     ByteArrayViewProfileSynchronizer* synchronizer() const;
 
 private:
-    void init();
+    OKTETAKASTENGUI_NO_EXPORT void init();
 
 private Q_SLOTS:
-    void setFontByGlobalSettings();
+    OKTETAKASTENGUI_NO_EXPORT void setFontByGlobalSettings();
 
-    void onSelectionChanged(const Okteta::AddressRange& selection);
+    OKTETAKASTENGUI_NO_EXPORT void onSelectionChanged(const Okteta::AddressRange& selection);
 
 private:
     Okteta::ByteArrayJanusView* mWidget;
     ByteArrayDocument* mDocument;
     ByteArraySelection mSelection;
-//     KCursorProxy *mCursorProxy;
 
     ByteArrayViewProfileSynchronizer* const mByteArrayViewProfileSynchronizer;
 };

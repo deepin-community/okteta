@@ -1,22 +1,5 @@
 set( SUTDIR ${CMAKE_CURRENT_SOURCE_DIR}/.. )
 
-# make sure to not use KDE_EXPORT or KDE_IMPORT because we link statically
-# against a small part of the libs
-add_definitions(-DOKTETACORE_EXPORT=)
-add_definitions(-DOKTETAKASTENCORE_EXPORT=)
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}/../..
-  ${SUTDIR}
-  ${SUTDIR}/..
-  ${SUTDIR}/../document
-  ${SUTDIR}/filesystem
-)
-
-########### io ###############
-
 set( oktetakastenio_LIB_SRCS
   ${SUTDIR}/filesystem/bytearrayrawfileloadthread.cpp
   ${SUTDIR}/filesystem/bytearrayrawfilereloadthread.cpp
@@ -29,7 +12,28 @@ set( oktetakastenio_LIB_SRCS
 )
 
 add_library( oktetakastenio  STATIC ${oktetakastenio_LIB_SRCS} )
-target_link_libraries( oktetakastenio  KastenCore OktetaCore KF5::I18n KF5::CoreAddons Qt5::Core )
+target_link_libraries( oktetakastenio
+  PUBLIC
+    KastenCore
+    OktetaCore
+  PRIVATE
+    KF5::I18n
+    KF5::CoreAddons
+)
+target_include_directories(oktetakastenio PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}/../..
+  ${SUTDIR}
+  ${SUTDIR}/..
+  ${SUTDIR}/../document
+  ${SUTDIR}/filesystem
+)
+# Configure export macros to be setup as with a static lib
+# as the source files are reused for static oktetakastenio
+# Saves doing a separate export header.
+target_compile_definitions(oktetakastenio
+  PUBLIC
+    OKTETAKASTENCORE_STATIC_DEFINE
+)
 
 
 ########### bytearrayrawfilesynchronizertest ###############
@@ -44,9 +48,8 @@ ecm_add_test(
   LINK_LIBRARIES
   oktetakastenio
   KastenCore
-  kastencoretestutil
-  oktetacoretestutil
-  testoktetacore
+  KastenCoreTestUtil
+  OktetaCoreTestUtil
   KF5::I18n
   KF5::Bookmarks
   Qt5::Test
@@ -65,9 +68,8 @@ ecm_add_test(
   LINK_LIBRARIES
   oktetakastenio
   KastenCore
-  kastencoretestutil
-  oktetacoretestutil
-  testoktetacore
+  KastenCoreTestUtil
+  OktetaCoreTestUtil
   KF5::I18n
   KF5::Bookmarks
   Qt5::Test

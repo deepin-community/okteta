@@ -23,12 +23,19 @@ class StructureTreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    enum Roles {
+        DataInformationRole = Qt::UserRole,
+    };
+
+public:
     explicit StructureTreeModel(StructuresTool* tool, QObject* parent = nullptr);
     ~StructureTreeModel() override;
 
 public: // QAbstractItemModel API
     QVariant data(const QModelIndex& index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
+    QMimeData* mimeData(const QModelIndexList& indexes) const override;
+    QStringList mimeTypes() const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;

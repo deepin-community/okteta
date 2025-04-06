@@ -10,18 +10,20 @@
 
 // Qt
 #include <QDoubleValidator>
+#include <QLocale>
 // C++
 #include <limits>
 
 Float32Editor::Float32Editor(QWidget* parent)
     : QLineEdit(parent)
 {
-    const float floatMax = std::numeric_limits<float>::max();
-    const float floatMin = std::numeric_limits<float>::min();
+    const float floatHighest = std::numeric_limits<float>::max();
+    const float floatLowest = std::numeric_limits<float>::lowest();
 
     auto* validator = new QDoubleValidator(this);
+    validator->setLocale(QLocale::c()); // for consistency with other podtable editors
     validator->setNotation(QDoubleValidator::ScientificNotation);
-    validator->setRange(floatMin, floatMax);
+    validator->setRange(floatLowest, floatHighest, 1000); // 1000 also being default in Qt5
 
     setValidator(validator);
     setClearButtonEnabled(true);
@@ -39,3 +41,5 @@ Float32 Float32Editor::data() const
 //     interpretText();
     return text().toFloat();
 }
+
+#include "moc_float32editor.cpp"

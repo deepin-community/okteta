@@ -5,9 +5,9 @@ set( okteta_SRCS
   mainwindow.cpp
 )
 
-set_source_files_properties(about.cpp PROPERTIES
-    COMPILE_FLAGS -DOKTETA_VERSION=\\\"${Okteta_VERSION}\\\"
-)
+configure_file(about-config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/about-config.hpp @ONLY)
+set(KASTEN_BUILD_TERMINALTOOL ${BUILD_TERMINALTOOL})
+configure_file(mainwindow-config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/mainwindow-config.hpp @ONLY)
 
 qt5_add_resources(okteta_SRCS
     okteta.qrc

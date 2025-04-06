@@ -18,13 +18,18 @@ class ZoomPinchController
 {
 public:
     explicit ZoomPinchController(AbstractByteArrayView* view);
+    ZoomPinchController(const ZoomPinchController&) = delete;
+
+    ~ZoomPinchController() = default;
+
+    ZoomPinchController& operator=(const ZoomPinchController&) = delete;
 
 public:
     bool handlePinchGesture(QPinchGesture* pinchGesture);
 
 private:
     AbstractByteArrayView* mView;
-    double mOriginalZoomLevel = -1;
+    double m_originalZoomScale = -1;
 };
 
 }

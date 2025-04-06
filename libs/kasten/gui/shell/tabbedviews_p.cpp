@@ -9,13 +9,11 @@
 #include "tabbedviews_p.hpp"
 
 // lib
-#include "toolinlineviewwidget.hpp"
 #include <abstracttoolinlineview.hpp>
-// Kasten core
-#include <Kasten/AbstractDocument>
 // Qt
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QTabBar>
 #include <QApplication>
 #include <QClipboard>
 
@@ -36,20 +34,27 @@ void TabbedViewsPrivate::init()
     Q_Q(TabbedViews);
 
     mTabWidget = new TabWidget();
+    mTabWidget->setMovable(true);
+    mTabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     mViewAreaBox = new ViewAreaBox(mTabWidget);
 
     QObject::connect(mTabWidget, &QTabWidget::tabCloseRequested,
-                     q, [&](int index) { onTabCloseRequest(index); });
+                     q, [this](int index) { onTabCloseRequest(index); });
     QObject::connect(mTabWidget, &QTabWidget::currentChanged,
-                     q, [&](int index) { onCurrentChanged(index); });
+                     q, [this](int index) { onCurrentChanged(index); });
+
+    QObject::connect(mTabWidget, &QWidget::customContextMenuRequested,
+                     q, [this](const QPoint& pos) { onContextMenuRequested(pos); });
 
     QObject::connect(mTabWidget, &TabWidget::testCanDecode,
-                     q, [&](const QDragMoveEvent* event, bool& accept) { onDragMoveEvent(event, accept); });
+                     q, [this](const QDragMoveEvent* event, bool& accept) { onDragMoveEvent(event, accept); });
     QObject::connect(mTabWidget, &TabWidget::receivedDropEvent,
-                     q, [&](QDropEvent* event) { onDropEvent(event); });
+                     q, [this](QDropEvent* event) { onDropEvent(event); });
     QObject::connect(mTabWidget, &TabWidget::mouseMiddleClick,
-                     q, [&]() { onMouseMiddleClick(); });
+                     q, [this]() { onMouseMiddleClick(); });
+    QObject::connect(mTabWidget, &TabWidget::emptySpaceMouseDoubleClicked,
+                     q, [this]() { onEmptySpaceMouseDoubleClicked(); });
 }
 
 QVector<AbstractView*> TabbedViewsPrivate::viewList() const
@@ -87,14 +92,14 @@ void TabbedViewsPrivate::addViews(const QVector<AbstractView*>& views)
 {
     Q_Q(TabbedViews);
 
-    if (views.count() == 0) {
+    if (views.isEmpty()) {
         return;
     }
 
     int insertIndex = mTabWidget->currentIndex() + 1;
     for (AbstractView* view : views) {
         QObject::connect(view, &AbstractModel::titleChanged,
-                         q, [&](const QString& title) { onTitleChanged(title); });
+                         q, [this](const QString& title) { onTitleChanged(title); });
 
         auto* viewBox = new ViewBox(view, mTabWidget);
         mTabWidget->insertTab(insertIndex, viewBox, view->title());
@@ -176,7 +181,7 @@ void TabbedViewsPrivate::onCurrentChanged(int index)
 
     if (view) {
         QObject::connect(view, &AbstractView::focusChanged,
-                         q, [&](bool hasFocus) { onViewFocusChanged(hasFocus); });
+                         q, [this](bool hasFocus) { onViewFocusChanged(hasFocus); });
         view->widget()->setFocus();
     }
 
@@ -212,7 +217,7 @@ void TabbedViewsPrivate::onTitleChanged(const QString& newTitle)
 void TabbedViewsPrivate::onModifiedChanged(AbstractDocument::SyncStates newStates)
 {
     Q_UNUSED(newStates)
-    AbstractView * view = qobject_cast<AbstractView*>(sender());
+    auto* view = qobject_cast<AbstractView*>(sender());
     if (view) {
         const int index = indexOf(view);
         if (index != -1) {
@@ -231,10 +236,25 @@ void TabbedViewsPrivate::onViewFocusChanged(bool hasFocus)
 {
     Q_Q(TabbedViews);
 
-//     AbstractView* view = qobject_cast<AbstractView *>( q->sender() );
+//     auto* view = qobject_cast<AbstractView*>( q->sender() );
 // qCDebug(LOG_KASTEN_GUI)<<view<<view->title()<<hasFocus;
 
     emit q->focusChanged(hasFocus);
+}
+
+void TabbedViewsPrivate::onContextMenuRequested(QPoint pos)
+{
+    Q_Q(TabbedViews);
+
+    AbstractView* view = nullptr;
+    QTabBar* tabBar = mTabWidget->tabBar();
+    const int tabIndex = tabBar->tabAt(tabBar->mapFrom(mTabWidget, pos));
+    if (tabIndex != -1) {
+        const QWidget* widget = mTabWidget->widget(tabIndex);
+        const auto* viewBox = static_cast<const ViewBox*>(widget);
+        view = viewBox->view();
+    }
+    emit q->contextMenuRequested(view, mTabWidget->mapTo(mViewAreaBox, pos));
 }
 
 void TabbedViewsPrivate::onMouseMiddleClick()
@@ -244,6 +264,13 @@ void TabbedViewsPrivate::onMouseMiddleClick()
     const QMimeData* mimeData = QApplication::clipboard()->mimeData(QClipboard::Selection);
 
     emit q->dataDropped(mimeData);
+}
+
+void TabbedViewsPrivate::onEmptySpaceMouseDoubleClicked()
+{
+    Q_Q(TabbedViews);
+
+    emit q->newDocumentRequested();
 }
 
 void TabbedViewsPrivate::onDragMoveEvent(const QDragMoveEvent* event, bool& accepted)

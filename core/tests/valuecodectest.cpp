@@ -164,7 +164,8 @@ void ValueCodecTest::testAppendDigit()
 
     Byte decodedByte = 0;
     for (auto d : qAsConst(digits)) {
-        codec->appendDigit(&decodedByte, d.toLatin1());
+        const bool success = codec->appendDigit(&decodedByte, d.toLatin1());
+        QVERIFY(success);
     }
 
     QCOMPARE(decodedByte, byte);
@@ -229,11 +230,10 @@ void ValueCodecTest::testIsValidDigit_data()
 
     for (auto& valueCodecDescription : valueCodecDescriptions) {
         QBitArray validnessPerDigitField = QBitArray(digitCount, false);
-        const QByteArray validDigits =
-            QByteArray(valueCodecDescription.validDigits);
+        const auto validDigits = QByteArray(valueCodecDescription.validDigits);
 
-        for (int j = 0; j < validDigits.count(); ++j) {
-            validnessPerDigitField.setBit(validDigits[j], true);
+        for (const char digit : validDigits) {
+            validnessPerDigitField.setBit(digit, true);
         }
 
         for (int j = 0; j < validnessPerDigitField.count(); ++j) {
@@ -268,3 +268,5 @@ void ValueCodecTest::testIsValidDigit()
 }
 
 QTEST_GUILESS_MAIN(Okteta::ValueCodecTest)
+
+#include "moc_valuecodectest.cpp"

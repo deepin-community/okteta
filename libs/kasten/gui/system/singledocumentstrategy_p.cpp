@@ -19,7 +19,6 @@
 #include <Kasten/DocumentSyncManager>
 #include <Kasten/DocumentCreateManager>
 #include <Kasten/AbstractModelDataGenerator>
-#include <Kasten/AbstractModel>
 // KF
 #include <KProcess>
 // Qt
@@ -134,6 +133,8 @@ void SingleDocumentStrategyPrivate::triggerGeneration(AbstractModelDataGenerator
 
     const bool setModified = (generator->flags() & AbstractModelDataGenerator::DynamicGeneration);
     mDocumentManager->createManager()->createNewFromData(mimeData, setModified);
+
+    delete mimeData;
 
     QApplication::restoreOverrideCursor();
 }

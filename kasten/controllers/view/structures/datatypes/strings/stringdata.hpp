@@ -11,6 +11,8 @@
 
 #include <Okteta/Address>
 #include "../datainformationbase.hpp"
+// Qt
+#include <QSysInfo>
 
 class StringDataInformation;
 
@@ -20,9 +22,6 @@ class AbstractByteArrayModel;
 
 class StringData
 {
-private:
-    Q_DISABLE_COPY(StringData)
-
 public:
     enum TerminationMode
     {
@@ -36,8 +35,13 @@ public:
     Q_DECLARE_FLAGS(TerminationModes, TerminationMode)
 
     explicit StringData(StringDataInformation* parent);
+    StringData(const StringData&) = delete;
+
     virtual ~StringData();
 
+    StringData& operator=(const StringData&) = delete;
+
+public:
     virtual QString typeName() const = 0;
     virtual uint count() const = 0;
     virtual QString charType() const = 0;
@@ -45,9 +49,9 @@ public:
     virtual QString completeString(bool skipInvalid = false) const = 0;
     virtual BitCount32 size() const = 0;
     virtual BitCount32 sizeAt(uint index) const = 0;
-    virtual qint64 read(Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) = 0;
+    virtual qint64 read(const Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) = 0;
     /** by default just sets value, if more logic is needed can be overridden */
-    virtual void setLittleEndian(bool littleEndian);
+    virtual void setEndianness(QSysInfo::Endian endianness);
     TerminationMode terminationMode() const;
     void setTerminationMode(TerminationMode mode);
 

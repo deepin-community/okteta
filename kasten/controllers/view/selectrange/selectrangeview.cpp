@@ -10,18 +10,52 @@
 
 // tool
 #include "selectrangetool.hpp"
+// libconfigentries
+#include <addresscomboboxcodingconfigentry.hpp>
+#include <directionconfigentry.hpp>
 // Okteta Kasten gui
 #include <Kasten/Okteta/AddressComboBox>
 // KF
 #include <KGuiItem>
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QPushButton>
 #include <QCheckBox>
 #include <QLabel>
-#include <QLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
+
+template <>
+inline Kasten::SelectRangeView::SelectDirection KConfigGroup::readEntry(const char *key, const Kasten::SelectRangeView::SelectDirection &defaultValue) const
+{
+    return static_cast<Kasten::SelectRangeView::SelectDirection>(KConfigGroup::readEntry(key, static_cast<Kasten::Direction>(defaultValue)));
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const Kasten::SelectRangeView::SelectDirection &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    writeEntry(key, static_cast<Kasten::Direction>(value), flags);
+}
 
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char SelectRangeView::ConfigGroupId[];
+
+constexpr char SelectRangeView::StartOffsetCodingConfigKey[];
+constexpr char SelectRangeView::EndOffsetCodingConfigKey[];
+constexpr char SelectRangeView::RelativeToEndConfigKey[];
+constexpr char SelectRangeView::DirectionConfigKey[];
+
+constexpr Okteta::AddressComboBox::Coding SelectRangeView::DefaultStartOffsetCoding;
+constexpr Okteta::AddressComboBox::Coding SelectRangeView::DefaultEndOffsetCoding;
+constexpr bool SelectRangeView::DefaultRelativeToEnd;
+constexpr SelectRangeView::SelectDirection SelectRangeView::DefaultDirection;
+
 
 SelectRangeView::SelectRangeView(SelectRangeTool* tool, QWidget* parent)
     : AbstractToolWidget(parent)
@@ -38,7 +72,7 @@ SelectRangeView::SelectRangeView(SelectRangeTool* tool, QWidget* parent)
     auto* startOffsetLayout = new QHBoxLayout();
     startOffsetLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel* label = new QLabel(i18nc("@label:listbox", "Start offset:"), this);
+    auto* label = new QLabel(i18nc("@label:listbox", "Start offset:"), this);
     mStartEdit = new Okteta::AddressComboBox(this);
     connect(mStartEdit, &Okteta::AddressComboBox::addressChanged,
             mTool, &SelectRangeTool::setTargetStart);
@@ -78,24 +112,24 @@ SelectRangeView::SelectRangeView(SelectRangeTool* tool, QWidget* parent)
     auto* optionsLayout = new QVBoxLayout();
     optionsLayout->setContentsMargins(0, 0, 0, 0);
 
-    mRelativeCheckBox = new QCheckBox(i18nc("@option:check", "End relative"), this);
-    mRelativeCheckBox->setWhatsThis(
-        i18nc("@info:whatsthis", "Extend the selection by the cursor move."));
-    connect(mRelativeCheckBox, &QCheckBox::toggled,
-            mTool, &SelectRangeTool::setIsEndRelative);
-    mRelativeCheckBox->setChecked(mTool->isEndRelative());
     mBackwardsCheckBox = new QCheckBox(i18nc("@option:check", "&Backwards"), this);
     mBackwardsCheckBox->setWhatsThis(
         i18nc("@info:whatsthis", "Go backwards from the end or the current cursor location."));
     connect(mBackwardsCheckBox, &QCheckBox::toggled,
             mTool, &SelectRangeTool::setIsEndBackwards);
     mBackwardsCheckBox->setChecked(mTool->isEndBackwards());
+    mRelativeCheckBox = new QCheckBox(i18nc("@option:check", "End relative"), this);
+    mRelativeCheckBox->setWhatsThis(
+        i18nc("@info:whatsthis", "Extend the selection by the cursor move."));
+    connect(mRelativeCheckBox, &QCheckBox::toggled,
+            mTool, &SelectRangeTool::setIsEndRelative);
+    mRelativeCheckBox->setChecked(mTool->isEndRelative());
 
     connect(mRelativeCheckBox, &QCheckBox::toggled, mBackwardsCheckBox, &QCheckBox::setEnabled);
     mBackwardsCheckBox->setEnabled(mRelativeCheckBox->isChecked());
 
-    optionsLayout->addWidget(mRelativeCheckBox);
     optionsLayout->addWidget(mBackwardsCheckBox);
+    optionsLayout->addWidget(mRelativeCheckBox);
 
     baseLayout->addLayout(optionsLayout);
 
@@ -103,7 +137,7 @@ SelectRangeView::SelectRangeView(SelectRangeTool* tool, QWidget* parent)
     const KGuiItem selectGuiItem =
         KGuiItem(i18nc("@action:button",
                        "&Select"),
-                 QString(),
+                 QStringLiteral("select-rectangular"),
                  i18nc("@info:tooltip",
                        "Select the range."),
                  xi18nc("@info:whatsthis",
@@ -123,6 +157,20 @@ SelectRangeView::SelectRangeView(SelectRangeTool* tool, QWidget* parent)
     setTabOrder(mEndEdit, mRelativeCheckBox);
     setTabOrder(mRelativeCheckBox, mBackwardsCheckBox);
     setTabOrder(mBackwardsCheckBox, mSelectButton);
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    const Okteta::AddressComboBox::Coding startOffsetCoding = configGroup.readEntry(StartOffsetCodingConfigKey, DefaultStartOffsetCoding);
+    mStartEdit->setFormat(startOffsetCoding);
+
+    const Okteta::AddressComboBox::Coding endOffsetCoding = configGroup.readEntry(EndOffsetCodingConfigKey, DefaultEndOffsetCoding);
+    mEndEdit->setFormat(endOffsetCoding);
+
+    const SelectDirection direction = configGroup.readEntry(DirectionConfigKey, DefaultDirection);
+    mBackwardsCheckBox->setChecked(direction == SelectBackward);
+
+    const bool relativeToEnd = configGroup.readEntry(RelativeToEndConfigKey, DefaultRelativeToEnd);
+    mRelativeCheckBox->setChecked(relativeToEnd);
 
     connect(mTool, &SelectRangeTool::isApplyableChanged, this, &SelectRangeView::onApplyableChanged);
 
@@ -144,8 +192,19 @@ void SelectRangeView::onSelectButtonClicked()
     mStartEdit->rememberCurrentAddress();
     mEndEdit->rememberCurrentAddress();
 
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(StartOffsetCodingConfigKey,
+                           static_cast<Okteta::AddressComboBox::Coding>(mStartEdit->format()));
+    configGroup.writeEntry(EndOffsetCodingConfigKey,
+                           static_cast<Okteta::AddressComboBox::Coding>(mEndEdit->format()));
+    configGroup.writeEntry(DirectionConfigKey,
+                           mBackwardsCheckBox->isChecked() ? SelectBackward : SelectForward);
+    configGroup.writeEntry(RelativeToEndConfigKey, mRelativeCheckBox->isChecked());
+
     mTool->select();
 //     emit toolUsed();
 }
 
 }
+
+#include "moc_selectrangeview.cpp"

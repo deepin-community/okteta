@@ -12,8 +12,15 @@
 // lib
 #include "abstractbytearrayfilterparameterset.hpp"
 
+class KConfigGroup;
+
 class ReverseByteArrayFilterParameterSet : public AbstractByteArrayFilterParameterSet
 {
+private:
+    static constexpr bool DefaultInvertsBits = false;
+
+    static constexpr char InvertsBitsConfigKey[] = "InvertsBits";
+
 public:
     ReverseByteArrayFilterParameterSet();
     ~ReverseByteArrayFilterParameterSet() override;
@@ -26,6 +33,10 @@ public:
 
 public:
     bool invertsBits() const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 private:
     bool mInvertsBits = false;

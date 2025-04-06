@@ -32,7 +32,7 @@ constexpr TextStreamFunction hex = ::hex;
 #endif
 }
 
-const quint64 TopLevelDataInformation::INVALID_OFFSET = std::numeric_limits<quint64>::max();
+const Okteta::Address TopLevelDataInformation::INVALID_OFFSET = std::numeric_limits<Okteta::Address>::max();
 
 TopLevelDataInformation::TopLevelDataInformation(DataInformation* data, ScriptLogger* logger,
                                                  QScriptEngine* engine, const QFileInfo& structureFile)
@@ -75,10 +75,15 @@ void TopLevelDataInformation::resetValidationState()
     mData->resetValidationState();
 }
 
-void TopLevelDataInformation::read(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+void TopLevelDataInformation::read(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                                    const Okteta::ArrayChangeMetricsList& changesList, bool forceRead)
 {
     mChildDataChanged = false;
+
+    if (isLockedFor(input)) {
+        address = lockPositionFor(input);
+    }
+
     const bool updateNeccessary = forceRead || isReadingNecessary(input, address, changesList);
     if (!updateNeccessary) {
         return;
@@ -116,18 +121,15 @@ void TopLevelDataInformation::enqueueReadData(PointerDataInformation* toRead)
     mDelayedRead.append(toRead);
 }
 
-bool TopLevelDataInformation::isReadingNecessary(Okteta::AbstractByteArrayModel* model,
+bool TopLevelDataInformation::isReadingNecessary(const Okteta::AbstractByteArrayModel* model,
                                                  Okteta::Address address, const Okteta::ArrayChangeMetricsList& changesList)
 {
     if (model != mLastModel) {
         return true; // whenever we have a new model we have to read
 
     }
-    if (isLockedFor(model)) {
-        address = lockPositionFor(model);
-    }
 
-    if (quint64(address) != mLastReadOffset) {
+    if (address != mLastReadOffset) {
         return true; // address as changed, we have to read again
 
     }
@@ -177,16 +179,22 @@ bool TopLevelDataInformation::isReadingNecessary(Okteta::AbstractByteArrayModel*
 
 void TopLevelDataInformation::lockPositionToOffset(Okteta::Address offset, const Okteta::AbstractByteArrayModel* model)
 {
-    if (quint64(offset) == INVALID_OFFSET) {
-        // we use quint64 max to indicate not locked -> error out
-        mLogger->error() << "Attempting to lock at uint64_max, this is forbidden.";
+    if (offset == INVALID_OFFSET) {
+        // we use Okteta::Address max to indicate not locked -> error out
+        mLogger->error() << "Attempting to lock at max adress value, this is forbidden.";
         return;
     }
-    mLockedPositions.insert(model, quint64(offset));
+    auto it = mLockedPositions.find(model);
+    if (it != mLockedPositions.end()) {
+        it.value() = offset;
+    } else {
+        mLockedPositions.insert(model, offset);
+        // remove when deleted
+        connect(model, &Okteta::AbstractByteArrayModel::destroyed,
+                this, &TopLevelDataInformation::removeByteArrayModelFromList);
+    }
     qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
         << mData->name() << ": Locking start offset in model" << model << "to position" << Okteta::hex << offset;
-    // remove when deleted
-    connect(model, &Okteta::AbstractByteArrayModel::destroyed, this, &TopLevelDataInformation::removeByteArrayModelFromList);
 }
 
 void TopLevelDataInformation::unlockPosition(const Okteta::AbstractByteArrayModel* model)
@@ -194,7 +202,9 @@ void TopLevelDataInformation::unlockPosition(const Okteta::AbstractByteArrayMode
     Q_ASSERT(mLockedPositions.contains(model) && mLockedPositions.value(model) != INVALID_OFFSET);
     qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
         << "removing lock at position" << mLockedPositions.value(model) << ", model=" << model;
-    mLockedPositions.insert(model, INVALID_OFFSET);
+    mLockedPositions.remove(model);
+    disconnect(model, &Okteta::AbstractByteArrayModel::destroyed,
+               this, &TopLevelDataInformation::removeByteArrayModelFromList);
 }
 
 void TopLevelDataInformation::removeByteArrayModelFromList(QObject* obj)
@@ -210,9 +220,9 @@ bool TopLevelDataInformation::isLockedByDefault() const
 
 void TopLevelDataInformation::setDefaultLockOffset(Okteta::Address offset)
 {
-    if (quint64(offset) == INVALID_OFFSET) {
-        // we use quint64 max to indicate not locked -> error out
-        mLogger->error() << "Attempting to lock by default at uint64_max, this is forbidden.";
+    if (offset == INVALID_OFFSET) {
+        // we use max Okteta::Address to indicate not locked -> error out
+        mLogger->error() << "Attempting to lock by default at max Okteta::Address, this is forbidden.";
         return;
     }
     mDefaultLockOffset = offset;
@@ -220,30 +230,29 @@ void TopLevelDataInformation::setDefaultLockOffset(Okteta::Address offset)
 
 void TopLevelDataInformation::newModelActivated(Okteta::AbstractByteArrayModel* model)
 {
-    // don't add null pointers to map
-    if (model && !mLockedPositions.contains(model)) {
-        // if this structure has no default lock offset, mDefaultLockOfsset will contain NOT_LOCKED
-        mLockedPositions.insert(model, mDefaultLockOffset);
-        if (mDefaultLockOffset == INVALID_OFFSET) {
-            qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
-                << "new model activated:" << model << ", not locked.";
-        } else {
-            qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
-                << "new model activated:" << model << ", locked at 0x" << QString::number(mDefaultLockOffset, 16);
-        }
+    if (!model || mLockedPositions.contains(model)) {
+        return;
+    }
+
+    if (mDefaultLockOffset != INVALID_OFFSET) {
+        qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
+            << "new model activated:" << model << ", locked at 0x" << QString::number(mDefaultLockOffset, 16);
+        lockPositionToOffset(mDefaultLockOffset, model);
+    } else {
+        qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES)
+            << "new model activated:" << model << ", not locked.";
     }
 }
 
 bool TopLevelDataInformation::isLockedFor(const Okteta::AbstractByteArrayModel* model) const
 {
-    Q_ASSERT(mLockedPositions.contains(model));
-    return mLockedPositions.value(model, 0) != INVALID_OFFSET;
+    return mLockedPositions.contains(model);
 }
 
-quint64 TopLevelDataInformation::lockPositionFor(const Okteta::AbstractByteArrayModel* model) const
+Okteta::Address TopLevelDataInformation::lockPositionFor(const Okteta::AbstractByteArrayModel* model) const
 {
     Q_ASSERT(mLockedPositions.contains(model) && mLockedPositions.value(model) != INVALID_OFFSET);
-    return mLockedPositions.value(model);
+    return mLockedPositions.value(model, INVALID_OFFSET);
 }
 
 int TopLevelDataInformation::indexOf(const DataInformation* const data) const
@@ -263,3 +272,5 @@ bool TopLevelDataInformation::isTopLevel() const
 {
     return true;
 }
+
+#include "moc_topleveldatainformation.cpp"

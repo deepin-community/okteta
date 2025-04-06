@@ -15,10 +15,9 @@
 #include "../../script/classes/pointerscriptclass.hpp"
 #include "../../script/scriptlogger.hpp"
 #include "../../parsers/parserutils.hpp"
-
-#include <QScriptEngine>
+// KF
 #include <KLocalizedString>
-
+// Std
 #include <limits>
 
 PointerDataInformation::PointerDataInformation(const QString& name, DataInformation* childType,
@@ -53,7 +52,7 @@ PointerDataInformation::PointerDataInformation(const PointerDataInformation& d)
 
 PointerDataInformation::~PointerDataInformation() = default;
 
-qint64 PointerDataInformation::readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+qint64 PointerDataInformation::readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                                         BitCount64 bitsRemaining, quint8* bitOffset)
 {
     qint64 ret = PrimitiveDataInformationWrapper::readData(input, address, bitsRemaining, bitOffset);
@@ -72,7 +71,7 @@ BitCount64 PointerDataInformation::childPosition(const DataInformation* child, O
 {
     // TODO other pointer modes
     Q_ASSERT(child == mPointerTarget.data());
-    Q_UNUSED(child);
+    Q_UNUSED(child)
 
     return mWasAbleToRead ? interpret(start) * 8 : 0;
 }
@@ -83,7 +82,7 @@ int PointerDataInformation::indexOf(const DataInformation* const data) const
     return data == mPointerTarget.data() ? 0 : -1;
 }
 
-void PointerDataInformation::delayedReadData(Okteta::AbstractByteArrayModel* input, Okteta::Address address)
+void PointerDataInformation::delayedReadData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address)
 {
     Q_ASSERT(mHasBeenUpdated); // update must have been called prior to reading
     Q_ASSERT(mWasAbleToRead);
@@ -155,11 +154,6 @@ bool PointerDataInformation::setPointerType(DataInformation* type)
 QScriptClass* PointerDataInformation::scriptClass(ScriptHandlerInfo* handlerInfo) const
 {
     return handlerInfo->mPointerClass.data();
-}
-
-bool PointerDataInformation::canHaveChildren() const
-{
-    return true;
 }
 
 bool PointerDataInformation::isPointer() const

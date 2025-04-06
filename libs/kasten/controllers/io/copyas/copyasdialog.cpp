@@ -16,7 +16,8 @@
 // Qt
 #include <QSplitter>
 #include <QGroupBox>
-#include <QLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QIcon>
@@ -41,9 +42,9 @@ CopyAsDialog::CopyAsDialog(const QString& remoteTypeName,
     auto* splitter = new QSplitter(this);
 
     // config editor
-    QWidget* editorPage = new QWidget(splitter);
+    auto* editorPage = new QWidget(splitter);
     auto* editorPageLayout = new QVBoxLayout(editorPage);
-    QLabel* editorLabel = new QLabel(remoteTypeName);
+    auto* editorLabel = new QLabel(remoteTypeName);
     QFont font = editorLabel->font();
     font.setBold(true);
     editorLabel->setFont(font);
@@ -58,7 +59,7 @@ CopyAsDialog::CopyAsDialog(const QString& remoteTypeName,
     mPreviewView = configEditor->createPreviewView();
 
     if (mPreviewView) {
-        QGroupBox* previewBox = new QGroupBox(i18nc("@title:group", "Preview"), this);
+        auto* previewBox = new QGroupBox(i18nc("@title:group", "Preview"), this);
         splitter->addWidget(previewBox);
 
         auto* previewBoxLayout = new QHBoxLayout(previewBox);
@@ -68,8 +69,8 @@ CopyAsDialog::CopyAsDialog(const QString& remoteTypeName,
 
     // dialog buttons
     auto* dialogButtonBox = new QDialogButtonBox;
-    QPushButton* exportButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")),
-                                                i18nc("@action:button", "&Copy to clipboard"));
+    auto* exportButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")),
+                                         i18nc("@action:button", "&Copy to clipboard"));
     exportButton->setToolTip(i18nc("@info:tooltip",
                                    "Copy the selected data to the clipboard."));
     exportButton->setWhatsThis(xi18nc("@info:whatsthis",
@@ -88,8 +89,7 @@ CopyAsDialog::CopyAsDialog(const QString& remoteTypeName,
 
     // main layout
     auto* layout = new QVBoxLayout;
-    layout->addWidget(splitter);
-    layout->addStretch();
+    layout->addWidget(splitter, 1);
     layout->addWidget(dialogButtonBox);
 
     setLayout(layout);
@@ -121,3 +121,5 @@ void CopyAsDialog::onFinished(int result)
 }
 
 }
+
+#include "moc_copyasdialog.cpp"

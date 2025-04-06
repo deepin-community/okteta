@@ -19,7 +19,6 @@
 #include <KSharedConfig>
 // Qt
 #include <QFileDialog>
-#include <QMimeDatabase>
 #include <QApplication>
 
 namespace Kasten {
@@ -82,3 +81,5 @@ void LoaderController::onUrlUsed(const QUrl& url)
 }
 
 }
+
+#include "moc_loadercontroller.cpp"

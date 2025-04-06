@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oktetapart\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2009-03-01 12:40+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -88,3 +88,74 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "लेखक"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "वेल्यू कोडिंग (&V)"
+
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "हेक्साडेसीमल (&H)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "दसमलव (&D)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "ओक्टल (&O)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "बाइनरी (&B)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "अक्छर एनकोडिंग (&C)"
+
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "छपाई नइ करे जा सके अक्छर देखाव (&N)"
+
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "लकीर आफसेट (&L)"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "वेल्यू खंभा (&V)"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "अक्छर खंभा (&C)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "नवा आकार सैली (&R)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "नवा आकार नइ (&N)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "समूह तालाबंद करव (&L)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "पूरा आकार उपयोग (&F)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "खंभा (&C)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "दोनों खंभा (&B)"

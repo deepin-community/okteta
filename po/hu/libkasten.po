@@ -3,28 +3,29 @@
 #
 # Tamas Szanto <taszanto@gmail.com>, 2009.
 # Laszlo Papp <djszapi@archlinux.us>, 2010.
+# Kristof Kiszel <kiszel.kristof@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-03-23 07:47+0100\n"
-"PO-Revision-Date: 2010-03-18 23:18+0100\n"
-"Last-Translator: Laszlo Papp <djszapi@archlinux.us>\n"
+"POT-Creation-Date: 2025-03-07 03:30+0000\n"
+"PO-Revision-Date: 2021-10-30 13:01+0200\n"
+"Last-Translator: Kristof Kiszel <kiszel.kristof@gmail.com>\n"
 "Language-Team: Hungarian <kde-i18n-hu@kde.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 21.08.2\n"
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:74
+#: controllers/document/modified/modifiedbarcontroller.cpp:76
 #, kde-format
 msgctxt "@tooltip the document is modified"
 msgid "Modified."
 msgstr "Módosult."
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:75
+#: controllers/document/modified/modifiedbarcontroller.cpp:77
 #, kde-format
 msgctxt "@tooltip the document is not modified"
 msgid "Not modified."
@@ -54,7 +55,7 @@ msgctxt "@option:check set the document to read-write"
 msgid "Set Read-write"
 msgstr "Írható-olvasható legyen"
 
-#: controllers/document/terminal/terminaltool.cpp:32
+#: controllers/document/terminal/terminaltool.cpp:31
 #: controllers/document/terminal/terminaltoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
@@ -93,39 +94,33 @@ msgid "Versions"
 msgstr "Verziók"
 
 #: controllers/documentsystem/close/closecontroller.cpp:40
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close All"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:56
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All"
-msgstr "Minden bezárása"
+msgstr "Összes bezárása"
 
 #: controllers/documentsystem/close/closecontroller.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close All Other"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:63
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All Other"
-msgstr "A többi bezárása"
+msgstr "Többi bezárása"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:41
+#: controllers/documentsystem/creator/creatorcontroller.cpp:36
 #, kde-format
 msgctxt "@title:menu create new byte arrays from different sources"
 msgid "New"
 msgstr "Új"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "@title:menu create a new empty document"
-#| msgid "Empty"
+#: controllers/documentsystem/creator/creatorcontroller.cpp:49
+#, kde-format
 msgctxt "@item:inmenu create a new empty document"
 msgid "Empty"
 msgstr "Üres"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "@title:menu create a new document from data in the clipboard"
-#| msgid "From Clipboard"
+#: controllers/documentsystem/creator/creatorcontroller.cpp:60
+#, kde-format
 msgctxt "@item:inmenu create a new document from data in the clipboard"
 msgid "From Clipboard"
 msgstr "A vágólapról"
@@ -151,57 +146,57 @@ msgctxt "@title:window"
 msgid "Documents"
 msgstr "Dokumentumok"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:33
+#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:32
 #: controllers/documentsystem/filesystembrowser/filesystembrowsertoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
 msgid "Filesystem"
 msgstr "Fájlrendszer"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:79
+#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:99
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Folder of Current Document"
 msgstr "Az aktuális dokumentum mappája"
 
-#: controllers/io/copyas/copyascontroller.cpp:44
+#: controllers/io/copyas/copyascontroller.cpp:43
 #, kde-format
 msgctxt "@title:menu"
 msgid "Copy As"
 msgstr "Másolás mint"
 
-#: controllers/io/copyas/copyascontroller.cpp:91
+#: controllers/io/copyas/copyascontroller.cpp:95
 #, kde-format
 msgctxt "@item There are no encoders."
 msgid "Not available."
 msgstr "Nem elérhető."
 
-#: controllers/io/copyas/copyasdialog.cpp:39
+#: controllers/io/copyas/copyasdialog.cpp:40
 #, kde-format
 msgctxt "@title:window"
 msgid "Copy As"
 msgstr "Másolás mint"
 
-#: controllers/io/copyas/copyasdialog.cpp:61
-#: controllers/io/export/exportdialog.cpp:61
+#: controllers/io/copyas/copyasdialog.cpp:62
+#: controllers/io/export/exportdialog.cpp:62
 #, kde-format
 msgctxt "@title:group"
 msgid "Preview"
 msgstr "Előznézet"
 
-#: controllers/io/copyas/copyasdialog.cpp:72
+#: controllers/io/copyas/copyasdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Copy to clipboard"
 msgstr "&Másolás"
 
-#: controllers/io/copyas/copyasdialog.cpp:74
+#: controllers/io/copyas/copyasdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Copy the selected data to the clipboard."
 msgstr "Kimásolja a kijelölt adatokat a vágólapra."
 
-#: controllers/io/copyas/copyasdialog.cpp:76
+#: controllers/io/copyas/copyasdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -212,38 +207,38 @@ msgstr ""
 "Ha megnyomja a <interface>Másolás</interface> gombot, a kijelölt rész a "
 "vágólapra másolódik a fent megadott beállításoknak megfelelően."
 
-#: controllers/io/export/exportcontroller.cpp:40
+#: controllers/io/export/exportcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Export"
 msgstr "Exportálás"
 
-#: controllers/io/export/exportcontroller.cpp:87
+#: controllers/io/export/exportcontroller.cpp:91
 #, kde-format
 msgctxt "@item There are no exporters."
 msgid "Not available."
 msgstr "Nem elérhető."
 
-#: controllers/io/export/exportdialog.cpp:39
-#: core/system/modelcodecmanager_p.cpp:101
+#: controllers/io/export/exportdialog.cpp:40
+#: core/system/modelcodecmanager_p.cpp:102
 #, kde-format
 msgctxt "@title:window"
 msgid "Export"
 msgstr "Exportálás"
 
-#: controllers/io/export/exportdialog.cpp:72
+#: controllers/io/export/exportdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export to File..."
 msgstr "E&xportálás fájlba..."
 
-#: controllers/io/export/exportdialog.cpp:74
+#: controllers/io/export/exportdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Export the selected data to a file."
 msgstr "A kijelölt adatok mentése fájlba."
 
-#: controllers/io/export/exportdialog.cpp:76
+#: controllers/io/export/exportdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -253,13 +248,13 @@ msgstr ""
 "Ha megnyomja az <interface>Exportálás fájlba</interface> gombot, a kijelölt "
 "adatok elmentődnek fájlba a fenti beállításoknak megfelelően."
 
-#: controllers/io/insert/insertcontroller.cpp:40
+#: controllers/io/insert/insertcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Insert"
 msgstr "beszúrás"
 
-#: controllers/io/insert/insertcontroller.cpp:90
+#: controllers/io/insert/insertcontroller.cpp:94
 #, kde-format
 msgctxt "@item There are no generators."
 msgid "Not available."
@@ -295,38 +290,31 @@ msgstr ""
 "megadott beállításokkal beszúrja a létrejött adatokat a dokumentumba."
 
 #: controllers/io/synchronize/synchronizecontroller.cpp:34
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Reloa&d"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:38
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Reloa&d"
 msgstr "Új&ratöltés"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:42
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Split Vertically"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Split Vertically"
-msgstr "Függőleges megosztás"
+msgstr "Függőleges felosztás"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Split Horizontal"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Split Horizontal"
-msgstr "Vízszintes megosztás"
+msgstr "Vízszintes felosztás"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close View Area"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close View Area"
 msgstr "A nézetterület bezárása"
 
-#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:77
+#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:73
 #, kde-format
 msgctxt "@item There are no windows."
 msgid "None."
@@ -338,51 +326,51 @@ msgctxt "@action:inmenu"
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: controllers/view/version/versioncontroller.cpp:43
+#: controllers/view/version/versioncontroller.cpp:44
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Redo"
 msgstr "Újra végrehajtás"
 
-#: controllers/view/version/versioncontroller.cpp:130
+#: controllers/view/version/versioncontroller.cpp:134
 #, kde-format
 msgctxt "@action Undo: [change]"
 msgid "Undo: %1"
 msgstr "Visszavonás: %1"
 
-#: controllers/view/version/versioncontroller.cpp:150
+#: controllers/view/version/versioncontroller.cpp:154
 #, kde-format
 msgctxt "@action Redo: [change]"
 msgid "Redo: %1"
 msgstr "Újra végrehajtás: %1"
 
-#: controllers/view/zoom/zoomcontroller.cpp:36
+#: controllers/view/zoom/zoomcontroller.cpp:45
 #, kde-format
 msgid "Zoom"
 msgstr "Nagyítás"
 
-#: controllers/view/zoom/zoomcontroller.cpp:45
+#: controllers/view/zoom/zoomcontroller.cpp:54
 #, kde-format
 msgctxt "zoom-factor (percentage)"
 msgid "%1%"
 msgstr "%1%"
 
-#: controllers/view/zoom/zoomcontroller.cpp:58
+#: controllers/view/zoom/zoomcontroller.cpp:67
 #, kde-format
 msgid "&Fit to Width"
 msgstr "&Teljes szélesség"
 
-#: controllers/view/zoom/zoomcontroller.cpp:60
+#: controllers/view/zoom/zoomcontroller.cpp:69
 #, kde-format
 msgid "&Fit to Height"
 msgstr "Teljes ma&gasság"
 
-#: controllers/view/zoom/zoomcontroller.cpp:62
+#: controllers/view/zoom/zoomcontroller.cpp:71
 #, kde-format
 msgid "&Fit to Size"
 msgstr "Teljes mé&ret"
 
-#: controllers/view/zoom/zoomslider.cpp:107
+#: controllers/view/zoom/zoomslider.cpp:150
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Zoom: %1%"
@@ -394,19 +382,19 @@ msgctxt "@title:window"
 msgid "Save As"
 msgstr "Mentés másként"
 
-#: core/system/documentsyncmanager_p.cpp:202
+#: core/system/documentsyncmanager_p.cpp:213
 #, kde-format
 msgctxt "@title:window"
 msgid "Close"
 msgstr "Bezárás"
 
-#: core/system/documentsyncmanager_p.cpp:237
+#: core/system/documentsyncmanager_p.cpp:248
 #, kde-format
 msgctxt "@title:window"
 msgid "Reload"
 msgstr "Újratöltés"
 
-#: core/system/modelcodecmanager_p.cpp:110
+#: core/system/modelcodecmanager_p.cpp:112
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export"
@@ -440,7 +428,7 @@ msgstr ""
 "Ha rákattint a <interface>Létrehozás</interface> gombra, a program a fent "
 "megadott beállításokkal beszúrja a létrejött adatokat egy új dokumentumba."
 
-#: gui/system/dialoghandler.cpp:33
+#: gui/system/dialoghandler.cpp:34
 #, kde-kuit-format
 msgctxt "@info"
 msgid "There is already a file at<nl/><filename>%1</filename>.<nl/>Overwrite?"
@@ -448,7 +436,7 @@ msgstr ""
 "Már létezik ilyen nevű fájl: <nl/><filename>%1</filename>.<nl/>Felül "
 "szeretné írni?"
 
-#: gui/system/dialoghandler.cpp:47
+#: gui/system/dialoghandler.cpp:58
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -458,7 +446,7 @@ msgstr ""
 "A dokumentum (<filename>%1</filename>) megváltozott, ha újratölti, a "
 "módosítások elvesznek.<nl/>Eldobja a változásokat?"
 
-#: gui/system/dialoghandler.cpp:60
+#: gui/system/dialoghandler.cpp:71
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -468,7 +456,7 @@ msgstr ""
 "Megváltozott ez a fájl: <filename>%1</filename>.<nl/>El szeretné menteni a "
 "változásokat?"
 
-#: gui/system/dialoghandler.cpp:74
+#: gui/system/dialoghandler.cpp:95
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -477,3 +465,11 @@ msgid ""
 msgstr ""
 "Megváltozott ez a fájl: <filename>%1</filename>.<nl/>El szeretné dobni a "
 "változásokat?"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Export the data into the file with the entered name."
+#~ msgstr "Az adatok fájlba importálása a megadott névvel."
+
+#~ msgctxt "@title:group"
+#~ msgid "Preview (max. first 100 bytes)"
+#~ msgstr "Előnézet (max. az első 100 bájt)"

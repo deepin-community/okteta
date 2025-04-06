@@ -10,15 +10,16 @@
 #ifndef KASTEN_STRUCTUREVIEW_HPP
 #define KASTEN_STRUCTUREVIEW_HPP
 
-#include <QWidget>
 #include "structureviewitemdelegate.hpp"
+// Qt
+#include <QWidget>
 
 namespace Okteta {
 class AbstractByteArrayModel;
 }
 
 class QTreeView;
-class QPushButton;
+class QAction;
 
 namespace Kasten {
 class StructuresTool;
@@ -40,13 +41,15 @@ private Q_SLOTS:
     void openSettingsDlg();
     void openScriptConsole();
     void onCurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
-    void onCursorIndexChange();
-    void lockButtonToggled();
-    void setLockButtonState(bool structureLocked);
+    void onLockButtonClicked(bool checked);
+    void onLockButtonToggled(bool checked);
     void onByteArrayModelChanged(Okteta::AbstractByteArrayModel* model);
+    void onCustomContextMenuRequested(QPoint pos);
 
 private:
     void setLockButtonState(const QModelIndex& current);
+    void selectBytesInView();
+    void copyToClipboard();
 
 private:
     StructuresTool* mTool;
@@ -57,10 +60,10 @@ private:
 
     QTreeView* mStructTreeView;
 
-    QPushButton* mValidateButton;
-    QPushButton* mSettingsButton;
-    QPushButton* mScriptConsoleButton;
-    QPushButton* mLockStructureButton;
+    QAction* mValidateAction;
+    QAction* mSettingsAction;
+    QAction* mScriptConsoleAction;
+    QAction* mLockStructureAction;
 
     QWidget* mStructTreeViewFocusChild;
 };

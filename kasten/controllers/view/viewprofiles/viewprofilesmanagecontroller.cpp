@@ -37,7 +37,7 @@ ViewProfilesManageController::ViewProfilesManageController(KXMLGUIClient* guiCli
 
 void ViewProfilesManageController::setTargetModel(AbstractModel* model)
 {
-    Q_UNUSED(model);
+    Q_UNUSED(model)
 }
 
 void ViewProfilesManageController::manageProfiles()
@@ -47,3 +47,5 @@ void ViewProfilesManageController::manageProfiles()
 }
 
 }
+
+#include "moc_viewprofilesmanagecontroller.cpp"

@@ -13,7 +13,7 @@
 #include "documentstool.hpp"
 // Qt
 #include <QTreeView>
-#include <QLayout>
+#include <QVBoxLayout>
 
 namespace Kasten {
 
@@ -56,3 +56,5 @@ void DocumentsView::onDocumentActivated(const QModelIndex& index)
 }
 
 }
+
+#include "moc_documentsview.cpp"

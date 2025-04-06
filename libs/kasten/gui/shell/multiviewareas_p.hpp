@@ -15,13 +15,10 @@
 #include "tabbedviews.hpp"
 // Qt
 #include <QSplitter>
-
-class QDragMoveEvent;
-class QDropEvent;
+// Std
+#include <vector>
 
 namespace Kasten {
-
-class TabbedViews;
 
 class MultiViewAreasPrivate : public AbstractGroupedViewsPrivate
 {
@@ -60,10 +57,12 @@ public: // If::ViewAreaSplitable API
 
 private:
     int indexOf(AbstractView* view) const;
+    TabbedViews* createViewArea(QSplitter* splitter);
 
 private:  // slots
     void onViewsRemoved();
     void onViewAreaFocusChanged(bool hasFocus);
+    void onContextMenuRequested(AbstractView* view, QPoint pos);
 
 private:
     Q_DECLARE_PUBLIC(MultiViewAreas)
@@ -141,7 +140,13 @@ inline void MultiViewAreasPrivate::removeViews(const QVector<AbstractView*>& vie
     Q_Q(MultiViewAreas);
 
     // TODO: possible to just send the views of the given area?
+    // create copy of current list, as areas might be emptied and removed in handlers during the loop
+    std::vector<TabbedViews*> currentViewAreas;
+    currentViewAreas.reserve(mViewAreaList.size());
     for (TabbedViews* viewArea : qAsConst(mViewAreaList)) {
+        currentViewAreas.emplace_back(viewArea);
+    }
+    for (auto* const viewArea : currentViewAreas) {
         viewArea->removeViews(views);
     }
 

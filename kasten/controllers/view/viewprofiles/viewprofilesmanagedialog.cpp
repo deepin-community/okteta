@@ -276,8 +276,9 @@ ViewProfilesManageDialog::onModelReset()
     // TODO: show a ghost profile with the built-in parameters if there is none
 
     mEditButton->setEnabled(isViewProfileSelected);
-    mSetDefaultButton->setEnabled(isViewProfileSelected);
     mDeleteButton->setEnabled(isViewProfileSelected);
+    mSetDefaultButton->setEnabled(isViewProfileSelected &&
+                                  mCurrentViewProfileId != mViewProfileManager->defaultViewProfileId());
 }
 
 void
@@ -312,3 +313,5 @@ ViewProfilesManageDialog::onDefaultViewProfileChanged(const ByteArrayViewProfile
 }
 
 }
+
+#include "moc_viewprofilesmanagedialog.cpp"

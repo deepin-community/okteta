@@ -7,29 +7,30 @@
 # obsoleteman <tulliana@gmail.com>, 2008-2009,2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2014.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kdesdk-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-03-23 07:47+0100\n"
-"PO-Revision-Date: 2014-11-12 01:13+0200\n"
-"Last-Translator: Kaan Ozdincer <kaanozdincer@gmail.com>\n"
+"POT-Creation-Date: 2025-03-07 03:30+0000\n"
+"PO-Revision-Date: 2024-10-18 02:07+0300\n"
+"Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: Lokalize 24.11.70\n"
 "(http: //www.transifex.com/projects/p/kdesdk-k-tr/language/tr/)\n"
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:74
+#: controllers/document/modified/modifiedbarcontroller.cpp:76
 #, kde-format
 msgctxt "@tooltip the document is modified"
 msgid "Modified."
 msgstr "Değiştirildi."
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:75
+#: controllers/document/modified/modifiedbarcontroller.cpp:77
 #, kde-format
 msgctxt "@tooltip the document is not modified"
 msgid "Not modified."
@@ -39,27 +40,27 @@ msgstr "Değiştirilmedi."
 #, kde-format
 msgctxt "@option:check the document is read-write"
 msgid "Read-write"
-msgstr "Oku-Yaz"
+msgstr "Oku–Yaz"
 
 #: controllers/document/readonly/readonlybarcontroller.cpp:24
 #, kde-format
 msgctxt "@option:check the document is read-only"
 msgid "Read-only"
-msgstr "Salt-okunur"
+msgstr "Saltokunur"
 
 #: controllers/document/readonly/readonlycontroller.cpp:25
 #, kde-format
 msgctxt "@option:check set the document to read-only"
 msgid "Set Read-only"
-msgstr "Salt-okunur olarak Ayarla"
+msgstr "Saltokunur Olarak Ayarla"
 
 #: controllers/document/readonly/readonlycontroller.cpp:27
 #, kde-format
 msgctxt "@option:check set the document to read-write"
 msgid "Set Read-write"
-msgstr "Okunabilir-yazılabilir olarak Ayarla"
+msgstr "Okunur/Yazılır Olarak Ayarla"
 
-#: controllers/document/terminal/terminaltool.cpp:32
+#: controllers/document/terminal/terminaltool.cpp:31
 #: controllers/document/terminal/terminaltoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
@@ -70,7 +71,7 @@ msgstr "Uçbirim"
 #, kde-format
 msgctxt "@title:column Id of the version"
 msgid "Id"
-msgstr "No"
+msgstr "Kimlik"
 
 #: controllers/document/versionview/versiontablemodel.cpp:109
 #, kde-format
@@ -98,39 +99,33 @@ msgid "Versions"
 msgstr "Sürümler"
 
 #: controllers/documentsystem/close/closecontroller.cpp:40
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close All"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:56
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All"
 msgstr "Tümünü Kapat"
 
 #: controllers/documentsystem/close/closecontroller.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close All Other"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:63
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All Other"
 msgstr "Diğerlerinin Tümünü Kapat"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:41
+#: controllers/documentsystem/creator/creatorcontroller.cpp:36
 #, kde-format
 msgctxt "@title:menu create new byte arrays from different sources"
 msgid "New"
 msgstr "Yeni"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "@title:menu create a new empty document"
-#| msgid "Empty"
+#: controllers/documentsystem/creator/creatorcontroller.cpp:49
+#, kde-format
 msgctxt "@item:inmenu create a new empty document"
 msgid "Empty"
 msgstr "Boş"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "@title:menu create a new document from data in the clipboard"
-#| msgid "From Clipboard"
+#: controllers/documentsystem/creator/creatorcontroller.cpp:60
+#, kde-format
 msgctxt "@item:inmenu create a new document from data in the clipboard"
 msgid "From Clipboard"
 msgstr "Panodan"
@@ -156,57 +151,57 @@ msgctxt "@title:window"
 msgid "Documents"
 msgstr "Belgeler"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:33
+#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:32
 #: controllers/documentsystem/filesystembrowser/filesystembrowsertoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
 msgid "Filesystem"
-msgstr "Dosya sistemi"
+msgstr "Dosya Sistemi"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:79
+#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:99
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Folder of Current Document"
 msgstr "Geçerli Belgenin Dizini"
 
-#: controllers/io/copyas/copyascontroller.cpp:44
+#: controllers/io/copyas/copyascontroller.cpp:43
 #, kde-format
 msgctxt "@title:menu"
 msgid "Copy As"
 msgstr "Farklı Kopyala"
 
-#: controllers/io/copyas/copyascontroller.cpp:91
+#: controllers/io/copyas/copyascontroller.cpp:95
 #, kde-format
 msgctxt "@item There are no encoders."
 msgid "Not available."
 msgstr "Kullanılabilir değil."
 
-#: controllers/io/copyas/copyasdialog.cpp:39
+#: controllers/io/copyas/copyasdialog.cpp:40
 #, kde-format
 msgctxt "@title:window"
 msgid "Copy As"
 msgstr "Farklı Kopyala"
 
-#: controllers/io/copyas/copyasdialog.cpp:61
-#: controllers/io/export/exportdialog.cpp:61
+#: controllers/io/copyas/copyasdialog.cpp:62
+#: controllers/io/export/exportdialog.cpp:62
 #, kde-format
 msgctxt "@title:group"
 msgid "Preview"
 msgstr "Önizleme"
 
-#: controllers/io/copyas/copyasdialog.cpp:72
+#: controllers/io/copyas/copyasdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Copy to clipboard"
-msgstr "&Panoya kopyala"
+msgstr "Panoya ko&pyala"
 
-#: controllers/io/copyas/copyasdialog.cpp:74
+#: controllers/io/copyas/copyasdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Copy the selected data to the clipboard."
 msgstr "Seçili metni panoya kopyala."
 
-#: controllers/io/copyas/copyasdialog.cpp:76
+#: controllers/io/copyas/copyasdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -217,54 +212,54 @@ msgstr ""
 "<interface>Panoya kopyala</interface> düğmesine basarsanız, seçili veri "
 "yukarıda girdiğiniz ayarlarla birlikte panoya kopyalanacak."
 
-#: controllers/io/export/exportcontroller.cpp:40
+#: controllers/io/export/exportcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Export"
-msgstr "Dışarıya Aktar"
+msgstr "Dışa Aktar"
 
-#: controllers/io/export/exportcontroller.cpp:87
+#: controllers/io/export/exportcontroller.cpp:91
 #, kde-format
 msgctxt "@item There are no exporters."
 msgid "Not available."
 msgstr "Kullanılabilir değil."
 
-#: controllers/io/export/exportdialog.cpp:39
-#: core/system/modelcodecmanager_p.cpp:101
+#: controllers/io/export/exportdialog.cpp:40
+#: core/system/modelcodecmanager_p.cpp:102
 #, kde-format
 msgctxt "@title:window"
 msgid "Export"
-msgstr "Dışarıya Aktar"
+msgstr "Dışa Aktar"
 
-#: controllers/io/export/exportdialog.cpp:72
+#: controllers/io/export/exportdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export to File..."
-msgstr "&Dosyaya Aktar..."
+msgstr "&Dosyaya Dışa Aktar..."
 
-#: controllers/io/export/exportdialog.cpp:74
+#: controllers/io/export/exportdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Export the selected data to a file."
-msgstr "Seçili verileri bir dosyaya aktar."
+msgstr "Seçili verileri bir dosyaya dışa aktar."
 
-#: controllers/io/export/exportdialog.cpp:76
+#: controllers/io/export/exportdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
 "If you press the <interface>Export to file</interface> button, the selected "
 "data will be copied to a file with the settings you entered above."
 msgstr ""
-"<interface>Dosyaya aktar</interface> düğmesine basarsanız, seçili veri "
+"<interface>Dosyaya Dışa Aktar</interface> düğmesine basarsanız seçili veri "
 "yukarıdaki ayarlarla birlikte bir dosyaya kopyalanacak."
 
-#: controllers/io/insert/insertcontroller.cpp:40
+#: controllers/io/insert/insertcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Insert"
 msgstr "Ekle"
 
-#: controllers/io/insert/insertcontroller.cpp:90
+#: controllers/io/insert/insertcontroller.cpp:94
 #, kde-format
 msgctxt "@item There are no generators."
 msgid "Not available."
@@ -300,42 +295,35 @@ msgstr ""
 "ayarlarla birlikte belgenizin imlecin bulunduğu konumuna kopyalanacak."
 
 #: controllers/io/synchronize/synchronizecontroller.cpp:34
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Reloa&d"
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:38
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Reloa&d"
-msgstr "&Yeniden yükle"
+msgstr "&Yeniden Yükle"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:42
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Split Vertically"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Split Vertically"
 msgstr "Dikey Böl"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Split Horizontal"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Split Horizontal"
 msgstr "Yatay Böl"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "@title:menu"
-#| msgid "Close View Area"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Close View Area"
 msgstr "Görünüm Alanını Kapat"
 
-#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:77
+#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:73
 #, kde-format
 msgctxt "@item There are no windows."
 msgid "None."
-msgstr "Hiçbiri."
+msgstr "Yok"
 
 #: controllers/view/version/versioncontroller.cpp:32
 #, kde-format
@@ -343,55 +331,55 @@ msgctxt "@action:inmenu"
 msgid "Undo"
 msgstr "Geri Al"
 
-#: controllers/view/version/versioncontroller.cpp:43
+#: controllers/view/version/versioncontroller.cpp:44
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Redo"
 msgstr "Yinele"
 
-#: controllers/view/version/versioncontroller.cpp:130
+#: controllers/view/version/versioncontroller.cpp:134
 #, kde-format
 msgctxt "@action Undo: [change]"
 msgid "Undo: %1"
 msgstr "Geri Al: %1"
 
-#: controllers/view/version/versioncontroller.cpp:150
+#: controllers/view/version/versioncontroller.cpp:154
 #, kde-format
 msgctxt "@action Redo: [change]"
 msgid "Redo: %1"
 msgstr "Yinele: %1"
 
-#: controllers/view/zoom/zoomcontroller.cpp:36
+#: controllers/view/zoom/zoomcontroller.cpp:45
 #, kde-format
 msgid "Zoom"
-msgstr "Büyüt"
+msgstr "Yakınlaştırma"
 
-#: controllers/view/zoom/zoomcontroller.cpp:45
+#: controllers/view/zoom/zoomcontroller.cpp:54
 #, kde-format
 msgctxt "zoom-factor (percentage)"
 msgid "%1%"
-msgstr "%%1"
+msgstr "%​%1"
 
-#: controllers/view/zoom/zoomcontroller.cpp:58
+#: controllers/view/zoom/zoomcontroller.cpp:67
 #, kde-format
 msgid "&Fit to Width"
 msgstr "&Genişliğe Sığdır"
 
-#: controllers/view/zoom/zoomcontroller.cpp:60
+#: controllers/view/zoom/zoomcontroller.cpp:69
 #, kde-format
 msgid "&Fit to Height"
 msgstr "&Yüksekliğe Uydur"
 
-#: controllers/view/zoom/zoomcontroller.cpp:62
+#: controllers/view/zoom/zoomcontroller.cpp:71
 #, kde-format
 msgid "&Fit to Size"
 msgstr "Boyuta &Uydur"
 
-#: controllers/view/zoom/zoomslider.cpp:107
+#: controllers/view/zoom/zoomslider.cpp:150
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Zoom: %1%"
-msgstr "Büyüt: %%1"
+msgstr "Yakınlaştır: %​%1"
 
 #: core/system/documentsyncmanager_p.cpp:114
 #, kde-format
@@ -399,23 +387,23 @@ msgctxt "@title:window"
 msgid "Save As"
 msgstr "Farklı Kaydet"
 
-#: core/system/documentsyncmanager_p.cpp:202
+#: core/system/documentsyncmanager_p.cpp:213
 #, kde-format
 msgctxt "@title:window"
 msgid "Close"
 msgstr "Kapat"
 
-#: core/system/documentsyncmanager_p.cpp:237
+#: core/system/documentsyncmanager_p.cpp:248
 #, kde-format
 msgctxt "@title:window"
 msgid "Reload"
 msgstr "Yeniden Yükle "
 
-#: core/system/modelcodecmanager_p.cpp:110
+#: core/system/modelcodecmanager_p.cpp:112
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export"
-msgstr "&Dışarıya Aktar"
+msgstr "&Dışa Aktar"
 
 #: gui/system/createdialog.cpp:35
 #, kde-format
@@ -433,7 +421,7 @@ msgstr "&Oluştur"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new document with the generated data."
-msgstr "Oluşturulmuş verilerden yeni belge oluştur."
+msgstr "Üretilmiş veriden yeni belge oluştur."
 
 #: gui/system/createdialog.cpp:50
 #, kde-kuit-format
@@ -442,10 +430,10 @@ msgid ""
 "If you press the <interface>Create</interface> button, the data will be "
 "generated with the settings you entered above and inserted in a new document."
 msgstr ""
-"<interface>Oluştur</interface> düğmesine basarsanız, yukarıda girdiğiniz "
+"<interface>Oluştur</interface> düğmesine basarsanız yukarıda girdiğiniz "
 "ayarlarla bir veri oluşturulacak ve yeni belgeye eklenecek."
 
-#: gui/system/dialoghandler.cpp:33
+#: gui/system/dialoghandler.cpp:34
 #, kde-kuit-format
 msgctxt "@info"
 msgid "There is already a file at<nl/><filename>%1</filename>.<nl/>Overwrite?"
@@ -453,7 +441,7 @@ msgstr ""
 "<nl/><filename>%1</filename> konumunda bir dosya var.<nl/>Üzerine yazılsın "
 "mı?"
 
-#: gui/system/dialoghandler.cpp:47
+#: gui/system/dialoghandler.cpp:58
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -461,20 +449,20 @@ msgid ""
 "lost if you reload the document.<nl/>Do you want to discard them?"
 msgstr ""
 "<filename>%1</filename> dosyasında kaydedilmemiş değişiklikler var. Belgeyi "
-"yeniden yüklerseniz bu değişiklikler kaybolacak.<nl/>Devam etmek istiyor "
+"yeniden yüklerseniz bu değişiklikler kaybolacak.<nl/>Sürdürmek istiyor "
 "musunuz?"
 
-#: gui/system/dialoghandler.cpp:60
+#: gui/system/dialoghandler.cpp:71
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
 "<filename>%1</filename> has been modified.<nl/>Do you want to save your "
 "changes or discard them?"
 msgstr ""
-"<filename>%1</filename> dosyası değiştirildi.<nl/>Kaydetmek mi, yoksa "
+"<filename>%1</filename> dosyası değiştirildi.<nl/>Kaydetmek mi yoksa "
 "değişiklikleri silmek mi istiyorsunuz?"
 
-#: gui/system/dialoghandler.cpp:74
+#: gui/system/dialoghandler.cpp:95
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -483,3 +471,7 @@ msgid ""
 msgstr ""
 "<filename>%1</filename> dosyası değiştirildi.<nl/>Değişikliklerinizi "
 "kaybetmek istiyor musunuz?"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Export the data into the file with the entered name."
+#~ msgstr "Veriyi dosyaya verilen isimle aktar."

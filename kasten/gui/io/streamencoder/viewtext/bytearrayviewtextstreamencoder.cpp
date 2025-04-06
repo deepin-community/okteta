@@ -20,7 +20,6 @@
 #include <Okteta/AbstractByteArrayView>
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
-#include <Okteta/Character>
 // KF
 #include <KLocalizedString>
 // Qt
@@ -29,13 +28,6 @@
 namespace Kasten {
 
 // static constexpr Okteta::OffsetFormat::Format DefaultOffsetFormat = Okteta::OffsetFormat::Hexadecimal;
-
-using TextStreamFunction = QTextStream& (*)(QTextStream&);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-constexpr TextStreamFunction endl = Qt::endl;
-#else
-constexpr TextStreamFunction endl = ::endl;
-#endif
 
 ByteArrayViewTextStreamEncoderSettings::ByteArrayViewTextStreamEncoderSettings()
     // : offsetFormat(DefaultOffsetFormat)
@@ -53,6 +45,13 @@ bool ByteArrayViewTextStreamEncoder::encodeDataToStream(QIODevice* device,
                                                         const Okteta::AbstractByteArrayModel* byteArrayModel,
                                                         const Okteta::AddressRange& range)
 {
+    using TextStreamFunction = QTextStream& (*)(QTextStream&);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    constexpr TextStreamFunction endl = Qt::endl;
+#else
+    constexpr TextStreamFunction endl = ::endl;
+#endif
+
     bool success = true;
 
     // settings
@@ -81,11 +80,11 @@ bool ByteArrayViewTextStreamEncoder::encodeDataToStream(QIODevice* device,
 
     if (byteArrayView->offsetColumnVisible()) {
         columnTextRendererList.append(
-            new OffsetColumnTextRenderer(Okteta::OffsetFormat::Hexadecimal, mSettings.firstLineOffset, mSettings.delta));
+            new OffsetColumnTextRenderer(byteArrayView->offsetCoding(), mSettings.firstLineOffset, mSettings.delta));
         columnTextRendererList.append(new BorderColumnTextRenderer());
     }
 
-    if (viewModus == 0) {
+    if (viewModus == ByteArrayView::ColumnViewId) {
         if (visibleByteArrayCodings & Okteta::AbstractByteArrayView::ValueCodingId) {
             columnTextRendererList.append(
                 new ValueByteArrayColumnTextRenderer(byteArrayModel, range.start(), coordRange,
@@ -153,3 +152,5 @@ bool ByteArrayViewTextStreamEncoder::encodeDataToStream(QIODevice* device,
 }
 
 }
+
+#include "moc_bytearrayviewtextstreamencoder.cpp"

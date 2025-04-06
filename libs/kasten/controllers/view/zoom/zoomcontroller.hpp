@@ -19,6 +19,7 @@ namespace Kasten {
 
 namespace If {
 class Zoomable;
+class ZoomLevelsQueryable;
 }
 
 class ZoomController : public AbstractXmlGuiController
@@ -34,18 +35,20 @@ public: // AbstractXmlGuiController API
 private Q_SLOTS: // action slots
     void zoomIn();
     void zoomOut();
+    void zoomNormal();
 
 private Q_SLOTS:
-    void onZoomLevelChange(double level);
+    void updateActionsToZoomScale(double zoomScale);
+    void onZoomLevelsChanged();
 
 private:
     AbstractModel* mModel = nullptr;
     If::Zoomable* mZoomControl = nullptr;
-
-    double mZoomLevel;
+    If::ZoomLevelsQueryable* m_zoomLevelsControl = nullptr;
 
     QAction* mZoomInAction;
     QAction* mZoomOutAction;
+    QAction* mZoomNormalAction;
 };
 
 }

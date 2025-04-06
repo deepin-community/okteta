@@ -14,8 +14,6 @@
 // Okteta gui
 #include <Okteta/PixelMetrics>
 #include <Okteta/Line>
-// Okteta core
-#include <Okteta/AddressRange>
 
 namespace Okteta {
 class AbstractColumnRenderer;
@@ -27,7 +25,7 @@ class AbstractColumnRenderer;
  * @author Friedrich W. H. Kossebau
  */
 
-class AbstractColumnFrameRenderer : public AbstractFrameRenderer
+class AbstractColumnFrameRenderer : public FramesPrint::AbstractFrameRenderer
 {
 public:
     AbstractColumnFrameRenderer();

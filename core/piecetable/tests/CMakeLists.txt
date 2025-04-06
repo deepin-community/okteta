@@ -1,9 +1,4 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 set( SUTDIR ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
-
-# make sure to not use KDE_EXPORT or KDE_IMPORT because we link statically
-# against a small part of the libs
-add_definitions(-DOKTETACORE_EXPORT=)
 
 include_directories(
   ${SUTDIR}
@@ -13,7 +8,11 @@ add_library( testpiecetablechangelib STATIC
   abstractpiecetablechangeiftest.cpp
   testpiecetablechange.cpp
 )
-target_link_libraries( testpiecetablechangelib  testoktetacore Qt5::Test Qt5::Core )
+target_link_libraries( testpiecetablechangelib
+  PUBLIC
+    TestOktetaCore
+    Qt5::Test
+)
 
 
 ########### piecetest ###############
@@ -30,49 +29,49 @@ target_include_directories(piecetest
 
 ecm_add_test( piecetabletest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### testpiecetablechangetest ###############
 
 ecm_add_test( testpiecetablechangetest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil testpiecetablechangelib Qt5::Test
 )
 
 ########### testpiecetablechangeabstractpiecetablechangeiftest ###############
 
 ecm_add_test( testpiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### insertpiecetablechangeabstractpiecetablechangeiftest ###############
 
 ecm_add_test( insertpiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### removepiecetablechangeabstractpiecetablechangeiftest ###############
 
 ecm_add_test( removepiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### replacepiecetablechangeabstractpiecetablechangeiftest ###############
 
 ecm_add_test( replacepiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### swaprangespiecetablechangeabstractpiecetablechangeiftest ###############
 
 ecm_add_test( swaprangespiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### grouppiecetablechangeabstractpiecetablechangeiftest ###############
@@ -81,7 +80,7 @@ ecm_add_test( swaprangespiecetablechangeabstractpiecetablechangeiftest.cpp
 if(IWILLPICKUPWORKONOKTETACORE)
 ecm_add_test( grouppiecetablechangeabstractpiecetablechangeiftest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES oktetacoretestutil testoktetacore testpiecetablechangelib Qt5::Test
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 endif()
 
@@ -89,19 +88,19 @@ endif()
 
 ecm_add_test( grouppiecetablechangetest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES testoktetacore testpiecetablechangelib Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### piecetablechangehistorytest ###############
 
 ecm_add_test( piecetablechangehistorytest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES testoktetacore testpiecetablechangelib Qt5::Test
+  LINK_LIBRARIES TestOktetaCore testpiecetablechangelib Qt5::Test
 )
 
 ########### revertablepiecetabletest ###############
 
 ecm_add_test( revertablepiecetabletest.cpp
   NAME_PREFIX "libpiecetable-"
-  LINK_LIBRARIES testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )

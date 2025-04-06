@@ -13,11 +13,19 @@ endmacro()
 
 oktetakastengui_add_sublibrary(liboktetawidgets
     PUBLIC
-        AddressValidator
+        AddressValidator # TODO: on next ABI break, move to PRIVATE
         AddressComboBox
         ByteArrayComboBox
     PRIVATE
+        AbstractByteArrayStringValidator
+        ByteArrayChar8StringDecoder
+        ByteArrayChar8StringEncoder
+        ByteArrayChar8StringValidator
+        ByteArrayUtf8StringDecoder
+        ByteArrayUtf8StringEncoder
+        ByteArrayUtf8StringValidator
         ByteArrayValidator
+        ByteArrayValueStringValidator
 )
 
 oktetakastengui_add_sublibrary(io/streamencoder/values
@@ -77,7 +85,7 @@ oktetakastengui_add_sublibrary(io/streamencoder/viewtext
         AbstractByteArrayColumnTextRenderer
         ValueByteArrayColumnTextRenderer
         CharByteArrayColumnTextRenderer
-        ByteArrayrowsColumnTextRenderer
+        ByteArrayRowsColumnTextRenderer
         ByteArrayViewTextStreamEncoder
 )
 
@@ -186,3 +194,7 @@ target_include_directories(OktetaKastenGui
 
 okteta_add_cmakeconfig(Gui NAMESPACE Okteta Kasten
 )
+
+if(BUILD_TESTING)
+    add_subdirectory(liboktetawidgets/tests)
+endif()

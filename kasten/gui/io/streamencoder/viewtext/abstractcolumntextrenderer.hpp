@@ -20,11 +20,20 @@ namespace Kasten {
  */
 class AbstractColumnTextRenderer
 {
+private:
+    static constexpr int DefaultNoOfSublines = 1;
+
 protected:
     static QString whiteSpace(unsigned int length);
 
+protected:
+    AbstractColumnTextRenderer() = default;
+
 public:
+    AbstractColumnTextRenderer(const AbstractColumnTextRenderer&) = delete;
     virtual ~AbstractColumnTextRenderer();
+
+    AbstractColumnTextRenderer& operator=(const AbstractColumnTextRenderer&) = delete;
 
 public: // API to be implemented
     virtual void renderFirstLine(QTextStream* stream, int lineIndex) const = 0;

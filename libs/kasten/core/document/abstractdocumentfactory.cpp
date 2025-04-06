@@ -14,17 +14,19 @@ AbstractDocumentFactory::~AbstractDocumentFactory() = default;
 
 bool AbstractDocumentFactory::canCreateFromData(const QMimeData* mimeData)
 {
-    Q_UNUSED(mimeData);
+    Q_UNUSED(mimeData)
 
     return false;
 }
 
 AbstractDocument* AbstractDocumentFactory::createFromData(const QMimeData* mimeData, bool setModified)
 {
-    Q_UNUSED(mimeData);
-    Q_UNUSED(setModified);
+    Q_UNUSED(mimeData)
+    Q_UNUSED(setModified)
 
     return nullptr;
 }
 
 }
+
+#include "moc_abstractdocumentfactory.cpp"

@@ -25,7 +25,7 @@ static int newByteArrayDocumentCounter = 0;
 
 bool ByteArrayDocumentFactory::canCreateFromData(const QMimeData* mimeData)
 {
-    Q_UNUSED(mimeData);
+    Q_UNUSED(mimeData)
 
     // we currently take everything, see createFromData()
     return true;
@@ -33,7 +33,7 @@ bool ByteArrayDocumentFactory::canCreateFromData(const QMimeData* mimeData)
 
 AbstractDocument* ByteArrayDocumentFactory::create()
 {
-    ByteArrayDocument* document = new ByteArrayDocument(i18nc("The byte array was new created.", "New created."));
+    auto* document = new ByteArrayDocument(i18nc("The byte array was new created.", "New created."));
 
     ++newByteArrayDocumentCounter;
 
@@ -70,7 +70,7 @@ AbstractDocument* ByteArrayDocumentFactory::createFromData(const QMimeData* mime
     byteArray->setModified(setModified);
 
     // TODO: pass name of generator
-    ByteArrayDocument* document = new ByteArrayDocument(byteArray, i18nc("origin of the byte array", "Created from data."));
+    auto* document = new ByteArrayDocument(byteArray, i18nc("origin of the byte array", "Created from data."));
 
     ++newByteArrayDocumentCounter;
 
@@ -85,3 +85,5 @@ AbstractDocument* ByteArrayDocumentFactory::createFromData(const QMimeData* mime
 }
 
 }
+
+#include "moc_bytearraydocumentfactory.cpp"

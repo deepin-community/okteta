@@ -30,12 +30,15 @@ class QVariant;
 
 class AbstractArrayData
 {
-    Q_DISABLE_COPY(AbstractArrayData)
-
 public:
     explicit AbstractArrayData(DataInformation* childType, ArrayDataInformation* parent);
+    AbstractArrayData(const AbstractArrayData&) = delete;
+
     virtual ~AbstractArrayData();
 
+    AbstractArrayData& operator=(const AbstractArrayData&) = delete;
+
+public:
     void setParent(ArrayDataInformation* parent);
     /** @return The current child type. Ownership is NOT transferred */
     DataInformation* childType() const;
@@ -45,6 +48,7 @@ public:
     virtual void setLength(uint newLength) = 0;
 
     virtual QString typeName() const = 0;
+    virtual QString valueString() const = 0;
 
     virtual BitCount32 size() const = 0;
 
@@ -57,7 +61,7 @@ public:
 
     virtual int indexOf(const DataInformation* data) const = 0;
     virtual BitCount64 offset(const DataInformation* child) const = 0;
-    virtual qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) = 0;
+    virtual qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) = 0;
     virtual bool setChildData(uint row, const QVariant& value, Okteta::AbstractByteArrayModel* out,
                               Okteta::Address address, BitCount64 bitsRemaining) = 0;
     virtual BitCount32 sizeAt(uint index) = 0;

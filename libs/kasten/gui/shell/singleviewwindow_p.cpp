@@ -100,20 +100,20 @@ void SingleViewWindowPrivate::setView(AbstractView* view)
 
     if (view) {
         QObject::connect(view, &AbstractModel::titleChanged,
-                         q, [&](const QString& Title) { onTitleChanged(Title); });
+                         q, [this](const QString& Title) { onTitleChanged(Title); });
     }
 
     if (mSynchronizer) {
         if (isNewSynchronizer) {
             QObject::connect(mSynchronizer, &AbstractModelSynchronizer::localSyncStateChanged,
-                             q, [&](LocalSyncState localSyncState) { onLocalSyncStateChanged(localSyncState); });
+                             q, [this](LocalSyncState localSyncState) { onLocalSyncStateChanged(localSyncState); });
             QObject::connect(mSynchronizer, &QObject::destroyed,
-                             q, [&](QObject* object) { onSynchronizerDeleted(object); });
+                             q, [this](QObject* object) { onSynchronizerDeleted(object); });
         }
     } else if (mDocument) {
         if (isNewDocument) {
             QObject::connect(mDocument, &AbstractDocument::contentFlagsChanged,
-                             q, [&](ContentFlags contentFlags) { onContentFlagsChanged(contentFlags); });
+                             q, [this](ContentFlags contentFlags) { onContentFlagsChanged(contentFlags); });
         }
     }
 }
@@ -130,6 +130,12 @@ void SingleViewWindowPrivate::addTool(AbstractToolView* toolView)
     auto* dockWidget = new ToolViewDockWidget(toolView, q);
     // TODO: where to set the initial area?
     q->addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+    // For now hide initially, to avoid triggering bug 462703
+    // as currently (KF 5.116) in KXmlGuiWindow::setupGUI()
+    // window size is still restored before the dock widgets' visibilty state.
+    // So adding all the dock widgets here to any area might
+    // increase the minimal needed size beyond some stored size.
+    dockWidget->hide();
 
     mTools.append(toolView->tool());
     mDockWidgets.append(dockWidget);
@@ -139,7 +145,7 @@ void SingleViewWindowPrivate::addTool(AbstractToolView* toolView)
     }
 
     QObject::connect(dockWidget, &QDockWidget::visibilityChanged,
-                     q, [&](bool visible) { onToolVisibilityChanged(visible); });
+                     q, [this](bool visible) { onToolVisibilityChanged(visible); });
 }
 
 void SingleViewWindowPrivate::onTitleChanged(const QString& newTitle)
@@ -189,7 +195,7 @@ void SingleViewWindowPrivate::onSynchronizerDeleted(QObject* synchronizer)
 
     // switch to document state
     QObject::connect(mDocument, &AbstractDocument::contentFlagsChanged,
-                     q, [&](ContentFlags contentFlags) { onContentFlagsChanged(contentFlags); });
+                     q, [this](ContentFlags contentFlags) { onContentFlagsChanged(contentFlags); });
 
     onContentFlagsChanged(mDocument->contentFlags());
 }

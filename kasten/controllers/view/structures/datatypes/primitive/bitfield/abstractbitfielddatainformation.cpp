@@ -48,7 +48,7 @@ PrimitiveDataType AbstractBitfieldDataInformation::type() const
     return PrimitiveDataType::Bitfield;
 }
 
-qint64 AbstractBitfieldDataInformation::readData(Okteta::AbstractByteArrayModel* input,
+qint64 AbstractBitfieldDataInformation::readData(const Okteta::AbstractByteArrayModel* input,
                                                  Okteta::Address address, BitCount64 bitsRemaining, quint8* bitOffset)
 {
     Q_ASSERT(mHasBeenUpdated); // update must have been called prior to reading
@@ -57,14 +57,13 @@ qint64 AbstractBitfieldDataInformation::readData(Okteta::AbstractByteArrayModel*
         mValue = 0;
         return -1;
     }
-    bool wasValid = mWasAbleToRead;
     AllPrimitiveTypes oldVal(mValue);
     AllPrimitiveTypes newVal(mValue);
 
     mWasAbleToRead = newVal.readBits(size(), input, effectiveByteOrder(), address, bitsRemaining,
                                      bitOffset);
 
-    if (oldVal != newVal || wasValid != mWasAbleToRead) {
+    if (oldVal != newVal || mWasAbleToReadBefore != mWasAbleToRead) {
         topLevelDataInformation()->setChildDataChanged();
         mValue = newVal;
     }

@@ -9,7 +9,6 @@
 #include "headerfooterframerenderer.hpp"
 
 // KF
-#include <KLocalizedString>
 #include <KUser>
 // Qt
 #include <QLocale>
@@ -17,6 +16,8 @@
 #include <QDateTime>
 #include <QPainter>
 #include <QFontMetrics>
+
+namespace FramesPrint {
 
 HeaderFooterFrameRenderer::HeaderFooterFrameRenderer(const PrintInfo* info)
     : mInfo(info)
@@ -130,9 +131,7 @@ void HeaderFooterFrameRenderer::renderFrame(QPainter* painter, int frameIndex)
         QString text = mGloballyReplacedTextList[i];
         // substitute locally
         const QString pageNumberTag = QStringLiteral("%p");
-        if (text.indexOf(pageNumberTag) != -1) {
-            text.replace(pageNumberTag, QString::number(frameIndex + 1)); // TODO: frameIndex != pageNumber in general
-        }
+        text.replace(pageNumberTag, QString::number(frameIndex + 1)); // TODO: frameIndex != pageNumber in general
         int align = verticalAlign | horizontalAlign[i];
 
         painter->drawText(margin, 0, rightEnd, mHeight, align, text);
@@ -145,4 +144,6 @@ void HeaderFooterFrameRenderer::renderFrame(QPainter* painter, int frameIndex)
 //         painter->drawRect( 0, 0, pdmWidth, pdmHeight);
 //             paint.drawLine(0, headerHeight, headerWidth, headerHeight);
     }
+}
+
 }

@@ -11,22 +11,24 @@
 // tool
 #include "containedstringtablemodel.hpp"
 #include "stringsextracttool.hpp"
+// utils
+#include <labelledtoolbarwidget.hpp>
 // KF
-#include <KGuiItem>
 #include <KLocalizedString>
 // Qt
-#include <QFontDatabase>
+#include <QToolBar>
 #include <QLabel>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QLineEdit>
 #include <QSpinBox>
-#include <QPushButton>
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
 #include <QTreeView>
 #include <QClipboard>
 #include <QApplication>
 #include <QFocusEvent>
+#include <QAction>
+#include <QIcon>
 
 namespace Kasten {
 
@@ -38,53 +40,54 @@ StringsExtractView::StringsExtractView(StringsExtractTool* tool, QWidget* parent
 {
     auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
     // update
-    auto* updateLayout = new QHBoxLayout();
+    auto* updateToolBar = new QToolBar(this);
+    updateToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    updateLayout->addStretch();
-    QLabel* label = new QLabel(i18nc("@label:spinbox minimum length for consecutive chars to be seen as a string",
-                                     "Minimum length:"), this);
-    updateLayout->addWidget(label);
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    updateToolBar->addWidget(stretcher);
+
+    auto* label = new QLabel(i18nc("@label:spinbox minimum length for consecutive chars to be seen as a string",
+                                   "Minimum length:"), this);
 
     mMinLengthSpinBox = new QSpinBox(this);
     mMinLengthSpinBox->setValue(mTool->minLength());
     mMinLengthSpinBox->setMinimum(MinimumStringLength);
     connect(mMinLengthSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             mTool, &StringsExtractTool::setMinLength);
-    label->setBuddy(mMinLengthSpinBox);
-    updateLayout->addWidget(mMinLengthSpinBox);
+    auto* labelledMinLengthSpinBox = new LabelledToolBarWidget(label, mMinLengthSpinBox, this);
+    updateToolBar->addWidget(labelledMinLengthSpinBox);
 
-    const KGuiItem updateGuiItem =
-        KGuiItem(i18nc("@action:button extract the strings from the byte array", "&Extract"),
-                 QStringLiteral("document-export"),
-                 i18nc("@info:tooltip",
-                       "Finds the strings contained in the selected range and lists them in the view below."),
-                 xi18nc("@info:whatsthis",
-                        "If you press the <interface>Extract</interface> button, "
-                        "the selected range is searched for all strings which have the set minimum length. "
-                        "This strings found will be listed in the view below."));
-    mUpdateButton = new QPushButton(this);
-    KGuiItem::assign(mUpdateButton, updateGuiItem);
-    mUpdateButton->setEnabled(mTool->isApplyable());
-    connect(mUpdateButton, &QPushButton::clicked, mTool, &StringsExtractTool::extractStrings);
-    updateLayout->addWidget(mUpdateButton);
+    mUpdateAction =
+        updateToolBar->addAction(QIcon::fromTheme(QStringLiteral("document-export")),
+                                 i18nc("@action:button extract the strings from the byte array", "&Extract"),
+                                 mTool, &StringsExtractTool::extractStrings);
+    mUpdateAction->setToolTip(i18nc("@info:tooltip",
+                                    "Finds the strings contained in the selected range and lists them in the view below."));
+    mUpdateAction->setWhatsThis(xi18nc("@info:whatsthis",
+                                        "If you press the <interface>Extract</interface> button, "
+                                        "the selected range is searched for all strings which have the set minimum length. "
+                                        "This strings found will be listed in the view below."));
+    mUpdateAction->setEnabled(mTool->isApplyable());
 
-    baseLayout->addLayout(updateLayout);
+    baseLayout->addWidget(updateToolBar);
 
     // filter
-    auto* filterLayout = new QHBoxLayout();
+    auto* filterToolBar = new QToolBar(this);
 
     label = new QLabel(i18nc("@label:lineedit filter term for displayed strings", "Filter:"), this);
-    filterLayout->addWidget(label);
 
     auto* mFilterEdit = new QLineEdit(this);
     mFilterEdit->setClearButtonEnabled(true);
     mFilterEdit->setPlaceholderText(i18n("Enter a term to limit the list."));
-    label->setBuddy(mFilterEdit);
-    filterLayout->addWidget(mFilterEdit, 10);
+    mFilterEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    auto* labelledFilterEdit = new LabelledToolBarWidget(label, mFilterEdit, this);
+    filterToolBar->addWidget(labelledFilterEdit);
 
-    baseLayout->addLayout(filterLayout);
+    baseLayout->addWidget(filterToolBar);
 
     // strings
     mContainedStringTableModel =
@@ -104,17 +107,17 @@ StringsExtractView::StringsExtractView(StringsExtractTool* tool, QWidget* parent
     // TODO: find a signal/event emitted when fixedfont changes
 //     connect( KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged,
 //              this, &StringsExtractView::setFixedFontByGlobalSettings );
-    setFixedFontByGlobalSettings(); // do this before setting model
     mContainedStringTableView->setObjectName(QStringLiteral("ContainedStringTable"));
     mContainedStringTableView->setRootIsDecorated(false);
     mContainedStringTableView->setItemsExpandable(false);
     mContainedStringTableView->setUniformRowHeights(true);
     mContainedStringTableView->setAllColumnsShowFocus(true);
     mContainedStringTableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mContainedStringTableView->setDragEnabled(true);
+    mContainedStringTableView->setDragDropMode(QAbstractItemView::DragOnly);
     mContainedStringTableView->setSortingEnabled(true);
     mContainedStringTableView->installEventFilter(this);
     QHeaderView* header = mContainedStringTableView->header();
-    header->setFont(font());
     header->setSectionResizeMode(QHeaderView::Interactive);
     mContainedStringTableView->setModel(mSortFilterProxyModel);
     mContainedStringTableView->sortByColumn(ContainedStringTableModel::OffsetColumnId, Qt::AscendingOrder);
@@ -127,37 +130,34 @@ StringsExtractView::StringsExtractView(StringsExtractTool* tool, QWidget* parent
     baseLayout->addWidget(mContainedStringTableView, 10);
 
     // actions
-    auto* actionsLayout = new QHBoxLayout();
+    auto* actionsToolBar = new QToolBar(this);
+    actionsToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    const KGuiItem copyGuiItem =
-        KGuiItem(i18n("C&opy"),
-                 QStringLiteral("edit-copy"),
-                 i18nc("@info:tooltip",
-                       "Copies the selected strings to the clipboard."),
-                 xi18nc("@info:whatsthis",
-                        "If you press the <interface>Copy</interface> button, all strings you selected "
-                        "in the list are copied to the clipboard."));
-    mCopyButton = new QPushButton(this);
-    KGuiItem::assign(mCopyButton, copyGuiItem);
-    connect(mCopyButton, &QPushButton::clicked, this, &StringsExtractView::onCopyButtonClicked);
-    actionsLayout->addWidget(mCopyButton);
+    mCopyAction =
+        actionsToolBar->addAction(QIcon::fromTheme(QStringLiteral("edit-copy")),
+                                  i18n("C&opy"),
+                                  this, &StringsExtractView::onCopyButtonClicked);
+    mCopyAction->setToolTip(i18nc("@info:tooltip",
+                                  "Copies the selected strings to the clipboard."));
+    mCopyAction->setWhatsThis(xi18nc("@info:whatsthis",
+                                     "If you press the <interface>Copy</interface> button, all strings you selected "
+                                     "in the list are copied to the clipboard."));
 
-    actionsLayout->addStretch();
+    auto* actionsStretcher = new QWidget(this);
+    actionsStretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    actionsToolBar->addWidget(actionsStretcher);
 
-    const KGuiItem gotoGuiItem =
-        KGuiItem(i18n("&Show"),
-                 QStringLiteral("go-jump"),
-                 i18nc("@info:tooltip",
-                       "Shows the selected string in the view."),
-                 xi18nc("@info:whatsthis",
-                        "If you press the <interface>Go to</interface> button, the string which was last "
-                        "selected is marked and shown in the view."));
-    mGotoButton = new QPushButton(this);
-    KGuiItem::assign(mGotoButton, gotoGuiItem);
-    connect(mGotoButton, &QPushButton::clicked, this, &StringsExtractView::onGotoButtonClicked);
-    actionsLayout->addWidget(mGotoButton);
+    mGotoAction =
+        actionsToolBar->addAction(QIcon::fromTheme(QStringLiteral("go-jump")),
+                                  i18n("&Show"),
+                                  this, &StringsExtractView::onGotoButtonClicked);
+    mGotoAction->setToolTip(i18nc("@info:tooltip",
+                                  "Shows the selected string in the view."));
+    mGotoAction->setWhatsThis(xi18nc("@info:whatsthis",
+                                     "If you press the <interface>Go to</interface> button, the string which was last "
+                                     "selected is marked and shown in the view."));
 
-    baseLayout->addLayout(actionsLayout);
+    baseLayout->addWidget(actionsToolBar);
 
     connect(mTool, &StringsExtractTool::uptodateChanged, this, &StringsExtractView::onStringsUptodateChanged);
     connect(mTool, &StringsExtractTool::isApplyableChanged, this, &StringsExtractView::onApplyableChanged);
@@ -184,11 +184,6 @@ bool StringsExtractView::eventFilter(QObject* object, QEvent* event)
     return QWidget::eventFilter(object, event);
 }
 
-void StringsExtractView::setFixedFontByGlobalSettings()
-{
-    mContainedStringTableView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-}
-
 void StringsExtractView::onStringsUptodateChanged(bool stringsUptodate)
 {
     if (stringsUptodate) {
@@ -196,18 +191,18 @@ void StringsExtractView::onStringsUptodateChanged(bool stringsUptodate)
     }
 
     const bool isApplyable = mTool->isApplyable();
-    mUpdateButton->setEnabled(!stringsUptodate && isApplyable);
+    mUpdateAction->setEnabled(!stringsUptodate && isApplyable);
 }
 
 void StringsExtractView::onApplyableChanged(bool isApplyable)
 {
-    mUpdateButton->setEnabled(!mTool->isUptodate() && isApplyable);
+    mUpdateAction->setEnabled(!mTool->isUptodate() && isApplyable);
 }
 
 void StringsExtractView::onCanHighlightStringChanged(bool canHighlightString)
 {
     const bool stringSelected = mContainedStringTableView->selectionModel()->currentIndex().isValid();
-    mGotoButton->setEnabled(canHighlightString && stringSelected);
+    mGotoAction->setEnabled(canHighlightString && stringSelected);
 }
 
 void StringsExtractView::onGotoButtonClicked()
@@ -222,17 +217,12 @@ void StringsExtractView::onGotoButtonClicked()
 
 void StringsExtractView::onCopyButtonClicked()
 {
-    const QModelIndexList selectedRows = mContainedStringTableView->selectionModel()->selectedRows();
-    const QList<ContainedString>* containedStringList = mTool->containedStringList();
+    const QItemSelectionModel* selectionModel = mContainedStringTableView->selectionModel();
 
-    QString strings;
-    for (const QModelIndex& index : selectedRows) {
-        const int i = mSortFilterProxyModel->mapToSource(index).row();
-        strings += containedStringList->at(i).string();
-        strings += QLatin1Char('\n'); // TODO: specific linefeed for platforms
-    }
+    const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+    QMimeData* mimeData = mContainedStringTableView->model()->mimeData(selectedIndexes);
 
-    QApplication::clipboard()->setText(strings);
+    QApplication::clipboard()->setMimeData(mimeData);
 }
 
 void StringsExtractView::onStringSelectionChanged()
@@ -242,11 +232,11 @@ void StringsExtractView::onStringSelectionChanged()
     // TODO: selectionModel->selectedIndexes() is a expensive operation,
     // but with Qt 4.4.3 hasSelection() has the flaw to return true with a current index
     const bool hasSelection = !selectionModel->selectedIndexes().isEmpty();
-    mCopyButton->setEnabled(hasSelection);
+    mCopyAction->setEnabled(hasSelection);
 
     const bool stringSelected = selectionModel->isSelected(selectionModel->currentIndex());
     const bool canHighlightString = mTool->canHighlightString();
-    mGotoButton->setEnabled(canHighlightString && stringSelected);
+    mGotoAction->setEnabled(canHighlightString && stringSelected);
 }
 
 void StringsExtractView::onStringDoubleClicked(const QModelIndex& index)
@@ -257,3 +247,5 @@ void StringsExtractView::onStringDoubleClicked(const QModelIndex& index)
 }
 
 }
+
+#include "moc_stringsextractview.cpp"

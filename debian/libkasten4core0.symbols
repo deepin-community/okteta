@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 5:0.26.2 amd64 armel armhf
+# SymbolsHelper-Confirmed: 5:0.26.11 amd64 i386
 libKasten4Core.so.0 libkasten4core0 #MINVER#
 * Build-Depends-Package: okteta-dev
  _ZN6Kasten10JobManager10executeJobEP4KJob@Base 4:14.12.0
@@ -19,9 +19,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten13AbstractModel15readOnlyChangedEb@Base 4:14.12.0
  _ZN6Kasten13AbstractModel16staticMetaObjectE@Base 4:14.12.0
  _ZN6Kasten13AbstractModel17modifiableChangedEb@Base 4:14.12.0
- _ZN6Kasten13AbstractModelC1EPNS_20AbstractModelPrivateE@Base 4:14.12.0
  _ZN6Kasten13AbstractModelC1EPS0_@Base 4:14.12.0
- _ZN6Kasten13AbstractModelC2EPNS_20AbstractModelPrivateE@Base 4:14.12.0
  _ZN6Kasten13AbstractModelC2EPS0_@Base 4:14.12.0
  _ZN6Kasten13AbstractModelD0Ev@Base 4:14.12.0
  _ZN6Kasten13AbstractModelD1Ev@Base 4:14.12.0
@@ -31,9 +29,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten15AbstractLoadJob11setDocumentEPNS_16AbstractDocumentE@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJob14documentLoadedEPNS_16AbstractDocumentE@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJob16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten15AbstractLoadJobC1EPNS_22AbstractLoadJobPrivateE@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJobC1Ev@Base 4:14.12.0
- _ZN6Kasten15AbstractLoadJobC2EPNS_22AbstractLoadJobPrivateE@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJobC2Ev@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJobD0Ev@Base 4:14.12.0
  _ZN6Kasten15AbstractLoadJobD1Ev@Base 4:14.12.0
@@ -72,9 +68,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten17AbstractExportJob11setDocumentEPNS_16AbstractDocumentE@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJob14documentLoadedEPNS_16AbstractDocumentE@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJob16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten17AbstractExportJobC1EPNS_24AbstractExportJobPrivateE@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJobC1Ev@Base 4:14.12.0
- _ZN6Kasten17AbstractExportJobC2EPNS_24AbstractExportJobPrivateE@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJobC2Ev@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJobD0Ev@Base 4:14.12.0
  _ZN6Kasten17AbstractExportJobD1Ev@Base 4:14.12.0
@@ -96,9 +90,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten18AbstractConnectJob11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJob11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJob16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten18AbstractConnectJobC1EPNS_25AbstractConnectJobPrivateE@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJobC1Ev@Base 4:14.12.0
- _ZN6Kasten18AbstractConnectJobC2EPNS_25AbstractConnectJobPrivateE@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJobC2Ev@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJobD0Ev@Base 4:14.12.0
  _ZN6Kasten18AbstractConnectJobD1Ev@Base 4:14.12.0
@@ -125,9 +117,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten21AbstractModelExporter11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporter11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporter16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten21AbstractModelExporterC1EPNS_28AbstractModelExporterPrivateE@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporterC1ERK7QStringS3_@Base 4:14.12.0
- _ZN6Kasten21AbstractModelExporterC2EPNS_28AbstractModelExporterPrivateE@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporterC2ERK7QStringS3_@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporterD0Ev@Base 4:14.12.0
  _ZN6Kasten21AbstractModelExporterD1Ev@Base 4:14.12.0
@@ -157,9 +147,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten23AbstractSyncToRemoteJob11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJob11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJob16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten23AbstractSyncToRemoteJobC1EPNS_30AbstractSyncToRemoteJobPrivateE@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJobC1Ev@Base 4:14.12.0
- _ZN6Kasten23AbstractSyncToRemoteJobC2EPNS_30AbstractSyncToRemoteJobPrivateE@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJobC2Ev@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJobD0Ev@Base 4:14.12.0
  _ZN6Kasten23AbstractSyncToRemoteJobD1Ev@Base 4:14.12.0
@@ -197,9 +185,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten25AbstractModelSynchronizer21localSyncStateChangedENS_14LocalSyncStateE@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizer22remoteSyncStateChangedENS_15RemoteSyncStateE@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizer6setUrlERK4QUrl@Base 4:14.12.0
- _ZN6Kasten25AbstractModelSynchronizerC1EPNS_32AbstractModelSynchronizerPrivateE@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizerC1Ev@Base 4:14.12.0
- _ZN6Kasten25AbstractModelSynchronizerC2EPNS_32AbstractModelSynchronizerPrivateE@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizerC2Ev@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizerD0Ev@Base 4:14.12.0
  _ZN6Kasten25AbstractModelSynchronizerD1Ev@Base 4:14.12.0
@@ -217,9 +203,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten25AbstractSyncWithRemoteJob11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJob11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJob16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten25AbstractSyncWithRemoteJobC1EPNS_32AbstractSyncWithRemoteJobPrivateE@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJobC1Ev@Base 4:14.12.0
- _ZN6Kasten25AbstractSyncWithRemoteJobC2EPNS_32AbstractSyncWithRemoteJobPrivateE@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJobC2Ev@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJobD0Ev@Base 4:14.12.0
  _ZN6Kasten25AbstractSyncWithRemoteJobD1Ev@Base 4:14.12.0
@@ -227,9 +211,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten26AbstractModelDataGenerator11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGenerator11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGenerator16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten26AbstractModelDataGeneratorC1EPNS_33AbstractModelDataGeneratorPrivateE@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGeneratorC1ERK7QStringS3_NS0_5FlagsE@Base 4:14.12.0
- _ZN6Kasten26AbstractModelDataGeneratorC2EPNS_33AbstractModelDataGeneratorPrivateE@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGeneratorC2ERK7QStringS3_NS0_5FlagsE@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGeneratorD0Ev@Base 4:14.12.0
  _ZN6Kasten26AbstractModelDataGeneratorD1Ev@Base 4:14.12.0
@@ -237,9 +219,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten26AbstractModelStreamEncoder11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoder11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoder16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten26AbstractModelStreamEncoderC1EPNS_33AbstractModelStreamEncoderPrivateE@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoderC1ERK7QStringS3_S3_@Base 4:14.12.0
- _ZN6Kasten26AbstractModelStreamEncoderC2EPNS_33AbstractModelStreamEncoderPrivateE@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoderC2ERK7QStringS3_S3_@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoderD0Ev@Base 4:14.12.0
  _ZN6Kasten26AbstractModelStreamEncoderD1Ev@Base 4:14.12.0
@@ -250,9 +230,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten27AbstractFileSystemExportJob16staticMetaObjectE@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJob5startEv@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJobC1EPNS_13AbstractModelEPKNS_22AbstractModelSelectionERK4QUrl@Base 4:14.12.0
- _ZN6Kasten27AbstractFileSystemExportJobC1EPNS_34AbstractFileSystemExportJobPrivateE@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJobC2EPNS_13AbstractModelEPKNS_22AbstractModelSelectionERK4QUrl@Base 4:14.12.0
- _ZN6Kasten27AbstractFileSystemExportJobC2EPNS_34AbstractFileSystemExportJobPrivateE@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJobD0Ev@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJobD1Ev@Base 4:14.12.0
  _ZN6Kasten27AbstractFileSystemExportJobD2Ev@Base 4:14.12.0
@@ -331,9 +309,7 @@ libKasten4Core.so.0 libkasten4core0 #MINVER#
  _ZN6Kasten35AbstractModelFileSystemSynchronizer19unpauseFileWatchingEv@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizer20startNetworkWatchingEv@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizer21setFileDateTimeOnSyncERK9QDateTime@Base 4:14.12.0
- _ZN6Kasten35AbstractModelFileSystemSynchronizerC1EPNS_42AbstractModelFileSystemSynchronizerPrivateE@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizerC1Ev@Base 4:14.12.0
- _ZN6Kasten35AbstractModelFileSystemSynchronizerC2EPNS_42AbstractModelFileSystemSynchronizerPrivateE@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizerC2Ev@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizerD0Ev@Base 4:14.12.0
  _ZN6Kasten35AbstractModelFileSystemSynchronizerD1Ev@Base 4:14.12.0

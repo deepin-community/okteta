@@ -1,21 +1,13 @@
-# SymbolsHelper-Confirmed: 5:0.26.2 amd64 armel armhf
+# SymbolsHelper-Confirmed: 5:0.26.18 amd64 i386
 libKasten4Okteta2Controllers.so.0 libkasten4okteta2controllers0 #MINVER#
 * Build-Depends-Package: okteta-dev
+ (optional=templinst)_ZN12KConfigGroup10writeEntryIN6Kasten15ByteArrayCodingEEEvPKcRKT_6QFlagsIN11KConfigBase15WriteConfigFlagEE@Base 5:0.26.13
+ (optional=templinst)_ZN12KConfigGroup10writeEntryIN6Okteta15AddressComboBox6CodingEEEvPKcRKT_6QFlagsIN11KConfigBase15WriteConfigFlagEE@Base 5:0.26.13
  _ZN6Kasten15InfoToolFactoryC1Ev@Base 5:0.26.2
  _ZN6Kasten15InfoToolFactoryC2Ev@Base 5:0.26.2
  _ZN6Kasten15InfoToolFactoryD0Ev@Base 5:0.26.2
  _ZN6Kasten15InfoToolFactoryD1Ev@Base 5:0.26.2
  _ZN6Kasten15InfoToolFactoryD2Ev@Base 5:0.26.2
- _ZN6Kasten15PrintController11qt_metacallEN11QMetaObject4CallEiPPv@Base 5:0.26.2
- _ZN6Kasten15PrintController11qt_metacastEPKc@Base 5:0.26.2
- _ZN6Kasten15PrintController14setTargetModelEPNS_13AbstractModelE@Base 5:0.26.2
- _ZN6Kasten15PrintController16staticMetaObjectE@Base 5:0.26.2
- _ZN6Kasten15PrintController5printEv@Base 5:0.26.2
- _ZN6Kasten15PrintControllerC1EP13KXMLGUIClient@Base 5:0.26.2
- _ZN6Kasten15PrintControllerC2EP13KXMLGUIClient@Base 5:0.26.2
- _ZN6Kasten15PrintControllerD0Ev@Base 5:0.26.2
- _ZN6Kasten15PrintControllerD1Ev@Base 5:0.26.2
- _ZN6Kasten15PrintControllerD2Ev@Base 5:0.26.2
  _ZN6Kasten17FilterToolFactoryC1Ev@Base 5:0.26.2
  _ZN6Kasten17FilterToolFactoryC2Ev@Base 5:0.26.2
  _ZN6Kasten17FilterToolFactoryD0Ev@Base 5:0.26.2
@@ -176,8 +168,13 @@ libKasten4Okteta2Controllers.so.0 libkasten4okteta2controllers0 #MINVER#
  _ZN6Kasten35ViewProfilesManageControllerFactoryD0Ev@Base 5:0.26.2
  _ZN6Kasten35ViewProfilesManageControllerFactoryD1Ev@Base 5:0.26.2
  _ZN6Kasten35ViewProfilesManageControllerFactoryD2Ev@Base 5:0.26.2
+ (optional=templinst|arch=i386)_ZNK12KConfigGroup9readEntryI10QByteArrayEET_PKcRKS2_@Base 5:0.26.7
+ (optional=templinst)_ZNK12KConfigGroup9readEntryIN6Kasten15ByteArrayCodingEEET_PKcRKS3_@Base 5:0.26.13
+ (optional=templinst)_ZNK12KConfigGroup9readEntryIN6Okteta15AddressComboBox6CodingEEET_PKcRKS4_@Base 5:0.26.11
+ (optional=templinst)_ZNK12KConfigGroup9readEntryIbEET_PKcRKS1_@Base 5:0.26.11
+ (optional=templinst)_ZNK12KConfigGroup9readEntryIdEET_PKcRKS1_@Base 5:0.26.18
+ (optional=templinst)_ZNK12KConfigGroup9readEntryIiEET_PKcRKS1_@Base 5:0.26.7
  _ZNK6Kasten15InfoToolFactory6createEv@Base 5:0.26.2
- _ZNK6Kasten15PrintController10metaObjectEv@Base 5:0.26.2
  _ZNK6Kasten17FilterToolFactory6createEv@Base 5:0.26.2
  _ZNK6Kasten19ChecksumToolFactory6createEv@Base 5:0.26.2
  _ZNK6Kasten19InfoToolViewFactory15defaultPositionEv@Base 5:0.26.2
@@ -252,7 +249,6 @@ libKasten4Okteta2Controllers.so.0 libkasten4okteta2controllers0 #MINVER#
  _ZNK6Kasten35ViewProfilesManageControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
  (arch=!armel !armhf)_ZTI11QSharedData@Base 5:0.26.2
  _ZTIN6Kasten15InfoToolFactoryE@Base 5:0.26.2
- _ZTIN6Kasten15PrintControllerE@Base 5:0.26.2
  _ZTIN6Kasten17FilterToolFactoryE@Base 5:0.26.2
  _ZTIN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
  _ZTIN6Kasten19ChecksumToolFactoryE@Base 5:0.26.2
@@ -291,7 +287,6 @@ libKasten4Okteta2Controllers.so.0 libkasten4okteta2controllers0 #MINVER#
  _ZTIN6Okteta9CharCodecE@Base 5:0.26.2
  (arch=!armel !armhf)_ZTS11QSharedData@Base 5:0.26.2
  _ZTSN6Kasten15InfoToolFactoryE@Base 5:0.26.2
- _ZTSN6Kasten15PrintControllerE@Base 5:0.26.2
  _ZTSN6Kasten17FilterToolFactoryE@Base 5:0.26.2
  _ZTSN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
  _ZTSN6Kasten19ChecksumToolFactoryE@Base 5:0.26.2
@@ -329,7 +324,6 @@ libKasten4Okteta2Controllers.so.0 libkasten4okteta2controllers0 #MINVER#
  _ZTSN6Kasten35ViewProfilesManageControllerFactoryE@Base 5:0.26.2
  _ZTSN6Okteta9CharCodecE@Base 5:0.26.2
  _ZTVN6Kasten15InfoToolFactoryE@Base 5:0.26.2
- _ZTVN6Kasten15PrintControllerE@Base 5:0.26.2
  _ZTVN6Kasten17FilterToolFactoryE@Base 5:0.26.2
  (arch=!armel !armhf)_ZTVN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
  _ZTVN6Kasten19ChecksumToolFactoryE@Base 5:0.26.2

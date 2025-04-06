@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2007-2010 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2007-2010, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -26,6 +26,8 @@
 #include "typecodecs/utf8codec.hpp"
 #include "abstracttypecodec.hpp"
 #include "abstractdifferentsizedialog.hpp"
+// libconfigentries
+#include <endiannessconfigentry.hpp>
 // Okteta Kasten gui
 #include <Kasten/Okteta/ByteArrayView>
 // Okteta Kasten core
@@ -36,9 +38,20 @@
 #include <Okteta/ArrayChangeMetricsList>
 #include <Okteta/ChangesDescribable>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 
+
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char PODDecoderTool::ConfigGroupId[];
+constexpr char PODDecoderTool::ByteOrderConfigKey[];
+constexpr char PODDecoderTool::UnsignedAsHexConfigKey[];
+
+constexpr QSysInfo::Endian PODDecoderTool::DefaultByteOrder;
+constexpr bool PODDecoderTool::DefaultUnsignedAsHex;
 
 enum PODTypes
 {
@@ -65,9 +78,16 @@ PODDecoderTool::PODDecoderTool()
     : mReadOnly(true)
     , mIsPodMarked(false)
     , mCharCodec(Okteta::CharCodec::createCodec(Okteta::LocalEncoding))
-    , mUnsignedAsHex(true)
 {
     setObjectName(QStringLiteral("PODDecoder"));
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    const QSysInfo::Endian byteOrder = configGroup.readEntry(ByteOrderConfigKey, DefaultByteOrder);
+    mPODData.setByteOrder(byteOrder);
+
+    const bool unsignedAsHex = configGroup.readEntry(UnsignedAsHexConfigKey, DefaultUnsignedAsHex);
+    mUnsignedAsHex = unsignedAsHex;
 
     setupDecoder();
 }
@@ -84,6 +104,11 @@ bool PODDecoderTool::isApplyable() const { return (mByteArrayModel != nullptr); 
 
 void PODDecoderTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     const bool oldIsApplyable = isApplyable();
 
     if (mByteArrayView) {
@@ -96,7 +121,7 @@ void PODDecoderTool::setTargetModel(AbstractModel* model)
         mByteArrayModel->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
     mByteArrayModel = document ? document->content() : nullptr;
@@ -163,13 +188,21 @@ void PODDecoderTool::setUnsignedAsHex(bool unsignedAsHex)
 
     mUnsignedAsHex = unsignedAsHex;
 
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(UnsignedAsHexConfigKey, mUnsignedAsHex);
+
     updateData();
 }
 
-void PODDecoderTool::setByteOrder(int byteOrder)
+void PODDecoderTool::setByteOrder(int byteOrderValue)
 {
+    const auto byteOrder = static_cast<QSysInfo::Endian>(byteOrderValue);
     // TODO: test on no change is done in PODData, not this level
-    mPODData.setByteOrder((QSysInfo::Endian)byteOrder);
+    mPODData.setByteOrder(byteOrder);
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(ByteOrderConfigKey, byteOrder);
+
     updateData();
 }
 
@@ -208,6 +241,28 @@ QVariant PODDecoderTool::value(int podId) const
 {
     // TODO: add caching here
     return mDecodedValueList[podId];
+}
+
+QByteArray PODDecoderTool::bytes(int podId) const
+{
+    Okteta::AbstractTypeCodec* typeCodec = mTypeCodecs[podId];
+
+    // TODO: consider adding size property to AbstractTypeCodec and just get the data from mPODData
+    QByteArray bytes = typeCodec->valueToBytes(mDecodedValueList[podId]);
+
+    const int bytesSize = bytes.size();
+    // need to swap the bytes?
+    if ((bytesSize > 0) && (mPODData.byteOrder() != QSysInfo::ByteOrder)) {
+        const int firstHalfBytesCount = bytesSize / 2;
+        int j = bytesSize - 1;
+        for (int i = 0; i < firstHalfBytesCount; ++i, --j) {
+            const char helper = bytes[i];
+            bytes[i] = bytes[j];
+            bytes[j] = helper;
+        }
+    }
+
+    return bytes;
 }
 
 void PODDecoderTool::setData(const QVariant& data, int podId)
@@ -255,8 +310,7 @@ void PODDecoderTool::setData(const QVariant& data, int podId)
         }
     }
 
-    Okteta::ChangesDescribable* changesDescribable =
-        qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
+    auto* changesDescribable = qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
 
     if (changesDescribable) {
         changesDescribable->openGroupedChange(i18nc("Edited as %datatype", "Edited as %1", typeCodec->name()));
@@ -303,6 +357,14 @@ void PODDecoderTool::updateData()
     emit dataChanged();
 }
 
+void PODDecoderTool::selectBytesInView(int podId)
+{
+    const int length = mDecodedValueByteCountList[podId];
+    const Okteta::AddressRange selection = Okteta::AddressRange::fromWidth(mCursorIndex, length);
+    mByteArrayView->setSelection(selection.start(), selection.end());
+    mByteArrayView->setFocus();
+}
+
 void PODDecoderTool::markPOD(int podId)
 {
     const int length = mDecodedValueByteCountList[podId];
@@ -329,3 +391,5 @@ void PODDecoderTool::onReadOnlyChanged()
 }
 
 }
+
+#include "moc_poddecodertool.cpp"

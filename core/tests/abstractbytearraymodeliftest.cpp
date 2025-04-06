@@ -39,9 +39,9 @@ void AbstractByteArrayModelIfTest::init()
 
 void AbstractByteArrayModelIfTest::cleanup()
 {
-    deleteByteArrayModel(mByteArrayModel);
-
     delete ContentsChangeListSpy;
+
+    deleteByteArrayModel(mByteArrayModel);
 }
 
 void AbstractByteArrayModelIfTest::clearSignalSpys()
@@ -771,3 +771,5 @@ void AbstractByteArrayModelIfTest::testReplaceMore()
 }
 
 }
+
+#include "moc_abstractbytearraymodeliftest.cpp"

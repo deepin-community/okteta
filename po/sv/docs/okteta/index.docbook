@@ -1134,9 +1134,9 @@ Structures Script Console-->
 >Menyalternativ</title>
 
 <para
->Förutom de vanliga menyerna i &kde; som beskrivs i kapitlet <ulink url="help:/fundamentals/ui.html#menus"
->Meny</ulink
-> i dokumentet &kde;:s grunder, har &okteta; följande programspecifika menyalternativ: </para>
+>Apart from the common &kde; menus described in the <ulink url="help:/fundamentals/menus.html"
+>Menu</ulink
+> chapter of the &kde; Fundamentals documentation &okteta; has these application specific menu entries: </para>
 
 <sect2 id="file-menu">
 <title

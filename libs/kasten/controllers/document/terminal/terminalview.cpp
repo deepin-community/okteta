@@ -11,12 +11,17 @@
 // lib
 #include "terminaltool.hpp"
 // KF
-#include <KLocalizedString>
+#include <kcoreaddons_version.h>
+#if KCOREADDONS_VERSION >= QT_VERSION_CHECK(5, 86, 0)
+#include <KPluginFactory>
+#include <KPluginMetaData>
+#else
 #include <KServiceTypeTrader>
+#endif
 #include <KParts/ReadOnlyPart>
 #include <kde_terminal_interface.h>
 // Qt
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QFrame>
 #include <QUrl>
 #include <QDir>
@@ -44,9 +49,14 @@ TerminalView::~TerminalView()
 
 void TerminalView::createTerminalPart()
 {
+#if KCOREADDONS_VERSION >= QT_VERSION_CHECK(5, 86, 0)
+    KPluginFactory *factory = KPluginFactory::loadFactory(KPluginMetaData(QStringLiteral("konsolepart"))).plugin;
+    mTerminalPart = factory ? (factory->create<KParts::ReadOnlyPart>(this)) : nullptr;
+#else
     mTerminalPart =
         KServiceTypeTrader::createInstanceFromQuery<KParts::ReadOnlyPart>(
             QStringLiteral("TerminalEmulator"), this, this);
+#endif
 
     if (mTerminalPart) {
         connect(mTerminalPart, &QObject::destroyed,
@@ -92,3 +102,5 @@ void TerminalView::onTerminalPartDestroyed()
 }
 
 }
+
+#include "moc_terminalview.cpp"

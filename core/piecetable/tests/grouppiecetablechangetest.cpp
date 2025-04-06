@@ -13,8 +13,6 @@
 // test
 #include "testpiecetablechange.hpp"
 #include <piecetable/piecetable.hpp>
-//
-#include <arraychangemetricslist.hpp>
 // Qt
 #include <QTest>
 
@@ -199,3 +197,5 @@ void GroupPieceTableChangeTest::testRevertBeforeChange()
 }
 
 QTEST_GUILESS_MAIN(KPieceTable::GroupPieceTableChangeTest)
+
+#include "moc_grouppiecetablechangetest.cpp"

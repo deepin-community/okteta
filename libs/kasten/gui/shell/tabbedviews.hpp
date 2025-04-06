@@ -28,7 +28,7 @@ class KASTENGUI_EXPORT TabbedViews : public AbstractGroupedViews
     )
 
 protected:
-    explicit TabbedViews(TabbedViewsPrivate* d);
+    KASTENGUI_NO_EXPORT explicit TabbedViews(TabbedViewsPrivate* d);
 
 public:
     TabbedViews();
@@ -59,6 +59,8 @@ public:
 Q_SIGNALS:
     void dataOffered(const QMimeData* mimeData, bool& accepted);
     void dataDropped(const QMimeData* mimeData);
+    void contextMenuRequested(AbstractView* view, QPoint pos);
+    void newDocumentRequested();
 
 private:
     Q_DECLARE_PRIVATE(TabbedViews)

@@ -17,15 +17,15 @@
 // KF
 #include <KMessageBox>
 #include <KComboBox>
-#include <KGuiItem>
 #include <KLocalizedString>
 // Qt
-#include <QPushButton>
+#include <QToolBar>
 #include <QFormLayout>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QCheckBox>
-#include <QLabel>
 #include <QGroupBox>
+#include <QAction>
+#include <QIcon>
 
 namespace Kasten {
 
@@ -35,9 +35,10 @@ CharsetConversionView::CharsetConversionView(CharsetConversionTool* tool, QWidge
 {
     auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
     // source/target charset
-    auto* directionCharsetLayout = new QHBoxLayout();
+    auto* directionCharsetToolBar = new QToolBar(this);
 
     mDirectionComboBox = new KComboBox(this);
     const QStringList directionList {
@@ -60,13 +61,14 @@ CharsetConversionView::CharsetConversionView(CharsetConversionTool* tool, QWidge
     connect(mDirectionComboBox, QOverload<int>::of(&KComboBox::activated),
             mTool, &CharsetConversionTool::setConversionDirection);
 
-    directionCharsetLayout->addWidget(mDirectionComboBox);
+    directionCharsetToolBar->addWidget(mDirectionComboBox);
 
     mOtherCharSetComboBox = new KComboBox(this);
     const QStringList charCodecNames = Okteta::CharCodec::codecNames();
     const int indexOfCurrentCharCodec = charCodecNames.indexOf(mTool->otherCharCodecName());
     mOtherCharSetComboBox->addItems(charCodecNames);
     mOtherCharSetComboBox->setCurrentIndex(indexOfCurrentCharCodec);
+    mOtherCharSetComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     const QString targetCharsetToolTip =
         i18nc("@info:tooltip",
@@ -85,11 +87,11 @@ CharsetConversionView::CharsetConversionView(CharsetConversionTool* tool, QWidge
             mTool, &CharsetConversionTool::setOtherCharCodecName);
 #endif
 
-    directionCharsetLayout->addWidget(mOtherCharSetComboBox, 10);
-    baseLayout->addLayout(directionCharsetLayout);
+    directionCharsetToolBar->addWidget(mOtherCharSetComboBox);
+    baseLayout->addWidget(directionCharsetToolBar);
 
     // settings
-    QGroupBox* settingsBox = new QGroupBox(i18nc("@title:group", "Parameters"), this);
+    auto* settingsBox = new QGroupBox(i18nc("@title:group", "Parameters"), this);
 
     auto* settingsLayout = new QFormLayout();
 
@@ -124,6 +126,7 @@ CharsetConversionView::CharsetConversionView(CharsetConversionTool* tool, QWidge
     mSubstituteByteEdit = new Okteta::ByteArrayComboBox(this);
     mSubstituteByteEdit->setMinLength(1);
     mSubstituteByteEdit->setMaxLength(1);
+    mSubstituteByteEdit->setCharCodec(mTool->targetCharCodecName());
     const QString substituteByteToolTip =
         i18nc("@info:tooltip",
               "The byte to use for chars which are not part of the target charset.");
@@ -132,40 +135,47 @@ CharsetConversionView::CharsetConversionView(CharsetConversionTool* tool, QWidge
               "Define the byte to use for chars which are not part of the target charset.");
     mSubstituteByteEdit->setToolTip(substituteByteToolTip);
     mSubstituteByteEdit->setWhatsThis(substituteByteWhatsThis);
-//     mSubstituteByteEdit->setEnabled( mTool->isSubstitutingMissingChars() );
-    mSubstituteByteEdit->setEnabled(false);   // TODO: fix char entering and enable again
+    mSubstituteByteEdit->setEnabled(mTool->isSubstitutingMissingChars());
     connect(mSubstituteByteEdit, &Okteta::ByteArrayComboBox::byteArrayChanged,
             this, &CharsetConversionView::onDefaultByteEditChanged);
-//     connect( mSubstituteMissingCharCheckBox, SIGNAL(toggled(bool)),
-//              mSubstituteByteEdit, SLOT(setEnabled(bool)) );
+    connect(mSubstituteByteEdit, &Okteta::ByteArrayComboBox::formatChanged,
+            this, &CharsetConversionView::onDefaultByteEditCodingChanged);
+    connect(mTool, &CharsetConversionTool::isSubstitutingMissingCharsChanged,
+            mSubstituteByteEdit, &QWidget::setEnabled);
+    connect(mTool, &CharsetConversionTool::targetCharCodecChanged,
+            mSubstituteByteEdit, &Okteta::ByteArrayComboBox::setCharCodec);
+    mSubstituteByteEdit->setFormat(static_cast<Okteta::ByteArrayComboBox::Coding>(mTool->substituteByteCoding()));
     mSubstituteByteEdit->setByteArray(QByteArray(1, mTool->substituteByte()));
     settingsLayout->addRow(substituteByteLabelText, mSubstituteByteEdit);
+    QWidget* const substituteByteEditLabel = settingsLayout->labelForField(mSubstituteByteEdit);
+    substituteByteEditLabel->setEnabled(mTool->isSubstitutingMissingChars());
+    connect(mTool, &CharsetConversionTool::isSubstitutingMissingCharsChanged,
+            substituteByteEditLabel, &QWidget::setEnabled);
 
     settingsBox->setLayout(settingsLayout);
 
     baseLayout->addWidget(settingsBox);
 
     // action
-    auto* actionsLayout = new QHBoxLayout();
+    auto* actionToolBar = new QToolBar(this);
+    actionToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    actionsLayout->addStretch();
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    actionToolBar->addWidget(stretcher);
 
-    const KGuiItem convertGuiItem =
-        KGuiItem(i18n("Con&vert"),
-                 QStringLiteral("run-build"),
-                 i18nc("@info:tooltip",
-                       "Converts the bytes in the selected range."),
-                 xi18nc("@info:whatsthis",
+    mConvertAction =
+        actionToolBar->addAction(QIcon::fromTheme(QStringLiteral("run-build")),
+                                 i18n("Con&vert"),
+                                 this, &CharsetConversionView::onConvertButtonClicked);
+    mConvertAction->setToolTip(i18nc("@info:tooltip",
+                       "Converts the bytes in the selected range."));
+    mConvertAction->setWhatsThis(xi18nc("@info:whatsthis",
                         "If you press the <interface>Convert</interface> button, "
                         "all bytes in the selected range "
                         "will be replaced by bytes which represent the same character "
                         "in the selected target charset."));
-    mConvertButton = new QPushButton(this);
-    KGuiItem::assign(mConvertButton, convertGuiItem);
-    connect(mConvertButton, &QPushButton::clicked, this, &CharsetConversionView::onConvertButtonClicked);
-    actionsLayout->addWidget(mConvertButton);
-
-    baseLayout->addLayout(actionsLayout);
+    baseLayout->addWidget(actionToolBar);
     baseLayout->addStretch();
 
     connect(mTool, &CharsetConversionTool::isApplyableChanged,
@@ -178,16 +188,24 @@ CharsetConversionView::~CharsetConversionView() = default;
 
 void CharsetConversionView::onApplyableChanged(bool isApplyable)
 {
-    mConvertButton->setEnabled(isApplyable);
+    mConvertAction->setEnabled(isApplyable);
 }
 
 void CharsetConversionView::onDefaultByteEditChanged(const QByteArray& byteArray)
 {
-    Q_UNUSED(byteArray);
+    const Okteta::Byte byte = byteArray.isEmpty() ? 0 : byteArray[0];
+    mTool->setSubstituteByte(byte);
+}
+
+void CharsetConversionView::onDefaultByteEditCodingChanged(int coding)
+{
+    mTool->setSubstituteByteCoding(static_cast<CharsetConversionTool::Coding>(coding));
 }
 
 void CharsetConversionView::onConvertButtonClicked()
 {
+    mSubstituteByteEdit->rememberCurrentByteArray();
+
     mTool->convertChars();
 }
 
@@ -218,7 +236,7 @@ void CharsetConversionView::onConversionDone(bool success, int convertedBytesCou
                                  messageBoxTitle);
     } else {
         // TODO: show/goto byte which on which conversion fails
-        KMessageBox::sorry(/*mParentWidget*/ nullptr,
+        KMessageBox::error(/*mParentWidget*/ nullptr,
                            i18nc("@info",
                                  "Conversion cancelled because of chars which are not "
                                  "in the target charset."),
@@ -228,3 +246,5 @@ void CharsetConversionView::onConversionDone(bool success, int convertedBytesCou
 }
 
 }
+
+#include "moc_charsetconversionview.cpp"

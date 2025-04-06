@@ -14,6 +14,8 @@
 // Qt
 #include <QString>
 
+class KConfigGroup;
+
 namespace Kasten {
 
 class SourceCodeStreamEncoderSettings
@@ -27,12 +29,38 @@ public:
         UnsignedShort,
         Integer,
         UnsignedInteger,
+        LongInteger,
+        UnsignedLongInteger,
         Float,
         Double,
+        _Count,
     };
+
+private:
+    static const QString DefaultVariableName;
+
+    static constexpr PrimitiveDataType DefaultDataType = PrimitiveDataType::UnsignedChar;
+    static constexpr int DefaultElementsPerLine = 4;
+    static constexpr bool DefaultUnsignedAsHexadecimal = true;
+
+    static constexpr char VariableNameConfigKey[] = "VariableName";
+    static constexpr char DataTypeConfigKey[] = "DataType";
+    static constexpr char ElementsPerLineConfigKey[] = "ElementsPerLine";
+    static constexpr char UnsignedAsHexadecimalConfigKey[] = "UnsignedAsHexadecimal";
 
 public:
     SourceCodeStreamEncoderSettings();
+    SourceCodeStreamEncoderSettings(const SourceCodeStreamEncoderSettings&) = default;
+
+    ~SourceCodeStreamEncoderSettings() = default;
+
+    SourceCodeStreamEncoderSettings& operator=(const SourceCodeStreamEncoderSettings&) = default;
+
+    bool operator==(const SourceCodeStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     QString variableName;
@@ -46,6 +74,9 @@ public:
 class ByteArraySourceCodeStreamEncoder : public AbstractByteArrayStreamEncoder
 {
     Q_OBJECT
+
+private:
+    static constexpr char ConfigGroupId[] = "ByteArraySourceCodeStreamEncoder";
 
 public:
     ByteArraySourceCodeStreamEncoder();
@@ -73,11 +104,6 @@ private:
 };
 
 inline SourceCodeStreamEncoderSettings ByteArraySourceCodeStreamEncoder::settings() const { return mSettings; }
-inline void ByteArraySourceCodeStreamEncoder::setSettings(const SourceCodeStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 }
 

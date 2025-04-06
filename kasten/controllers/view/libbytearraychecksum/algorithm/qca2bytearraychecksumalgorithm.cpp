@@ -9,7 +9,7 @@
 // QCA
 // need to have this first, as QCA needs QT_NO_CAST_FROM_ASCII disabled when included
 #include <config-qca2.hpp> // krazy:excludeall=includes
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
 // disable QT_NO_CAST_FROM_ASCII
 #ifdef QT_NO_CAST_FROM_ASCII
 #undef QT_NO_CAST_FROM_ASCII
@@ -24,8 +24,8 @@
 // Qt
 #include <QByteArray>
 
-Qca2ByteArrayChecksumAlgorithm::Qca2ByteArrayChecksumAlgorithm(const QString& name, const QString& type)
-    : AbstractByteArrayChecksumAlgorithm(name)
+Qca2ByteArrayChecksumAlgorithm::Qca2ByteArrayChecksumAlgorithm(const QString& name, const QString& id, const QString& type)
+    : AbstractByteArrayChecksumAlgorithm(name, id)
     , mType(type)
 {}
 
@@ -62,3 +62,5 @@ bool Qca2ByteArrayChecksumAlgorithm::calculateChecksum(QString* result,
     *result = QCA::arrayToHex(hashResult);
     return true;
 }
+
+#include "moc_qca2bytearraychecksumalgorithm.cpp"

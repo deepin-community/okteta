@@ -10,11 +10,11 @@
 
 // Kasten gui
 #include <Kasten/Zoomable>
+#include <Kasten/ZoomLevelsQueryable>
 // Kasten core
 #include <Kasten/AbstractModel>
 // KF
 #include <KXMLGUIClient>
-#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 // Qt
@@ -22,14 +22,23 @@
 
 namespace Kasten {
 
+// same as ZoomSlider
+static constexpr int DefaultZoomControllerZoomOutLevelsSize = 49;
+static constexpr int DefaultZoomControllerZoomInLevelsSize = 50;
+
 ZoomController::ZoomController(KXMLGUIClient* guiClient)
 {
     mZoomInAction = KStandardAction::zoomIn(  this, &ZoomController::zoomIn,  this);
+    mZoomInAction->setEnabled(false);
     mZoomOutAction = KStandardAction::zoomOut(this, &ZoomController::zoomOut, this);
+    mZoomOutAction->setEnabled(false);
+    mZoomNormalAction = KStandardAction::actualSize(this, &ZoomController::zoomNormal, this);
+    mZoomNormalAction->setEnabled(false);
 
     guiClient->actionCollection()->addActions({
         mZoomInAction,
-        mZoomOutAction
+        mZoomOutAction,
+        mZoomNormalAction,
     });
 
 #if 0
@@ -62,36 +71,70 @@ ZoomController::ZoomController(KXMLGUIClient* guiClient)
     FitToSizeAction = new KAction(i18n("&Fit to Size"), ActionCollection, "fit_to_size");
     connect(FitToSizeAction, SIGNAL(triggered(bool)), SLOT(fitToSize()));
 #endif
-    setTargetModel(nullptr);
 }
 
 void ZoomController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const zoomableModel = model ? model->findBaseModelWithInterface<If::Zoomable*>() : nullptr;
+    if (zoomableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::Zoomable*>() : nullptr;
+    mModel = zoomableModel;
     mZoomControl = mModel ? qobject_cast<If::Zoomable*>(mModel) : nullptr;
+    m_zoomLevelsControl = nullptr;
 
     if (mZoomControl) {
-        mZoomLevel = mZoomControl->zoomLevel();
-        connect(mModel, SIGNAL(zoomLevelChanged(double)), SLOT(onZoomLevelChange(double)));
-    }
+        const auto children = mModel->findChildren<QObject*>(QString(), Qt::FindDirectChildrenOnly);
+        for (auto* child : children) {
+            m_zoomLevelsControl = qobject_cast<If::ZoomLevelsQueryable*>(child);
+            if (m_zoomLevelsControl) {
+                connect(child, SIGNAL(zoomLevelsChanged()),
+                        this, SLOT(onZoomLevelsChanged()));
+                break;
+            }
+        }
 
-    const bool hasView = (mZoomControl != nullptr);
-    mZoomInAction->setEnabled(hasView);
-    mZoomOutAction->setEnabled(hasView);
+        updateActionsToZoomScale(mZoomControl->zoomScale());
+        connect(mModel, SIGNAL(zoomLevelChanged(double)), SLOT(updateActionsToZoomScale(double)));
+    } else {
+        mZoomNormalAction->setEnabled(false);
+        mZoomInAction->setEnabled(false);
+        mZoomOutAction->setEnabled(false);
+    }
 }
 
 void ZoomController::zoomIn()
 {
-    mZoomControl->setZoomLevel(mZoomLevel * 1.10);
+    double newZoomScale = mZoomControl->zoomScale();
+    if (m_zoomLevelsControl) {
+        const int zoomLevel = m_zoomLevelsControl->zoomLevelForScale(newZoomScale);
+        newZoomScale = m_zoomLevelsControl->zoomScaleForLevel(zoomLevel + 1);
+    } else {
+        newZoomScale *= 1.10;
+    }
+    mZoomControl->setZoomScale(newZoomScale);
 }
 
 void ZoomController::zoomOut()
 {
-    mZoomControl->setZoomLevel(mZoomLevel / 1.10);
+    double newZoomScale = mZoomControl->zoomScale();
+    if (m_zoomLevelsControl) {
+        const int zoomLevel = m_zoomLevelsControl->zoomLevelForScale(newZoomScale);
+        newZoomScale = m_zoomLevelsControl->zoomScaleForLevel(zoomLevel - 1);
+    } else {
+        newZoomScale /= 1.10;
+    }
+    mZoomControl->setZoomScale(newZoomScale);
+}
+
+void ZoomController::zoomNormal()
+{
+    mZoomControl->setZoomScale(1.0);
 }
 #if 0
 void ZoomController::zoomTo(const QString& nz)
@@ -128,9 +171,27 @@ void ZoomController::fitToSize()
     updateZoomActions();
 }
 #endif
-void ZoomController::onZoomLevelChange(double level)
+void ZoomController::updateActionsToZoomScale(double zoomScale)
 {
-    mZoomLevel = level;
+    const int zoomLevel = m_zoomLevelsControl ? m_zoomLevelsControl->zoomLevelForScale(zoomScale) : 50 - static_cast<int>(50.0 / zoomScale + 0.5);
+
+    const bool isZoomed = (zoomLevel != 0);
+    mZoomNormalAction->setEnabled(isZoomed);
+
+    const int zoomOutLevelsSize = (m_zoomLevelsControl ? m_zoomLevelsControl->zoomOutLevelsSize() : DefaultZoomControllerZoomInLevelsSize);
+    const bool isOutZoomable = (-zoomLevel < zoomOutLevelsSize);
+    mZoomOutAction->setEnabled(isOutZoomable);
+
+    const int zoomInLevelsSize = (m_zoomLevelsControl ? m_zoomLevelsControl->zoomInLevelsSize() : DefaultZoomControllerZoomOutLevelsSize);
+    const bool isInZoomable = (zoomLevel < zoomInLevelsSize);
+    mZoomInAction->setEnabled(isInZoomable);
+}
+
+void ZoomController::onZoomLevelsChanged()
+{
+    updateActionsToZoomScale(mZoomControl->zoomScale());
 }
 
 }
+
+#include "moc_zoomcontroller.cpp"

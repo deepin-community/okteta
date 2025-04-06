@@ -43,6 +43,13 @@ int AddressComboBox::format() const
     return d->format();
 }
 
+void AddressComboBox::setFormat(AddressComboBox::Coding codingId)
+{
+    Q_D(AddressComboBox);
+
+    d->setFormat(codingId);
+}
+
 void AddressComboBox::rememberCurrentAddress()
 {
     Q_D(AddressComboBox);
@@ -51,3 +58,5 @@ void AddressComboBox::rememberCurrentAddress()
 }
 
 }
+
+#include "moc_addresscombobox.cpp"

@@ -56,11 +56,6 @@ DataInformation* PrimitiveDataInformation::childAt(unsigned int) const
     return nullptr;
 }
 
-bool PrimitiveDataInformation::canHaveChildren() const
-{
-    return false;
-}
-
 BitCount64 PrimitiveDataInformation::childPosition(const DataInformation*, Okteta::Address) const
 {
     Q_ASSERT(false);
@@ -73,12 +68,27 @@ int PrimitiveDataInformation::indexOf(const DataInformation* const) const
     return -1;
 }
 
+QVariant PrimitiveDataInformationWrapper::valueToQVariant() const
+{
+    return mValue->valueToQVariant();
+}
+
 QScriptValue PrimitiveDataInformationWrapper::valueAsQScriptValue() const
 {
     return mValue->valueAsQScriptValue();
 }
 
-qint64 PrimitiveDataInformationWrapper::readData(Okteta::AbstractByteArrayModel* input,
+QString PrimitiveDataInformationWrapper::valueToQString(AllPrimitiveTypes value) const
+{
+    return mValue->valueToQString(value);
+}
+
+QVariant PrimitiveDataInformationWrapper::valueToQVariant(AllPrimitiveTypes value) const
+{
+    return mValue->valueToQVariant(value);
+}
+
+qint64 PrimitiveDataInformationWrapper::readData(const Okteta::AbstractByteArrayModel* input,
                                                  Okteta::Address address, BitCount64 bitsRemaining, quint8* bitOffset)
 {
     Q_ASSERT(mHasBeenUpdated); // update must have been called prior to reading

@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2006-2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2006-2009, 2023 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -9,21 +9,32 @@
 #include "podtableview.hpp"
 
 // controller
+#include "poddisplaymodel.hpp"
 #include "podtablemodel.hpp"
 #include "poddelegate.hpp"
 #include "poddecodertool.hpp"
+// utils
+#include <labelledtoolbarwidget.hpp>
+#include <labelledwidgetstoolbar.hpp>
 // KF
+#include <kwidgetsaddons_version.h>
 #include <KComboBox>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KStandardAction>
 // Qt
+#include <QToolBar>
 #include <QLabel>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QCheckBox>
 #include <QTreeView>
 #include <QHeaderView>
-#include <QFocusEvent>
+#include <QMenu>
+#include <QMimeData>
+#include <QClipboard>
+#include <QApplication>
 #include <QFontMetrics>
+#include <QIcon>
 
 namespace Kasten {
 
@@ -31,8 +42,9 @@ PODTableView::PODTableView(PODDecoderTool* tool, QWidget* parent)
     : QWidget(parent)
     , mTool(tool)
 {
-    QBoxLayout* baseLayout = new QVBoxLayout(this);
+    auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
     // table
     mPODTableModel = new PODTableModel(mTool, this);
@@ -43,24 +55,30 @@ PODTableView::PODTableView(PODDecoderTool* tool, QWidget* parent)
     mPODTableView->setItemsExpandable(false);
     mPODTableView->setUniformRowHeights(true);
     mPODTableView->setAllColumnsShowFocus(true);
-    mPODTableView->setItemDelegate(new PODDelegate(mTool, this));
     mPODTableView->setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
     mPODTableView->setDragEnabled(true);
+    mPODTableView->setDragDropMode(QAbstractItemView::DragOnly);
     mPODTableView->setSortingEnabled(false);
-    mPODTableView->setModel(mPODTableModel);
     mPODTableView->installEventFilter(this);
+    mPODTableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    mPODDelegate = new PODDelegate(mTool, this);
+    mPODTableView->setItemDelegate(mPODDelegate);
     QHeaderView* header = mPODTableView->header();
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setStretchLastSection(false);
+    auto* displayModel = new PODDisplayModel(mPODTableView, mTool, this);
+    displayModel->setSourceModel(mPODTableModel);
+    mPODTableView->setModel(displayModel);
     connect(mPODTableView->selectionModel(),
             &QItemSelectionModel::currentRowChanged,
             this, &PODTableView::onCurrentRowChanged);
+    connect(mPODTableView, &QWidget::customContextMenuRequested,
+            this, &PODTableView::onCustomContextMenuRequested);
 
     baseLayout->addWidget(mPODTableView, 10);
 
     // settings
-    QBoxLayout* settingsLayout = new QHBoxLayout();
-    settingsLayout->setContentsMargins(0, 0, 0, 0);
+    auto* settingsToolBar = new LabelledWidgetsToolBar(this);
 
     mByteOrderSelection = new KComboBox(this);
     mByteOrderSelection->addItem(i18nc("@item:inlistbox", "Big-endian"));     // add first for index
@@ -72,25 +90,23 @@ PODTableView::PODTableView(PODDecoderTool* tool, QWidget* parent)
         i18nc("@info:tooltip",
               "The byte order to use for decoding the bytes.");
     mByteOrderSelection->setToolTip(byteOrderToolTip);
-    settingsLayout->addWidget(mByteOrderSelection);
+    settingsToolBar->addWidget(mByteOrderSelection);
 
-    QLabel* unsignedAsHexLabel = new QLabel(i18nc("@option:check", "Unsigned as hexadecimal:"), this);
-    settingsLayout->addWidget(unsignedAsHexLabel);
+    auto* unsignedAsHexLabel = new QLabel(i18nc("@option:check", "Unsigned as hexadecimal:"), this);
 
     mUnsignedAsHexCheck = new QCheckBox(this);
     mUnsignedAsHexCheck->setChecked(mTool->isUnsignedAsHex());
     connect(mUnsignedAsHexCheck, &QCheckBox::toggled,
             mTool, &PODDecoderTool::setUnsignedAsHex);
-    unsignedAsHexLabel->setBuddy(mUnsignedAsHexCheck);
+    auto* labelledUnsignedAsHexCheck = new LabelledToolBarWidget(unsignedAsHexLabel, mUnsignedAsHexCheck, this);
     const QString unsignedAsHexToolTip =
         i18nc("@info:tooltip",
               "Sets whether the values of the unsigned integer types are shown as hexadecimal instead of as decimal.");
     unsignedAsHexLabel->setToolTip(unsignedAsHexToolTip);
     mUnsignedAsHexCheck->setToolTip(unsignedAsHexToolTip);
-    settingsLayout->addWidget(mUnsignedAsHexCheck);
-    settingsLayout->addStretch();
+    settingsToolBar->addWidget(labelledUnsignedAsHexCheck);
 
-    baseLayout->addLayout(settingsLayout);
+    baseLayout->addWidget(settingsToolBar);
 
     mTool->setDifferentSizeDialog(this);
 
@@ -113,7 +129,7 @@ PODTableView::~PODTableView() = default;
 
 Answer PODTableView::query(int newValueSize, int oldValueSize, int sizeLeft)
 {
-    Q_UNUSED(sizeLeft);
+    Q_UNUSED(sizeLeft)
 
     Answer answer;
 
@@ -131,7 +147,12 @@ Answer PODTableView::query(int newValueSize, int oldValueSize, int sizeLeft)
                      i18nc("@info:tooltip",
                            "Keep the unused bytes with their old values."));
 
-        messageBoxAnswer = KMessageBox::warningYesNoCancel(this, message, mTool->title(),
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        messageBoxAnswer = KMessageBox::warningTwoActionsCancel(this,
+#else
+        messageBoxAnswer = KMessageBox::warningYesNoCancel(this,
+#endif
+                                                           message, mTool->title(),
                                                            keepGuiItem,
                                                            KStandardGuiItem::remove());
     } else {
@@ -140,15 +161,43 @@ Answer PODTableView::query(int newValueSize, int oldValueSize, int sizeLeft)
                    "The new value needs <emphasis>more</emphasis> bytes (%1 instead of %2).<nl/>"
                    "Overwrite the following bytes or insert new ones as needed?", newValueSize, oldValueSize);
 
-        messageBoxAnswer = KMessageBox::warningYesNoCancel(this, message, mTool->title(),
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        messageBoxAnswer = KMessageBox::warningTwoActionsCancel(this,
+#else
+        messageBoxAnswer = KMessageBox::warningYesNoCancel(this,
+#endif
+                                                           message, mTool->title(),
                                                            KStandardGuiItem::overwrite(),
                                                            KStandardGuiItem::insert());
     }
 
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    answer = (messageBoxAnswer == KMessageBox::PrimaryAction) ?   Overwrite :
+             (messageBoxAnswer == KMessageBox::SecondaryAction) ? AdaptSize :
+#else
     answer = (messageBoxAnswer == KMessageBox::Yes) ? Overwrite :
              (messageBoxAnswer == KMessageBox::No) ?  AdaptSize :
+#endif
                                                       Cancel;
     return answer;
+}
+
+void PODTableView::selectBytesInView()
+{
+    auto* action = static_cast<QAction*>(sender());
+    const int podId = action->data().toInt();
+
+    mTool->selectBytesInView(podId);
+}
+
+void PODTableView::copyToClipboard()
+{
+    auto* action = static_cast<QAction*>(sender());
+    const QModelIndex index = action->data().toModelIndex();
+
+    QMimeData* mimeData = mPODTableView->model()->mimeData({index});
+
+    QApplication::clipboard()->setMimeData(mimeData);
 }
 
 bool PODTableView::eventFilter(QObject* object, QEvent* event)
@@ -184,6 +233,36 @@ bool PODTableView::eventFilter(QObject* object, QEvent* event)
     return QWidget::eventFilter(object, event);
 }
 
+void PODTableView::onCustomContextMenuRequested(QPoint pos)
+{
+    const QModelIndex index = mPODTableView->indexAt(pos);
+    if (!index.isValid()) {
+        return;
+    }
+    const int podId = index.row();
+    if (mTool->value(podId).isNull()) {
+        return;
+    }
+
+    auto* menu = new QMenu(this);
+
+    // TODO: split into explicit "Copy As Data" and "Copy As Text"
+    auto* copyAction =  KStandardAction::copy(this, &PODTableView::copyToClipboard,  this);
+    copyAction->setShortcut(QKeySequence());
+    copyAction->setData(index);
+    menu->addAction(copyAction);
+
+    // TODO: reusing string due to string freeze
+    auto* selectAction = new QAction(QIcon::fromTheme(QStringLiteral("select-rectangular")),
+                                     i18nc("@action:button", "&Select"), this);
+    connect(selectAction, &QAction::triggered,
+            this, &PODTableView::selectBytesInView);
+    selectAction->setData(podId);
+    menu->addAction(selectAction);
+
+    menu->popup(mPODTableView->viewport()->mapToGlobal(pos));
+}
+
 void PODTableView::onCurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous)
@@ -201,3 +280,5 @@ void PODTableView::onCurrentRowChanged(const QModelIndex& current, const QModelI
 }
 
 }
+
+#include "moc_podtableview.cpp"

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 
-project(Okteta VERSION 0.26.6)
+project(Okteta VERSION 0.26.21)
 
 set(REQUIRED_KF5_VERSION "5.48.0")
 find_package(ECM ${REQUIRED_KF5_VERSION} REQUIRED NO_MODULE)
@@ -42,6 +42,8 @@ option(BUILD_DESIGNERPLUGIN "Build the Designer plugin." ON)
 add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Qt Designer plugin")
 option(BUILD_OKTETAKASTENLIBS "Build the Okteta Kasten libraries." ON)
 add_feature_info(OKTETAKASTENLIBS ${BUILD_OKTETAKASTENLIBS} "Okteta Kasten libraries")
+cmake_dependent_option(BUILD_TERMINALTOOL "Build the Terminal tool (needs Konsole/Qt5 KPart)." ON "BUILD_OKTETAKASTENLIBS" OFF)
+add_feature_info(TERMINALTOOL ${BUILD_TERMINALTOOL} "Terminal tool")
 
 cmake_dependent_option(BUILD_KPARTSPLUGIN "Build the KParts plugin." ON "BUILD_OKTETAKASTENLIBS" OFF)
 add_feature_info(KPARTSPLUGIN ${BUILD_KPARTSPLUGIN} "KParts plugin")
@@ -82,10 +84,14 @@ if( BUILD_OKTETAKASTENLIBS )
         KCMUtils
         KIO
         NewStuff
-        Parts
         Service
         WidgetsAddons
         XmlGui
+    )
+endif()
+if (BUILD_TERMINALTOOL OR BUILD_KPARTSPLUGIN)
+    list(APPEND ADDITIONAL_REQUIRED_KF_COMPONENTS
+        Parts
     )
 endif()
 if( BUILD_DESKTOPPROGRAM )

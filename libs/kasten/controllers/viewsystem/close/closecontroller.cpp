@@ -23,15 +23,19 @@ CloseController::CloseController(ViewManager* viewManager, KXMLGUIClient* guiCli
     : mViewManager(viewManager)
 {
     mCloseAction = KStandardAction::close(this, &CloseController::close, this);
+    mCloseAction->setEnabled(false);
 
     guiClient->actionCollection()->addAction(mCloseAction->objectName(), mCloseAction);
-
-    setTargetModel(0);
 }
 
 void CloseController::setTargetModel(AbstractModel* model)
 {
-    mView = model ? model->findBaseModel<AbstractView*>() : 0;
+    AbstractView* const view = model ? model->findBaseModel<AbstractView*>() : nullptr;
+    if (view == mView) {
+        return;
+    }
+
+    mView = view;
 
     const bool hasView = (mView != 0);
 
@@ -44,3 +48,5 @@ void CloseController::close()
 }
 
 }
+
+#include "moc_closecontroller.cpp"

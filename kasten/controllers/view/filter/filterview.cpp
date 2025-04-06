@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2008-2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2008-2009, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -15,17 +15,20 @@
 #include <abstractbytearrayfilterparametersetedit.hpp>
 #include <abstractbytearrayfilterparameterset.hpp>
 #include <abstractbytearrayfilter.hpp>
+// utils
+#include <labelledtoolbarwidget.hpp>
 // KF
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KGuiItem>
 // Qt
+#include <QToolBar>
 #include <QLabel>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QStackedWidget>
-#include <QPushButton>
+#include <QAction>
 #include <QGroupBox>
 #include <QAbstractItemView>
+#include <QIcon>
 
 namespace Kasten {
 
@@ -35,15 +38,16 @@ FilterView::FilterView(FilterTool* tool, QWidget* parent)
 {
     auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
-    // filter
-    auto* operationLayout = new QHBoxLayout();
-    QLabel* label = new QLabel(i18nc("@label:listbox operation to use by the filter", "Operation:"), this);
+    // filter selection
+    auto* filterSelectionToolBar = new QToolBar(this);
+    auto* label = new QLabel(i18nc("@label:listbox operation to use by the filter", "Operation:"), this);
     mOperationComboBox = new KComboBox(this);
     connect(mOperationComboBox, QOverload<int>::of(&KComboBox::activated),
-            this, &FilterView::onOperationChange);
+            mTool, &FilterTool::setFilter);
 
-    label->setBuddy(mOperationComboBox);
+    auto* labelledAlgorithmComboBox = new LabelledToolBarWidget(label, mOperationComboBox, this);
     const QString operationToolTip =
         i18nc("@info:tooltip", "The operation to use for the filter.");
     label->setToolTip(operationToolTip);
@@ -52,12 +56,12 @@ FilterView::FilterView(FilterTool* tool, QWidget* parent)
         i18nc("@info:whatsthis", "Select the operation to use for the filter.");
     label->setWhatsThis(operationWhatsThis);
     mOperationComboBox->setWhatsThis(operationWhatsThis);
+    mOperationComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    operationLayout->addWidget(label);
-    operationLayout->addWidget(mOperationComboBox, 10);
-    baseLayout->addLayout(operationLayout);
+    filterSelectionToolBar->addWidget(labelledAlgorithmComboBox);
+    baseLayout->addWidget(filterSelectionToolBar);
 
-    QGroupBox* parameterSetBox = new QGroupBox(i18nc("@title:group", "Parameters"), this);
+    auto* parameterSetBox = new QGroupBox(i18nc("@title:group", "Parameters"), this);
     baseLayout->addWidget(parameterSetBox);
 
     auto* parameterSetLayout = new QVBoxLayout;
@@ -69,22 +73,27 @@ FilterView::FilterView(FilterTool* tool, QWidget* parent)
     parameterSetLayout->addWidget(mParameterSetEditStack);
 
     // filter button
-    auto* buttonLayout = new QHBoxLayout();
-    buttonLayout->addStretch(10);
-    mFilterButton = new QPushButton(this);
-    KGuiItem::assign(mFilterButton, KGuiItem(i18nc("@action:button", "&Filter"),
-                                             QStringLiteral("run-build"),
-                                             i18nc("@info:tooltip", "Executes the filter for the bytes in the selected range."),
-                                             xi18nc("@info:whatsthis",
-                                                    "If you press the <interface>Filter</interface> button, the operation you selected "
-                                                    "above is executed for the bytes in the selected range with the given options.")));
-    mFilterButton->setEnabled(mTool->hasWriteable());
+    auto* actionToolBar = new QToolBar(this);
+    actionToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
+
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    actionToolBar->addWidget(stretcher);
+
+    mFilterAction =
+        actionToolBar->addAction(QIcon::fromTheme(QStringLiteral("run-build")),
+                                 i18nc("@action:button", "&Filter"),
+                                 this, &FilterView::onFilterClicked);
+    mFilterAction->setToolTip(i18nc("@info:tooltip",
+                                    "Executes the filter for the bytes in the selected range."));
+    mFilterAction->setWhatsThis(xi18nc("@info:whatsthis",
+                                       "If you press the <interface>Filter</interface> button, the operation you selected "
+                                       "above is executed for the bytes in the selected range with the given options."));
+    mFilterAction->setEnabled(mTool->hasWriteable());
+    connect(mTool, &FilterTool::filterChanged, this, &FilterView::onFilterChanged);
     connect(mTool, &FilterTool::hasWriteableChanged, this, &FilterView::onHasWriteableChanged);
     connect(mTool, &FilterTool::charCodecChanged, this, &FilterView::onCharCodecChanged);
-    connect(mFilterButton, &QPushButton::clicked, this, &FilterView::onFilterClicked);
-    addButton(mFilterButton, AbstractToolWidget::Default);
-    buttonLayout->addWidget(mFilterButton);
-    baseLayout->addLayout(buttonLayout);
+    baseLayout->addWidget(actionToolBar);
     baseLayout->addStretch(10);
 
     // automatically set focus to the parameters if a operation has been selected
@@ -115,7 +124,7 @@ void FilterView::addFilters()
         mParameterSetEditStack->addWidget(parameterEdit);
     }
 
-    onOperationChange(0);
+    onFilterChanged(mTool->filterId());
 }
 
 void FilterView::getParameterSet(AbstractByteArrayFilterParameterSet* parameterSet) const
@@ -129,7 +138,7 @@ void FilterView::getParameterSet(AbstractByteArrayFilterParameterSet* parameterS
 
 void FilterView::onFilterClicked()
 {
-    const int filterId = mOperationComboBox->currentIndex();
+    const int filterId = mTool->filterId();
 
     auto* parametersetEdit =
         qobject_cast<AbstractByteArrayFilterParameterSetEdit*>(mParameterSetEditStack->currentWidget());
@@ -142,7 +151,7 @@ void FilterView::onFilterClicked()
         getParameterSet(parameterSet);
     }
 
-    mTool->filter(filterId);
+    mTool->filter();
 }
 
 void FilterView::onOperationChange(int index)
@@ -157,10 +166,22 @@ void FilterView::onOperationChange(int index)
     auto* parametersetEdit =
         qobject_cast<AbstractByteArrayFilterParameterSetEdit*>(mParameterSetEditStack->currentWidget());
     if (parametersetEdit) {
+        AbstractByteArrayFilterParameterSet* parameterSet = mTool->parameterSet(index);
+        if (parameterSet) {
+            parametersetEdit->setValues(parameterSet);
+        }
         connect(parametersetEdit, &AbstractByteArrayFilterParameterSetEdit::validityChanged,
                 this, &FilterView::onValidityChanged);
+        connect(parametersetEdit, &AbstractByteArrayFilterParameterSetEdit::valuesChanged,
+                this, &FilterView::onValuesChanged);
         onValidityChanged(parametersetEdit->isValid());
     }
+}
+
+void FilterView::onFilterChanged(int filterId)
+{
+    mOperationComboBox->setCurrentIndex(filterId);
+    onOperationChange(filterId);
 }
 
 void FilterView::onHasWriteableChanged(bool hasWriteable)
@@ -169,7 +190,7 @@ void FilterView::onHasWriteableChanged(bool hasWriteable)
         qobject_cast<AbstractByteArrayFilterParameterSetEdit*>(mParameterSetEditStack->currentWidget());
     const bool isValid = (parametersetEdit ? parametersetEdit->isValid() : false);
 
-    mFilterButton->setEnabled(hasWriteable && isValid);
+    mFilterAction->setEnabled(hasWriteable && isValid);
 }
 
 void FilterView::onCharCodecChanged(const QString& charCodecName)
@@ -181,9 +202,22 @@ void FilterView::onCharCodecChanged(const QString& charCodecName)
     }
 }
 
+void FilterView::onValuesChanged()
+{
+    const int filterId = mOperationComboBox->currentIndex();
+    AbstractByteArrayFilterParameterSet* parameterSet = mTool->parameterSet(filterId);
+    if (!parameterSet) {
+        return;
+    }
+    getParameterSet(parameterSet);
+    mTool->saveParameterSet(filterId);
+}
+
 void FilterView::onValidityChanged(bool isValid)
 {
-    mFilterButton->setEnabled(mTool->hasWriteable() && isValid);
+    mFilterAction->setEnabled(mTool->hasWriteable() && isValid);
 }
 
 }
+
+#include "moc_filterview.cpp"

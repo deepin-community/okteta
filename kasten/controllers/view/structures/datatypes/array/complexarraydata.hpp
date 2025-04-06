@@ -18,13 +18,12 @@ class ScriptHandlerInfo;
 
 class ComplexArrayData : public AbstractArrayData
 {
-    Q_DISABLE_COPY(ComplexArrayData)
-
 public:
     /** Takes ownership of @p data !*/
     ComplexArrayData(unsigned int initialLength, DataInformation* data, ArrayDataInformation* parent);
     ~ComplexArrayData() override;
 
+public:
     QVariant dataAt(uint index, int column, int role) override;
 
     unsigned int length() const override;
@@ -32,6 +31,7 @@ public:
     BitCount32 size() const override;
 
     QString typeName() const override;
+    QString valueString() const override;
 
     DataInformation* childAt(unsigned int idx) override;
     int indexOf(const DataInformation* data) const override;
@@ -44,7 +44,7 @@ public:
 
     QScriptValue toScriptValue(uint index, QScriptEngine* engine, ScriptHandlerInfo* handlerInfo) override;
 
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) override;
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining) override;
     bool setChildData(uint row, const QVariant& value, Okteta::AbstractByteArrayModel* out,
                       Okteta::Address address, BitCount64 bitsRemaining) override;
 

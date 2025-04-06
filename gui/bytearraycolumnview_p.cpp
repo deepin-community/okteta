@@ -21,7 +21,6 @@
 #include <QFontDatabase>
 #include <QPainter>
 #include <QScrollBar>
-#include <QEvent>
 
 namespace Okteta {
 
@@ -268,20 +267,12 @@ void ByteArrayColumnViewPrivate::setByteTypeColored(bool isColored)
     unpauseCursor();
 }
 
-void ByteArrayColumnViewPrivate::changeEvent(QEvent* event)
+void ByteArrayColumnViewPrivate::adjustTToScaledFont()
 {
     Q_Q(ByteArrayColumnView);
 
-    // make sure base class deals with this event first,
-    // as some values which are used here are updated there
-    q->AbstractByteArrayView::changeEvent(event);
-
-    if (event->type() != QEvent::FontChange) {
-        return;
-    }
-
     // get new values
-    const QFontMetrics newFontMetrics = q->fontMetrics();
+    const QFontMetrics newFontMetrics(renderingFont());
     const PixelY digitHeight = newFontMetrics.height();
 
     mOffsetColumn->setFontMetrics(newFontMetrics);
@@ -638,12 +629,13 @@ void ByteArrayColumnViewPrivate::createCursorPixmaps()
     // calculat the shape
     PixelX cursorX;
     PixelX cursorW;
+    const int insertCursorWidth = q->style()->pixelMetric(QStyle::PM_TextCursorWidth);
     if (isCursorBehind()) {
-        cursorX = qMax(0, byteWidth - InsertCursorWidth);
-        cursorW = InsertCursorWidth;
+        cursorX = qMax(0, byteWidth - insertCursorWidth);
+        cursorW = insertCursorWidth;
     } else {
         cursorX = 0;
-        cursorW = mOverWrite ? -1 : InsertCursorWidth;
+        cursorW = mOverWrite ? -1 : insertCursorWidth;
     }
     mCursorPixmaps->setShape(cursorX, cursorW, q->devicePixelRatio());
 }
@@ -713,6 +705,9 @@ void ByteArrayColumnViewPrivate::drawInactiveCursor(QPainter* painter)
 void ByteArrayColumnViewPrivate::renderColumns(QPainter* painter, int cx, int cy, int cw, int ch)
 {
     Q_Q(ByteArrayColumnView);
+
+    // TODO: consider moving font zooming into ColumnsView
+    painter->setFont(renderingFont());
 
     q->AbstractByteArrayView::renderColumns(painter, cx, cy, cw, ch);
     // TODO: update non blinking cursors. Should this perhaps be done in the buffercolumn?

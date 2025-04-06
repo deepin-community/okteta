@@ -15,7 +15,7 @@
 #include <Kasten/Versionable>
 #include <Kasten/AbstractModel>
 // Qt
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QTreeView>
 
 namespace Kasten {
@@ -59,3 +59,5 @@ void VersionView::setModel(AbstractModel* model)
 }
 
 }
+
+#include "moc_versionview.cpp"

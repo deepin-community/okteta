@@ -21,7 +21,6 @@
 #include <Kasten/AbstractModel>
 // KF
 #include <KXMLGUIClient>
-#include <KXMLGUIFactory>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KSelectAction>
@@ -46,16 +45,21 @@ InsertController::InsertController(ModelCodecViewManager* modelCodecViewManager,
     // TODO: find better id
     guiClient->actionCollection()->addAction(QStringLiteral("insert"), mInsertSelectAction);
 
-    setTargetModel(nullptr);
+    updateActions();
 }
 
 void InsertController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const selectedDataWriteableModel = model ? model->findBaseModelWithInterface<If::SelectedDataWriteable*>() : nullptr;
+    if (selectedDataWriteableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::SelectedDataWriteable*>() : nullptr;
+    mModel = selectedDataWriteableModel;
     mSelectedDataWriteableControl = mModel ? qobject_cast<If::SelectedDataWriteable*>(mModel) : nullptr;
 
     if (mSelectedDataWriteableControl) {
@@ -87,7 +91,7 @@ void InsertController::updateActions()
             mInsertSelectAction->addAction(action);
         }
     } else {
-        QAction* noneAction = new QAction(i18nc("@item There are no generators.", "Not available."), mInsertSelectAction);
+        auto* noneAction = new QAction(i18nc("@item There are no generators.", "Not available."), mInsertSelectAction);
         noneAction->setEnabled(false);
         mInsertSelectAction->addAction(noneAction);
     }
@@ -131,6 +135,8 @@ void InsertController::triggerExecution(AbstractModelDataGenerator* generator)
 
     mSelectedDataWriteableControl->insertData(mimeData);
 
+    delete mimeData;
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -142,3 +148,5 @@ void InsertController::onReadOnlyChanged(bool isReadOnly)
 }
 
 }
+
+#include "moc_insertcontroller.cpp"

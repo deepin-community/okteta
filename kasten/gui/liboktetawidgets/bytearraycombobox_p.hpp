@@ -23,6 +23,11 @@ class ByteArrayComboBoxPrivate
 {
 public:
     explicit ByteArrayComboBoxPrivate(ByteArrayComboBox* parent);
+    ByteArrayComboBoxPrivate(const ByteArrayComboBoxPrivate&) = delete;
+
+    ~ByteArrayComboBoxPrivate() = default;
+
+    ByteArrayComboBoxPrivate& operator=(const ByteArrayComboBoxPrivate&) = delete;
 
 public:
     QByteArray byteArray() const;
@@ -33,6 +38,7 @@ public:
 public:
     void init();
     void setByteArray(const QByteArray& byteArray);
+    void setFormat(ByteArrayComboBox::Coding codecId);
     void setCharCodec(const QString& charCodecName);
     void setMaxLength(int maxLength);
     void setMinLength(int minLength);

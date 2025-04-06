@@ -1,16 +1,9 @@
-# translation of okteta.po to 简体中文
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the okteta package.
-#
-# Ni Hui <shuizhuyuanluo@126.com>, 2008, 2009.
-# Lie_Ex <lilith.ex@gmail.com>, 2008,2009.
-# Guo Yunhe <guoyunhebrave@gmail.com>, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-03-23 07:47+0100\n"
-"PO-Revision-Date: 2021-03-27 17:31\n"
+"POT-Creation-Date: 2025-03-07 03:30+0000\n"
+"PO-Revision-Date: 2024-03-30 19:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -24,13 +17,13 @@ msgstr ""
 "X-Crowdin-File: /kf5-stable/messages/okteta/libkasten.pot\n"
 "X-Crowdin-File-ID: 7161\n"
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:74
+#: controllers/document/modified/modifiedbarcontroller.cpp:76
 #, kde-format
 msgctxt "@tooltip the document is modified"
 msgid "Modified."
 msgstr "已修改。"
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:75
+#: controllers/document/modified/modifiedbarcontroller.cpp:77
 #, kde-format
 msgctxt "@tooltip the document is not modified"
 msgid "Not modified."
@@ -60,7 +53,7 @@ msgctxt "@option:check set the document to read-write"
 msgid "Set Read-write"
 msgstr "设为可读写"
 
-#: controllers/document/terminal/terminaltool.cpp:32
+#: controllers/document/terminal/terminaltool.cpp:31
 #: controllers/document/terminal/terminaltoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
@@ -99,30 +92,32 @@ msgid "Versions"
 msgstr "版本"
 
 #: controllers/documentsystem/close/closecontroller.cpp:40
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:56
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All"
 msgstr "关闭全部文档"
 
 #: controllers/documentsystem/close/closecontroller.cpp:47
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:63
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All Other"
-msgstr "关闭其它"
+msgstr "关闭其他"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:41
+#: controllers/documentsystem/creator/creatorcontroller.cpp:36
 #, kde-format
 msgctxt "@title:menu create new byte arrays from different sources"
 msgid "New"
 msgstr "新建"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:54
+#: controllers/documentsystem/creator/creatorcontroller.cpp:49
 #, kde-format
 msgctxt "@item:inmenu create a new empty document"
 msgid "Empty"
 msgstr "空文件"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:65
+#: controllers/documentsystem/creator/creatorcontroller.cpp:60
 #, kde-format
 msgctxt "@item:inmenu create a new document from data in the clipboard"
 msgid "From Clipboard"
@@ -149,57 +144,57 @@ msgctxt "@title:window"
 msgid "Documents"
 msgstr "文件"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:33
+#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:32
 #: controllers/documentsystem/filesystembrowser/filesystembrowsertoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
 msgid "Filesystem"
 msgstr "文件系统"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:79
+#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:99
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Folder of Current Document"
 msgstr "当前文档所在文件夹"
 
-#: controllers/io/copyas/copyascontroller.cpp:44
+#: controllers/io/copyas/copyascontroller.cpp:43
 #, kde-format
 msgctxt "@title:menu"
 msgid "Copy As"
 msgstr "复制为"
 
-#: controllers/io/copyas/copyascontroller.cpp:91
+#: controllers/io/copyas/copyascontroller.cpp:95
 #, kde-format
 msgctxt "@item There are no encoders."
 msgid "Not available."
 msgstr "不可用。"
 
-#: controllers/io/copyas/copyasdialog.cpp:39
+#: controllers/io/copyas/copyasdialog.cpp:40
 #, kde-format
 msgctxt "@title:window"
 msgid "Copy As"
 msgstr "复制为"
 
-#: controllers/io/copyas/copyasdialog.cpp:61
-#: controllers/io/export/exportdialog.cpp:61
+#: controllers/io/copyas/copyasdialog.cpp:62
+#: controllers/io/export/exportdialog.cpp:62
 #, kde-format
 msgctxt "@title:group"
 msgid "Preview"
 msgstr "Preview"
 
-#: controllers/io/copyas/copyasdialog.cpp:72
+#: controllers/io/copyas/copyasdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Copy to clipboard"
 msgstr "复制到剪贴板(&C)"
 
-#: controllers/io/copyas/copyasdialog.cpp:74
+#: controllers/io/copyas/copyasdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Copy the selected data to the clipboard."
 msgstr "将所选数据复制到剪贴板。"
 
-#: controllers/io/copyas/copyasdialog.cpp:76
+#: controllers/io/copyas/copyasdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -210,38 +205,38 @@ msgstr ""
 "如果您按下<interface>复制到剪贴板</interface>按钮，所选数据将依照您在上面输入"
 "的设置被复制到剪贴板。"
 
-#: controllers/io/export/exportcontroller.cpp:40
+#: controllers/io/export/exportcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Export"
 msgstr "导出"
 
-#: controllers/io/export/exportcontroller.cpp:87
+#: controllers/io/export/exportcontroller.cpp:91
 #, kde-format
 msgctxt "@item There are no exporters."
 msgid "Not available."
 msgstr "不可用。"
 
-#: controllers/io/export/exportdialog.cpp:39
-#: core/system/modelcodecmanager_p.cpp:101
+#: controllers/io/export/exportdialog.cpp:40
+#: core/system/modelcodecmanager_p.cpp:102
 #, kde-format
 msgctxt "@title:window"
 msgid "Export"
 msgstr "导出"
 
-#: controllers/io/export/exportdialog.cpp:72
+#: controllers/io/export/exportdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export to File..."
 msgstr "导出到文件(&E)..."
 
-#: controllers/io/export/exportdialog.cpp:74
+#: controllers/io/export/exportdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Export the selected data to a file."
 msgstr "将所选数据导出到文件。"
 
-#: controllers/io/export/exportdialog.cpp:76
+#: controllers/io/export/exportdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -251,13 +246,13 @@ msgstr ""
 "如果您按下<interface>导出到文件</interface>按钮，所选数据将依照您在上面输入的"
 "设置被复制到文件。"
 
-#: controllers/io/insert/insertcontroller.cpp:40
+#: controllers/io/insert/insertcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Insert"
 msgstr "Insert"
 
-#: controllers/io/insert/insertcontroller.cpp:90
+#: controllers/io/insert/insertcontroller.cpp:94
 #, kde-format
 msgctxt "@item There are no generators."
 msgid "Not available."
@@ -293,10 +288,11 @@ msgstr ""
 "的光标当前所在位置。"
 
 #: controllers/io/synchronize/synchronizecontroller.cpp:34
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:38
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Reloa&d"
-msgstr "重新载入(&D)"
+msgstr "重新加载(&D)"
 
 #: controllers/shellwindow/viewareasplit/viewareasplitcontroller.cpp:42
 #, kde-format
@@ -316,7 +312,7 @@ msgctxt "@action:inmenu"
 msgid "Close View Area"
 msgstr "关闭查看区域"
 
-#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:77
+#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:73
 #, kde-format
 msgctxt "@item There are no windows."
 msgid "None."
@@ -328,51 +324,51 @@ msgctxt "@action:inmenu"
 msgid "Undo"
 msgstr "撤销"
 
-#: controllers/view/version/versioncontroller.cpp:43
+#: controllers/view/version/versioncontroller.cpp:44
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Redo"
 msgstr "重做"
 
-#: controllers/view/version/versioncontroller.cpp:130
+#: controllers/view/version/versioncontroller.cpp:134
 #, kde-format
 msgctxt "@action Undo: [change]"
 msgid "Undo: %1"
 msgstr "撤销：%1"
 
-#: controllers/view/version/versioncontroller.cpp:150
+#: controllers/view/version/versioncontroller.cpp:154
 #, kde-format
 msgctxt "@action Redo: [change]"
 msgid "Redo: %1"
 msgstr "重做：%1"
 
-#: controllers/view/zoom/zoomcontroller.cpp:36
+#: controllers/view/zoom/zoomcontroller.cpp:45
 #, kde-format
 msgid "Zoom"
 msgstr "缩放"
 
-#: controllers/view/zoom/zoomcontroller.cpp:45
+#: controllers/view/zoom/zoomcontroller.cpp:54
 #, kde-format
 msgctxt "zoom-factor (percentage)"
 msgid "%1%"
 msgstr "%1%"
 
-#: controllers/view/zoom/zoomcontroller.cpp:58
+#: controllers/view/zoom/zoomcontroller.cpp:67
 #, kde-format
 msgid "&Fit to Width"
 msgstr "适合宽度(&F)"
 
-#: controllers/view/zoom/zoomcontroller.cpp:60
+#: controllers/view/zoom/zoomcontroller.cpp:69
 #, kde-format
 msgid "&Fit to Height"
 msgstr "适合高度(&F)"
 
-#: controllers/view/zoom/zoomcontroller.cpp:62
+#: controllers/view/zoom/zoomcontroller.cpp:71
 #, kde-format
 msgid "&Fit to Size"
 msgstr "适合尺寸(&F)"
 
-#: controllers/view/zoom/zoomslider.cpp:107
+#: controllers/view/zoom/zoomslider.cpp:150
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Zoom: %1%"
@@ -384,19 +380,19 @@ msgctxt "@title:window"
 msgid "Save As"
 msgstr "另存为"
 
-#: core/system/documentsyncmanager_p.cpp:202
+#: core/system/documentsyncmanager_p.cpp:213
 #, kde-format
 msgctxt "@title:window"
 msgid "Close"
 msgstr "关闭"
 
-#: core/system/documentsyncmanager_p.cpp:237
+#: core/system/documentsyncmanager_p.cpp:248
 #, kde-format
 msgctxt "@title:window"
 msgid "Reload"
-msgstr "重新载入"
+msgstr "重新加载"
 
-#: core/system/modelcodecmanager_p.cpp:110
+#: core/system/modelcodecmanager_p.cpp:112
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export"
@@ -430,23 +426,23 @@ msgstr ""
 "如果您按下<interface>创建</interface>按钮，您在上面生成的数据将会被插入到一个"
 "新文档。"
 
-#: gui/system/dialoghandler.cpp:33
+#: gui/system/dialoghandler.cpp:34
 #, kde-kuit-format
 msgctxt "@info"
 msgid "There is already a file at<nl/><filename>%1</filename>.<nl/>Overwrite?"
 msgstr "已经有一个名为 <nl/><filename>%1</filename> 的文件。<nl/>覆盖它吗？"
 
-#: gui/system/dialoghandler.cpp:47
+#: gui/system/dialoghandler.cpp:58
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
 "There are unsaved modifications to <filename>%1</filename>. They will be "
 "lost if you reload the document.<nl/>Do you want to discard them?"
 msgstr ""
-"对文件 <filename>%1</filename> 的修改尚未保存。如果您重新装载文档，这些修改将"
+"对文件 <filename>%1</filename> 的修改尚未保存。如果您重新加载文档，这些修改将"
 "会丢失。<nl/>您想要丢弃修改吗？"
 
-#: gui/system/dialoghandler.cpp:60
+#: gui/system/dialoghandler.cpp:71
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -454,7 +450,7 @@ msgid ""
 "changes or discard them?"
 msgstr "<filename>%1</filename> 已经被修改。<nl/>您想要保存还是丢弃更改？"
 
-#: gui/system/dialoghandler.cpp:74
+#: gui/system/dialoghandler.cpp:95
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""

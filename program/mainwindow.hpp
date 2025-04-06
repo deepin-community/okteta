@@ -18,7 +18,6 @@ class QMimeData;
 namespace Kasten {
 
 class OktetaProgram;
-class DocumentManager;
 class AbstractToolViewFactory;
 class AbstractToolFactory;
 class AbstractXmlGuiControllerFactory;
@@ -47,6 +46,7 @@ private Q_SLOTS:
     void onDataOffered(const QMimeData* mimeData, bool& accept);
     void onDataDropped(const QMimeData* mimeData);
     void onCloseRequest(const QVector<Kasten::AbstractView*>& views);
+    void onNewDocumentRequested();
 
 private:
     OktetaProgram* mProgram;

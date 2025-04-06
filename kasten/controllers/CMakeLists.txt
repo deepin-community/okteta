@@ -16,15 +16,16 @@ macro(OKTETAKASTENCONTROLLERS_ADD_SUBLIBRARY _subdir)
     )
 endmacro()
 
-macro(OKTETAKASTENCONTROLLERS_ADD_SUBLIBRARY_STRUCTURES_TESTED _subdir)
-    okteta_add_sublibrary(Controllers NAMESPACE Okteta Kasten
-        REVERSE_NAMESPACE_INCLUDEDIR
-        SOURCE_TAG structures_tested
-        SUBDIR ${_subdir}
-        ${ARGN}
-    )
-endmacro()
-
+oktetakastencontrollers_add_sublibrary(libconfigentries
+    PRIVATE
+        AddressComboBoxCodingConfigEntry
+        ByteArrayCodingConfigEntry
+        ByteArrayComboBoxCodingConfigEntry
+        CaseSensitivityConfigEntry
+        DirectionConfigEntry
+        EndiannessConfigEntry
+        FindDirectionConfigEntry
+)
 
 oktetakastencontrollers_add_sublibrary(document/info
     PUBLIC
@@ -59,6 +60,7 @@ oktetakastencontrollers_add_sublibrary(view/info
         InfoToolViewFactory
     PRIVATE
         CreateStatisticJob
+        StatisticDisplayModel
         StatisticTableModel
         InfoView
         InfoTool
@@ -66,6 +68,7 @@ oktetakastencontrollers_add_sublibrary(view/info
     KCFG
         infoviewsettings.kcfgc
 )
+configure_file(view/info/statisticdisplaymodel-config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/statisticdisplaymodel-config.hpp @ONLY)
 
 oktetakastencontrollers_add_sublibrary(view/stringsextract
     PUBLIC
@@ -142,6 +145,12 @@ oktetakastencontrollers_add_sublibrary(view/libfinddialog
         AbstractFindDialog
 )
 
+oktetakastencontrollers_add_sublibrary(view/libbytearraysearch
+    PRIVATE
+        ByteArraySearchJob
+        ByteArraySearchUtils
+)
+
 oktetakastencontrollers_add_sublibrary(view/poddecoder/typecodecs
     PRIVATE
         Binary8Codec
@@ -167,11 +176,18 @@ oktetakastencontrollers_add_sublibrary(view/poddecoder
         PODDecoderToolViewFactory
     PRIVATE
         PODData
+        PODDisplayModel
         PODTableModel
         PODDelegate
         PODTableView
         PODDecoderTool
         PODDecoderToolView
+)
+
+oktetakastencontrollers_add_sublibrary(view/poddecoder/types
+    SOURCE_TAG typeeditor
+    PRIVATE
+        Char8
 )
 
 oktetakastencontrollers_add_sublibrary(view/poddecoder/typeeditors
@@ -186,6 +202,8 @@ oktetakastencontrollers_add_sublibrary(view/poddecoder/typeeditors
         Float32Editor
         Float64Editor
         Char8Editor
+        Char8StringParser
+        Char8StringValidator
         Utf8Editor
 )
 
@@ -208,7 +226,6 @@ oktetakastencontrollers_add_sublibrary(view/search
     PRIVATE
         SearchUserQueryable
         SearchDialog
-        SearchJob
         SearchTool
         SearchController
 )
@@ -329,7 +346,8 @@ oktetakastencontrollers_add_sublibrary(view/bookmarks
 )
 
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatypes
+oktetakastencontrollers_add_sublibrary(view/structures/datatypes
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         TopLevelDataInformation
         DataInformation
@@ -343,7 +361,8 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatyp
         PrimitiveDataType
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatypes/array
+oktetakastencontrollers_add_sublibrary(view/structures/datatypes/array
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         ArrayDataInformation
         AbstractArrayData
@@ -351,7 +370,8 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatyp
         PrimitiveArrayData
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatypes/primitive
+oktetakastencontrollers_add_sublibrary(view/structures/datatypes/primitive
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         PointerDataInformation
         CharDataInformation
@@ -367,7 +387,8 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatyp
         EnumDefinition
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatypes/primitive/bitfield
+oktetakastencontrollers_add_sublibrary(view/structures/datatypes/primitive/bitfield
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         AbstractBitfieldDataInformation
         BoolBitfieldDataInformation
@@ -375,7 +396,8 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatyp
         UnsignedBitfieldDataInformation
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatypes/strings
+oktetakastencontrollers_add_sublibrary(view/structures/datatypes/strings
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         StringDataInformation
         StringData
@@ -386,23 +408,25 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/datatyp
         Utf32StringData
         EbcdicStringData
 )
-oktetakastencontrollers_add_sublibrary_structures_tested(../../core/codecs
+oktetakastencontrollers_add_sublibrary(../../core/codecs
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         Ebcdic1047CharCodec
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/script
+oktetakastencontrollers_add_sublibrary(view/structures/script
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         ScriptEngineInitializer
         ScriptHandler
         ScriptHandlerInfo
-        ScriptUtils
         ScriptLogger
         ScriptLoggerView
         SafeReference
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/script/classes
+oktetakastencontrollers_add_sublibrary(view/structures/script/classes
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         DefaultScriptClass
         ArrayScriptClass
@@ -414,7 +438,8 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/script/
         StructUnionScriptClass
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/parsers
+oktetakastencontrollers_add_sublibrary(view/structures/parsers
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         AbstractStructureParser
         OsdParser
@@ -424,12 +449,14 @@ oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/parsers
         ParserUtils
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures/settings
+oktetakastencontrollers_add_sublibrary(view/structures/settings
+    SOURCE_TAG structuresdatatypes
     KCFG
         structureviewpreferences.kcfgc
 )
 
-oktetakastencontrollers_add_sublibrary_structures_tested(view/structures
+oktetakastencontrollers_add_sublibrary(view/structures
+    SOURCE_TAG structuresdatatypes
     PRIVATE
         AllPrimitiveTypes
         StructLogging
@@ -468,6 +495,7 @@ oktetakastencontrollers_add_sublibrary(view/structures
 
 oktetakastencontrollers_add_sublibrary(${LIBFRAMESPRINT_REL_DIR}
     PRIVATE
+        PrintInfo
         AbstractFrameRenderer
         FramesToPaperPrinter
         HeaderFooterFrameRenderer
@@ -480,15 +508,15 @@ oktetakastencontrollers_add_sublibrary(view/print
         PrintTool
         PrintJob
         AbstractColumnFrameRenderer
+        AbstractByteArrayFrameRenderer
         PrintColumnStylist
-        ByteArrayFrameRenderer
+        ByteArrayColumnFrameRenderer
+        ByteArrayRowFrameRenderer
         PrintDialog
+        PrintPreviewDialog
         PrintController
 )
-set_source_files_properties(view/print/printtool.cpp PROPERTIES
-    COMPILE_FLAGS -DOKTETA_VERSION=\\\"${Okteta_VERSION}\\\"
-)
-
+configure_file(view/print/printtool-config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/printtool-config.hpp @ONLY)
 
 oktetakastencontrollers_add_sublibrary(view/viewconfig
     PUBLIC
@@ -536,6 +564,12 @@ oktetakastencontrollers_add_sublibrary(view/viewcontextmenu
         ViewContextMenuController
 )
 
+oktetakastencontrollers_add_sublibrary(utils
+    PRIVATE
+        LabelledToolBarWidget
+        LabelledWidgetsToolBar
+)
+
 # create a static library for the unit tests. This means we don't have to compile the sources twice
 
 add_library(poddecoder-typeeditors STATIC ${oktetakastencontrollers_typeeditor_LIB_SRCS})
@@ -547,70 +581,20 @@ PRIVATE
   KF5::Completion
 )
 
-add_library( structureview-tested-srcs STATIC ${oktetakastencontrollers_structures_tested_LIB_SRCS} )
-set_target_properties( structureview-tested-srcs PROPERTIES POSITION_INDEPENDENT_CODE TRUE )
-target_link_libraries( structureview-tested-srcs
+add_library( structuresdatatypes STATIC ${oktetakastencontrollers_structuresdatatypes_LIB_SRCS} )
+set_target_properties( structuresdatatypes PROPERTIES POSITION_INDEPENDENT_CODE TRUE )
+target_link_libraries( structuresdatatypes
 PUBLIC
   OktetaCore
   KF5::ConfigGui
-  KF5::I18n
-  KF5::Service
   Qt5::Script
-  Qt5::Xml
-  Qt5::Widgets
 PRIVATE
+  poddecoder-typeeditors
   KF5::Completion
   KF5::ConfigWidgets
+  KF5::I18n
+  KF5::Service
 )
-
-if(BUILD_TESTING)
-  #structures view unit tests
-  ecm_add_tests(
-    test/primitivearraytest.cpp
-    test/arraydatainformationtest.cpp
-    test/basicdatainformationtest.cpp
-    test/primitivedatainformationtest.cpp
-    test/scriptclassestest.cpp
-    test/uniondatainformationtest.cpp
-    test/allprimitivetypestest.cpp
-    test/scriptvalueconvertertest.cpp
-    test/osdparsertest.cpp
-    test/commonparsertest.cpp
-    test/jsparsertest.cpp
-    test/customtostringtest.cpp
-    test/locktooffsettest.cpp
-
-    NAME_PREFIX structures-
-    LINK_LIBRARIES structureview-tested-srcs Qt5::Test poddecoder-typeeditors
-  )
-
-  # remove useless default definition of QT_TESTCASE_BUILDDIR in interface from imported target Qt5::Test
-  get_target_property(qttestdefs Qt5::Test INTERFACE_COMPILE_DEFINITIONS)
-  list(FILTER qttestdefs EXCLUDE REGEX [[^QT_TESTCASE_BUILDDIR=]])
-  set_property(TARGET Qt5::Test PROPERTY INTERFACE_COMPILE_DEFINITIONS ${qttestdefs})
-  # set the definition as needed for our tests
-  target_compile_definitions(customtostringtest PRIVATE QT_TESTCASE_BUILDDIR="${CMAKE_CURRENT_BINARY_DIR}")
-  target_compile_definitions(jsparsertest       PRIVATE QT_TESTCASE_BUILDDIR="${CMAKE_CURRENT_BINARY_DIR}")
-  # TODO: still fragile once __FILE__ is neither absolute or full relative path to this build dir
-  # look into using custom code intead of simple QFINDTESTDATA usage
-
-  #replace tool unit tests
-  ecm_add_test(
-    view/search/searchjob.cpp
-    view/replace/replacejob.cpp
-    test/replacejobtest.cpp
-
-    TEST_NAME replacejobtest
-    LINK_LIBRARIES
-        OktetaKastenGui
-        OktetaKastenCore
-        Qt5::Test
-  )
-  target_include_directories(replacejobtest
-        PUBLIC
-            view/libfinddialog
-  )
-endif()
 
 list(APPEND oktetakastencontrollers_LIB_HDRS
     ${CMAKE_CURRENT_BINARY_DIR}/config-qca2.hpp
@@ -629,8 +613,7 @@ okteta_add_library(Controllers NAMESPACE Okteta Kasten
         KastenGui
         KastenCore
     PRIVATE
-        structureview-tested-srcs
-        poddecoder-typeeditors
+        structuresdatatypes
         KF5::NewStuff
         KF5::I18n
         KF5::ConfigWidgets
@@ -657,7 +640,10 @@ target_include_directories(OktetaKastenControllers
     PRIVATE
         view/libbytearraychecksum
         view/libbytearrayfilter
+        view/libbytearraysearch
         view/libfinddialog
+        libconfigentries
+        utils
         ${LIBFRAMESPRINT_REL_DIR}
 )
 
@@ -691,14 +677,36 @@ okteta_add_cmakeconfig(Controllers NAMESPACE Okteta Kasten
 
 if( KASTEN_BUILD_INTERNAL_TEMPLATES )
 
-okteta_add_sublibrary(ControllersTemplates NAMESPACE Okteta Kasten
+okteta_add_sublibrary(ByteArrayFilterTemplates
     SUBDIR view/libbytearrayfilter/filter/template
     PRIVATE
         Template_ByteArrayFilter
         Template_ByteArrayFilterParameterSet
         Template_ByteArrayFilterParameterSetEdit
 )
-okteta_add_sublibrary(ControllersTemplates NAMESPACE Okteta Kasten
+
+add_library(ByteArrayFilterTemplates  STATIC ${bytearrayfiltertemplates_LIB_SRCS})
+target_include_directories(ByteArrayFilterTemplates
+    PRIVATE
+        view/libbytearrayfilter
+        view/libbytearrayfilter/filter
+)
+# Configure export macros to be setup as with a static lib
+# as the source files are reused for static ByteArrayFilterTemplates
+# Saves doing a separate export header.
+target_compile_definitions(ByteArrayFilterTemplates
+    PUBLIC
+        OKTETAKASTENCONTROLLERS_STATIC_DEFINE
+)
+target_link_libraries(ByteArrayFilterTemplates
+    PUBLIC
+        OktetaCore
+        Qt5::Widgets
+    PRIVATE
+        KF5::I18n
+)
+
+okteta_add_sublibrary(ByteArrayCheckSumTemplates
     SUBDIR view/libbytearraychecksum/algorithm/template
     PRIVATE
         Template_ByteArrayCheckSumAlgorithm
@@ -706,16 +714,34 @@ okteta_add_sublibrary(ControllersTemplates NAMESPACE Okteta Kasten
         Template_ByteArrayChecksumParameterSetEdit
 )
 
-add_library( oktetakastencontrollertemplates  STATIC ${oktetakastencontrollerstemplates_LIB_SRCS} )
-target_include_directories(oktetakastencontrollertemplates
+add_library(ByteArrayCheckSumTemplates  STATIC ${bytearraychecksumtemplates_LIB_SRCS})
+target_include_directories(ByteArrayCheckSumTemplates
     PRIVATE
         view/libbytearrayfilter
         view/libbytearrayfilter/filter
         view/libbytearraychecksum
         view/libbytearraychecksum/algorithm
 )
-# MSVC needs this
-target_compile_definitions( oktetakastencontrollertemplates PUBLIC OKTETAKASTENCONTROLLERS_STATIC_DEFINE=1 )
-target_link_libraries( oktetakastencontrollertemplates   KF5::I18n Qt5::Widgets OktetaCore )
+# Configure export macros to be setup as with a static lib
+# as the source files are reused for static ByteArrayCheckSumTemplates
+# Saves doing a separate export header.
+target_compile_definitions(ByteArrayCheckSumTemplates
+    PUBLIC
+        OKTETAKASTENCONTROLLERS_STATIC_DEFINE
+)
+target_link_libraries(ByteArrayCheckSumTemplates
+    PUBLIC
+        OktetaCore
+        Qt5::Widgets
+    PRIVATE
+        KF5::I18n
+)
 
+endif()
+
+if(BUILD_TESTING)
+    add_subdirectory(view/poddecoder/tests)
+    add_subdirectory(view/replace/tests)
+    add_subdirectory(view/search/tests)
+    add_subdirectory(view/structures/tests)
 endif()

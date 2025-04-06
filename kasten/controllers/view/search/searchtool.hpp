@@ -31,6 +31,12 @@ class SearchTool : public AbstractTool
 {
     Q_OBJECT
 
+private:
+    static constexpr Qt::CaseSensitivity DefaultCaseSensitivity = Qt::CaseInsensitive;
+
+    static constexpr char ConfigGroupId[] = "SearchTool";
+    static constexpr char CaseSensitivityConfigKey[] = "CaseSensitivity";
+
 public:
     SearchTool();
     ~SearchTool() override;
@@ -43,7 +49,7 @@ public: // AbstractTool API
 
 public: // status
     QByteArray searchData() const;
-//     Qt::CaseSensitivity caseSensitivity() const;
+    Qt::CaseSensitivity caseSensitivity() const;
     bool hasSelectedData() const;
     QString charCodingName() const;
 
@@ -86,7 +92,7 @@ private: // target
 };
 
 inline QByteArray SearchTool::searchData() const { return mSearchData; }
-// inline Qt::CaseSensitivity SearchTool::caseSensitivity()       const { return mCaseSensitivity; }
+inline Qt::CaseSensitivity SearchTool::caseSensitivity()  const { return mCaseSensitivity; }
 
 }
 

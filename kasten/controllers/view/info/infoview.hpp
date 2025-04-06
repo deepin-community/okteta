@@ -12,9 +12,9 @@
 // Qt
 #include <QWidget>
 
-class QPushButton;
 class QLabel;
 class QTreeView;
+class QAction;
 
 namespace Kasten {
 
@@ -36,15 +36,17 @@ public Q_SLOTS:
     void setByteArraySize(int size);
 
 private Q_SLOTS:
-    void setFixedFontByGlobalSettings();
     void resizeColumnsWidth();
+    void onCopyButtonClicked();
+    void onTableSelectionChanged();
 
 private:
     InfoTool* mTool;
 
     QLabel* mSizeLabel;
     QTreeView* mStatisticTableView;
-    QPushButton* mUpdateButton;
+    QAction* mUpdateAction;
+    QAction* mCopyAction;
 };
 
 inline InfoTool* InfoView::tool() const { return mTool; }

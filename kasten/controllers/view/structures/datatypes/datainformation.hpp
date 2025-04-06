@@ -40,7 +40,6 @@ namespace Okteta {
 class AbstractByteArrayModel;
 }
 
-class QScriptContext;
 class QScriptEngine;
 class QScriptValue;
 class QScriptClass;
@@ -83,8 +82,6 @@ public:
     };
 
     // methods for children:
-    /** true for unions and structs and arrays*/
-    virtual bool canHaveChildren() const = 0;
     virtual unsigned int childCount() const = 0;
     virtual DataInformation* childAt(unsigned int) const = 0;
     /** @brief Looks for a child of this object with given name
@@ -141,7 +138,7 @@ public:
      *
      * @return the number of bits read or @c -1 if none were read
      */
-    virtual qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    virtual qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                             BitCount64 bitsRemaining, quint8* bitOffset) = 0;
     /** sets mWasAbleToRead to false for all children and this object.
      *  Gets called once before the reading of the whole structure starts. */
@@ -217,6 +214,10 @@ public:
     void setToStringFunction(const QScriptValue& value);
 
 protected:
+    static QString sizeString(BitCount32 size);
+    static QString tooltipString(const QString& nameString, const QString& valueString,
+                                 const QString& typeString, const QString& sizeString,
+                                 const QString& validationMessage = QString());
     static QVariant eofReachedData(int role);
     void setAdditionalFunction(AdditionalData::AdditionalDataType entry, const QScriptValue& value, const char* name);
 
@@ -239,6 +240,7 @@ protected:
     bool mHasBeenValidated : 1;
     bool mHasBeenUpdated : 1;
     bool mWasAbleToRead : 1;
+    bool mWasAbleToReadBefore : 1;
     DataInformationEndianess mByteOrder = DataInformationEndianess::EndianessInherit;
     mutable ScriptLogger::LogLevel mLoggedData : 2; // mutable is ugly but i guess it is the best solution
 };
@@ -249,7 +251,7 @@ Q_DECLARE_METATYPE(const DataInformation*)
 inline Qt::ItemFlags DataInformation::flags(int column, bool fileLoaded) const
 {
     Q_UNUSED(column)
-    Q_UNUSED(fileLoaded);
+    Q_UNUSED(fileLoaded)
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
@@ -266,11 +268,6 @@ inline void DataInformation::setName(const QString& newName)
 inline DataInformation* DataInformation::childAt(unsigned int) const
 {
     return nullptr;
-}
-
-inline bool DataInformation::canHaveChildren() const
-{
-    return false;
 }
 
 inline unsigned int DataInformation::childCount() const

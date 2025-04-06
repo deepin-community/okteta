@@ -11,7 +11,6 @@
 // Kasten core
 #include <Kasten/DocumentSyncManager>
 #include <Kasten/AbstractDocument>
-#include <Kasten/AbstractModelSynchronizer>
 
 // KF
 #include <KLocalizedString>
@@ -44,9 +43,14 @@ QUrl TerminalTool::currentUrl() const
 
 void TerminalTool::setTargetModel(AbstractModel* model)
 {
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
+        return;
+    }
+
     const QUrl oldCurrentUrl = currentUrl();
 
-    mDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    mDocument = document;
 
     const QUrl newCurrentUrl = currentUrl();
 
@@ -56,3 +60,5 @@ void TerminalTool::setTargetModel(AbstractModel* model)
 }
 
 }
+
+#include "moc_terminaltool.cpp"

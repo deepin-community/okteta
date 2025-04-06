@@ -1,11 +1,6 @@
-# SymbolsHelper-Confirmed: 5:0.26.5 arm64 armel armhf i386 mipsel powerpc ppc64 ppc64el s390x x32
+# SymbolsHelper-Confirmed: 5:0.26.19 amd64 i386
 libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
 * Build-Depends-Package: okteta-dev
- _ZN6Kasten19TerminalToolFactoryC1EPNS_19DocumentSyncManagerE@Base 5:0.26.2
- _ZN6Kasten19TerminalToolFactoryC2EPNS_19DocumentSyncManagerE@Base 5:0.26.2
- _ZN6Kasten19TerminalToolFactoryD0Ev@Base 5:0.26.2
- _ZN6Kasten19TerminalToolFactoryD1Ev@Base 5:0.26.2
- _ZN6Kasten19TerminalToolFactoryD2Ev@Base 5:0.26.2
  _ZN6Kasten20DocumentsToolFactoryC1EPNS_15DocumentManagerE@Base 5:0.26.2
  _ZN6Kasten20DocumentsToolFactoryC2EPNS_15DocumentManagerE@Base 5:0.26.2
  _ZN6Kasten20DocumentsToolFactoryD0Ev@Base 5:0.26.2
@@ -56,11 +51,6 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZN6Kasten23SelectControllerFactoryD0Ev@Base 5:0.26.2
  _ZN6Kasten23SelectControllerFactoryD1Ev@Base 5:0.26.2
  _ZN6Kasten23SelectControllerFactoryD2Ev@Base 5:0.26.2
- _ZN6Kasten23TerminalToolViewFactoryC1Ev@Base 5:0.26.2
- _ZN6Kasten23TerminalToolViewFactoryC2Ev@Base 5:0.26.2
- _ZN6Kasten23TerminalToolViewFactoryD0Ev@Base 5:0.26.2
- _ZN6Kasten23TerminalToolViewFactoryD1Ev@Base 5:0.26.2
- _ZN6Kasten23TerminalToolViewFactoryD2Ev@Base 5:0.26.2
  _ZN6Kasten24CreatorControllerFactoryC1EPNS_17ModelCodecManagerEPNS_24AbstractDocumentStrategyE@Base 5:0.26.2
  _ZN6Kasten24CreatorControllerFactoryC2EPNS_17ModelCodecManagerEPNS_24AbstractDocumentStrategyE@Base 5:0.26.2
  _ZN6Kasten24CreatorControllerFactoryD0Ev@Base 5:0.26.2
@@ -156,7 +146,11 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZN6Kasten32FileSystemBrowserToolViewFactoryD0Ev@Base 5:0.26.2
  _ZN6Kasten32FileSystemBrowserToolViewFactoryD1Ev@Base 5:0.26.2
  _ZN6Kasten32FileSystemBrowserToolViewFactoryD2Ev@Base 5:0.26.2
- _ZNK6Kasten19TerminalToolFactory6createEv@Base 5:0.26.2
+ _ZN6Kasten36ViewAreaContextMenuControllerFactoryC1EPNS_14MultiViewAreasEPNS_19DocumentSyncManagerE@Base 5:0.26.7
+ _ZN6Kasten36ViewAreaContextMenuControllerFactoryC2EPNS_14MultiViewAreasEPNS_19DocumentSyncManagerE@Base 5:0.26.7
+ _ZN6Kasten36ViewAreaContextMenuControllerFactoryD0Ev@Base 5:0.26.7
+ _ZN6Kasten36ViewAreaContextMenuControllerFactoryD1Ev@Base 5:0.26.7
+ _ZN6Kasten36ViewAreaContextMenuControllerFactoryD2Ev@Base 5:0.26.7
  _ZNK6Kasten20DocumentsToolFactory6createEv@Base 5:0.26.2
  _ZNK6Kasten21QuitControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
  _ZNK6Kasten21ZoomControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
@@ -167,11 +161,6 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZNK6Kasten23InsertControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
  _ZNK6Kasten23LoaderControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
  _ZNK6Kasten23SelectControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
- _ZNK6Kasten23TerminalToolViewFactory15defaultPositionEv@Base 5:0.26.2
- _ZNK6Kasten23TerminalToolViewFactory2idEv@Base 5:0.26.2
- _ZNK6Kasten23TerminalToolViewFactory5titleEv@Base 5:0.26.2
- _ZNK6Kasten23TerminalToolViewFactory6createEPNS_12AbstractToolE@Base 5:0.26.2
- _ZNK6Kasten23TerminalToolViewFactory8iconNameEv@Base 5:0.26.2
  _ZNK6Kasten24CreatorControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.2
  _ZNK6Kasten24DocumentsToolViewFactory15defaultPositionEv@Base 5:0.26.2
  _ZNK6Kasten24DocumentsToolViewFactory2idEv@Base 5:0.26.2
@@ -203,8 +192,8 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZNK6Kasten32FileSystemBrowserToolViewFactory5titleEv@Base 5:0.26.2
  _ZNK6Kasten32FileSystemBrowserToolViewFactory6createEPNS_12AbstractToolE@Base 5:0.26.2
  _ZNK6Kasten32FileSystemBrowserToolViewFactory8iconNameEv@Base 5:0.26.2
+ _ZNK6Kasten36ViewAreaContextMenuControllerFactory6createEP13KXMLGUIClient@Base 5:0.26.7
  _ZTIN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
- _ZTIN6Kasten19TerminalToolFactoryE@Base 5:0.26.2
  _ZTIN6Kasten20DocumentsToolFactoryE@Base 5:0.26.2
  _ZTIN6Kasten21QuitControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten21ZoomControllerFactoryE@Base 5:0.26.2
@@ -216,7 +205,6 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTIN6Kasten23InsertControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten23LoaderControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten23SelectControllerFactoryE@Base 5:0.26.2
- _ZTIN6Kasten23TerminalToolViewFactoryE@Base 5:0.26.2
  _ZTIN6Kasten24CreatorControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten24DocumentsToolViewFactoryE@Base 5:0.26.2
  _ZTIN6Kasten24VersionControllerFactoryE@Base 5:0.26.2
@@ -237,8 +225,8 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTIN6Kasten30ViewAreaSplitControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten31AbstractXmlGuiControllerFactoryE@Base 5:0.26.2
  _ZTIN6Kasten32FileSystemBrowserToolViewFactoryE@Base 5:0.26.2
+ _ZTIN6Kasten36ViewAreaContextMenuControllerFactoryE@Base 5:0.26.7
  _ZTSN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
- _ZTSN6Kasten19TerminalToolFactoryE@Base 5:0.26.2
  _ZTSN6Kasten20DocumentsToolFactoryE@Base 5:0.26.2
  _ZTSN6Kasten21QuitControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten21ZoomControllerFactoryE@Base 5:0.26.2
@@ -250,7 +238,6 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTSN6Kasten23InsertControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten23LoaderControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten23SelectControllerFactoryE@Base 5:0.26.2
- _ZTSN6Kasten23TerminalToolViewFactoryE@Base 5:0.26.2
  _ZTSN6Kasten24CreatorControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten24DocumentsToolViewFactoryE@Base 5:0.26.2
  _ZTSN6Kasten24VersionControllerFactoryE@Base 5:0.26.2
@@ -271,8 +258,8 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTSN6Kasten30ViewAreaSplitControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten31AbstractXmlGuiControllerFactoryE@Base 5:0.26.2
  _ZTSN6Kasten32FileSystemBrowserToolViewFactoryE@Base 5:0.26.2
+ _ZTSN6Kasten36ViewAreaContextMenuControllerFactoryE@Base 5:0.26.7
  (arch=!armel !armhf)_ZTVN6Kasten19AbstractToolFactoryE@Base 5:0.26.2
- _ZTVN6Kasten19TerminalToolFactoryE@Base 5:0.26.2
  _ZTVN6Kasten20DocumentsToolFactoryE@Base 5:0.26.2
  _ZTVN6Kasten21QuitControllerFactoryE@Base 5:0.26.2
  _ZTVN6Kasten21ZoomControllerFactoryE@Base 5:0.26.2
@@ -284,7 +271,6 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTVN6Kasten23InsertControllerFactoryE@Base 5:0.26.2
  _ZTVN6Kasten23LoaderControllerFactoryE@Base 5:0.26.2
  _ZTVN6Kasten23SelectControllerFactoryE@Base 5:0.26.2
- _ZTVN6Kasten23TerminalToolViewFactoryE@Base 5:0.26.2
  _ZTVN6Kasten24CreatorControllerFactoryE@Base 5:0.26.2
  _ZTVN6Kasten24DocumentsToolViewFactoryE@Base 5:0.26.2
  _ZTVN6Kasten24VersionControllerFactoryE@Base 5:0.26.2
@@ -305,3 +291,4 @@ libKasten4Controllers.so.0 libkasten4controllers0 #MINVER#
  _ZTVN6Kasten30ViewAreaSplitControllerFactoryE@Base 5:0.26.2
  (arch=!armel !armhf)_ZTVN6Kasten31AbstractXmlGuiControllerFactoryE@Base 5:0.26.2
  _ZTVN6Kasten32FileSystemBrowserToolViewFactoryE@Base 5:0.26.2
+ _ZTVN6Kasten36ViewAreaContextMenuControllerFactoryE@Base 5:0.26.7

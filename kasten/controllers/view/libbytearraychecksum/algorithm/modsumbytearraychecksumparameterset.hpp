@@ -11,7 +11,10 @@
 
 // lib
 #include "abstractbytearraychecksumparameterset.hpp"
-#include "endianness.hpp"
+// Qt
+#include <QSysInfo>
+
+class KConfigGroup;
 
 class ModSumByteArrayChecksumParameterSet : public AbstractByteArrayChecksumParameterSet
 {
@@ -23,13 +26,17 @@ public: // AbstractByteArrayChecksumParameterSet API
     const char* id() const override;
 
 public:
-    void setEndianness(Endianness endianness);
+    void setEndianness(QSysInfo::Endian endianness);
 
 public:
-    Endianness endianness() const;
+    QSysInfo::Endian endianness() const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 private:
-    Endianness mEndianness = ThisMachineEndianness;
+    QSysInfo::Endian mEndianness = QSysInfo::ByteOrder;
 };
 
 #endif

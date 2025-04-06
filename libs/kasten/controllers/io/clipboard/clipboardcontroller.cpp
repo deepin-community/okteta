@@ -15,7 +15,6 @@
 #include <Kasten/AbstractModel>
 // KF
 #include <KXMLGUIClient>
-#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 // Qt
@@ -29,8 +28,11 @@ namespace Kasten {
 ClipboardController::ClipboardController(KXMLGUIClient* guiClient)
 {
     mCutAction =   KStandardAction::cut(  this, &ClipboardController::cut,   this);
+    mCutAction->setEnabled(false);
     mCopyAction =  KStandardAction::copy( this, &ClipboardController::copy,  this);
+    mCopyAction->setEnabled(false);
     mPasteAction = KStandardAction::paste(this, &ClipboardController::paste, this);
+    mPasteAction->setEnabled(false);
 
     guiClient->actionCollection()->addActions({
         mCutAction,
@@ -40,17 +42,20 @@ ClipboardController::ClipboardController(KXMLGUIClient* guiClient)
 
     connect(QApplication::clipboard(), &QClipboard::dataChanged,
             this, &ClipboardController::onClipboardDataChanged);
-
-    setTargetModel(nullptr);
 }
 
 void ClipboardController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const dataSelectableModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    if (dataSelectableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    mModel = dataSelectableModel;
     mSelectionControl = mModel ? qobject_cast<If::DataSelectable*>(mModel) : nullptr;
 
     if (mSelectionControl) {
@@ -162,3 +167,5 @@ void ClipboardController::onClipboardDataChanged()
 }
 
 }
+
+#include "moc_clipboardcontroller.cpp"

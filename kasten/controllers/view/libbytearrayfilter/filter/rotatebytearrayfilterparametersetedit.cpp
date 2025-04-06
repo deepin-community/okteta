@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2008-2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2008-2009, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -15,6 +15,8 @@
 // Qt
 #include <QFormLayout>
 #include <QSpinBox>
+// Std
+#include <limits>
 
 const char RotateByteArrayFilterParameterSetEdit::Id[] = "Rotate";
 
@@ -25,7 +27,9 @@ RotateByteArrayFilterParameterSetEdit::RotateByteArrayFilterParameterSetEdit(QWi
     baseLayout->setContentsMargins(0, 0, 0, 0);
 
     mGroupSizeEdit = new QSpinBox(this);
-    mGroupSizeEdit->setRange(1, INT_MAX);
+    mGroupSizeEdit->setRange(1, std::numeric_limits<int>::max());
+    connect(mGroupSizeEdit, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &RotateByteArrayFilterParameterSetEdit::valuesChanged);
 
     const QString groupSizeLabelText =
         i18nc("@label:spinbox number of bytes the movement is done within",
@@ -42,9 +46,11 @@ RotateByteArrayFilterParameterSetEdit::RotateByteArrayFilterParameterSetEdit(QWi
     baseLayout->addRow(groupSizeLabelText, mGroupSizeEdit);
 
     mMoveBitWidthEdit = new QSpinBox(this);
-    mMoveBitWidthEdit->setRange(INT_MIN, INT_MAX);
+    mMoveBitWidthEdit->setRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
     connect(mMoveBitWidthEdit, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &RotateByteArrayFilterParameterSetEdit::onValueChanged);
+    connect(mMoveBitWidthEdit, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &RotateByteArrayFilterParameterSetEdit::valuesChanged);
 
     const QString moveBitWidthLabelText =
         i18nc("@label:spinbox width (in number of bits) the bits are moved",
@@ -85,3 +91,5 @@ void RotateByteArrayFilterParameterSetEdit::onValueChanged(int value)
 {
     emit validityChanged(value != 0);
 }
+
+#include "moc_rotatebytearrayfilterparametersetedit.cpp"

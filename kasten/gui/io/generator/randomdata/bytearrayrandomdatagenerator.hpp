@@ -11,16 +11,31 @@
 
 // Kasten core
 #include <Kasten/AbstractModelDataGenerator>
-// Qt
-#include <QObject>
-#include <QString>
+
+class KConfigGroup;
 
 namespace Kasten {
 
 class ByteArrayRandomDataGeneratorSettings
 {
+private:
+    static constexpr int DefaultSize = 256;
+
+    static constexpr char SizeConfigKey[] = "Size";
+
 public:
     ByteArrayRandomDataGeneratorSettings();
+    ByteArrayRandomDataGeneratorSettings(const ByteArrayRandomDataGeneratorSettings&) = default;
+
+    ~ByteArrayRandomDataGeneratorSettings() = default;
+
+    ByteArrayRandomDataGeneratorSettings& operator=(const ByteArrayRandomDataGeneratorSettings&) = default;
+
+    bool operator==(const ByteArrayRandomDataGeneratorSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     int size = 256;
@@ -29,6 +44,9 @@ public:
 class ByteArrayRandomDataGenerator : public AbstractModelDataGenerator
 {
     Q_OBJECT
+
+private:
+    static constexpr char ConfigGroupId[] = "ByteArrayRandomDataGenerator";
 
 public:
     ByteArrayRandomDataGenerator();
@@ -47,11 +65,6 @@ private:
 };
 
 inline ByteArrayRandomDataGeneratorSettings ByteArrayRandomDataGenerator::settings() const { return mSettings; }
-inline void ByteArrayRandomDataGenerator::setSettings(const ByteArrayRandomDataGeneratorSettings& settings)
-{
-    mSettings = settings;
-//     emit settingsChanged();
-}
 
 }
 

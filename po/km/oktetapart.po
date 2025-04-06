@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oktetapart\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2008-12-19 10:26+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -89,3 +89,74 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "អ្នក​និពន្ធ"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "កូដ​តម្លៃ"
+
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "គោលដប់ប្រាំមួយ"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "គោល​ដប់"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "គោលប្រាំបី"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "គោលពីរ"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "ការ​អ៊ិនកូដ​តួអក្សរ"
+
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "បង្ហាញ​តួអក្សរ​មិនអាច​បោះពុម្ព"
+
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "អុហ្វសិត​ជួរ"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "ជួរឈរ​តម្លៃ"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "ជួរឈរ​តួអក្សរ"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "ផ្លាស់ប្ដូរ​ទំហំ​រចនាប័ទ្ម"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "គ្មាន​ការ​ប្ដូរ​ទំហំ"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "ចាក់សោ​ក្រុម"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "ការ​ប្រើប្រាស់​ទំហំ​ពេញ"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "ជួរ​ឈរ"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "ជួរឈរ​ទាំងពីរ"

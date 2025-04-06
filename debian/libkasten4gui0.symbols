@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 5:0.26.4 amd64
+# SymbolsHelper-Confirmed: 5:0.26.11 amd64 i386
 libKasten4Gui.so.0 libkasten4gui0 #MINVER#
 * Build-Depends-Package: okteta-dev
  _ZN6Kasten11ShellWindow11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
@@ -20,12 +20,12 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten11TabbedViews11removeViewsERK7QVectorIPNS_12AbstractViewEE@Base 5:0.26.2
  _ZN6Kasten11TabbedViews12setViewFocusEPNS_12AbstractViewE@Base 4:14.12.0
  _ZN6Kasten11TabbedViews16staticMetaObjectE@Base 4:14.12.0
+ _ZN6Kasten11TabbedViews20contextMenuRequestedEPNS_12AbstractViewE6QPoint@Base 5:0.26.7
+ _ZN6Kasten11TabbedViews20newDocumentRequestedEv@Base 5:0.26.7
  _ZN6Kasten11TabbedViews24setCurrentToolInlineViewEPNS_22AbstractToolInlineViewE@Base 4:14.12.0
  _ZN6Kasten11TabbedViews8addViewsERK7QVectorIPNS_12AbstractViewEE@Base 5:0.26.2
  _ZN6Kasten11TabbedViews8setFocusEv@Base 4:14.12.0
- _ZN6Kasten11TabbedViewsC1EPNS_18TabbedViewsPrivateE@Base 4:14.12.0
  _ZN6Kasten11TabbedViewsC1Ev@Base 4:14.12.0
- _ZN6Kasten11TabbedViewsC2EPNS_18TabbedViewsPrivateE@Base 4:14.12.0
  _ZN6Kasten11TabbedViewsC2Ev@Base 4:14.12.0
  _ZN6Kasten11TabbedViewsD0Ev@Base 4:14.12.0
  _ZN6Kasten11TabbedViewsD1Ev@Base 4:14.12.0
@@ -84,6 +84,8 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten14MultiViewAreas16setViewAreaFocusEPNS_16AbstractViewAreaE@Base 4:14.12.0
  _ZN6Kasten14MultiViewAreas16staticMetaObjectE@Base 4:14.12.0
  _ZN6Kasten14MultiViewAreas16viewAreasRemovedERK7QVectorIPNS_16AbstractViewAreaEE@Base 5:0.26.2
+ _ZN6Kasten14MultiViewAreas20contextMenuRequestedEPNS_20AbstractGroupedViewsEPNS_12AbstractViewE6QPoint@Base 5:0.26.7
+ _ZN6Kasten14MultiViewAreas20newDocumentRequestedEv@Base 5:0.26.7
  _ZN6Kasten14MultiViewAreas20viewAreaFocusChangedEPNS_16AbstractViewAreaE@Base 4:14.12.0
  _ZN6Kasten14MultiViewAreas24setCurrentToolInlineViewEPNS_22AbstractToolInlineViewE@Base 4:14.12.0
  _ZN6Kasten14MultiViewAreas8addViewsERK7QVectorIPNS_12AbstractViewEE@Base 5:0.26.2
@@ -118,9 +120,7 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten16AbstractViewArea11qt_metacastEPKc@Base 4:14.12.0
  _ZN6Kasten16AbstractViewArea12focusChangedEb@Base 4:14.12.0
  _ZN6Kasten16AbstractViewArea16staticMetaObjectE@Base 4:14.12.0
- _ZN6Kasten16AbstractViewAreaC1EPNS_23AbstractViewAreaPrivateE@Base 4:14.12.0
  _ZN6Kasten16AbstractViewAreaC1Ev@Base 4:14.12.0
- _ZN6Kasten16AbstractViewAreaC2EPNS_23AbstractViewAreaPrivateE@Base 4:14.12.0
  _ZN6Kasten16AbstractViewAreaC2Ev@Base 4:14.12.0
  _ZN6Kasten16AbstractViewAreaD0Ev@Base 4:14.12.0
  _ZN6Kasten16AbstractViewAreaD1Ev@Base 4:14.12.0
@@ -180,9 +180,7 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten20AbstractGroupedViews16viewFocusChangedEPNS_12AbstractViewE@Base 4:14.12.0
  _ZN6Kasten20AbstractGroupedViews5addedERK7QVectorIPNS_12AbstractViewEE@Base 5:0.26.2
  _ZN6Kasten20AbstractGroupedViews8removingERK7QVectorIPNS_12AbstractViewEE@Base 5:0.26.2
- _ZN6Kasten20AbstractGroupedViewsC1EPNS_27AbstractGroupedViewsPrivateE@Base 4:14.12.0
  _ZN6Kasten20AbstractGroupedViewsC1Ev@Base 4:14.12.0
- _ZN6Kasten20AbstractGroupedViewsC2EPNS_27AbstractGroupedViewsPrivateE@Base 4:14.12.0
  _ZN6Kasten20AbstractGroupedViewsC2Ev@Base 4:14.12.0
  _ZN6Kasten20AbstractGroupedViewsD0Ev@Base 4:14.12.0
  _ZN6Kasten20AbstractGroupedViewsD1Ev@Base 4:14.12.0
@@ -252,9 +250,7 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten24AbstractDocumentStrategy5addedERK7QVectorIPNS_16AbstractDocumentEE@Base 5:0.26.2
  _ZN6Kasten24AbstractDocumentStrategy7closingERK7QVectorIPNS_16AbstractDocumentEE@Base 5:0.26.2
  _ZN6Kasten24AbstractDocumentStrategy7urlUsedERK4QUrl@Base 4:14.12.0
- _ZN6Kasten24AbstractDocumentStrategyC1EPNS_31AbstractDocumentStrategyPrivateE@Base 4:14.12.0
  _ZN6Kasten24AbstractDocumentStrategyC1Ev@Base 4:14.12.0
- _ZN6Kasten24AbstractDocumentStrategyC2EPNS_31AbstractDocumentStrategyPrivateE@Base 4:14.12.0
  _ZN6Kasten24AbstractDocumentStrategyC2Ev@Base 4:14.12.0
  _ZN6Kasten24AbstractDocumentStrategyD0Ev@Base 4:14.12.0
  _ZN6Kasten24AbstractDocumentStrategyD1Ev@Base 4:14.12.0
@@ -310,7 +306,6 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZN6Kasten49ModelEncoderFileSystemExporterConfigEditorFactoryD2Ev@Base 4:14.12.0
  _ZN6Kasten9DummyView11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:14.12.0
  _ZN6Kasten9DummyView11qt_metacastEPKc@Base 4:14.12.0
- _ZN6Kasten9DummyView13onTitleChangeERK7QString@Base 4:14.12.0
  _ZN6Kasten9DummyView16staticMetaObjectE@Base 4:14.12.0
  _ZN6Kasten9DummyView8setFocusEv@Base 4:14.12.0
  _ZN6Kasten9DummyViewC1EPNS_16AbstractDocumentE@Base 4:14.12.0
@@ -356,7 +351,6 @@ libKasten4Gui.so.0 libkasten4gui0 #MINVER#
  _ZNK6Kasten14MultiViewAreas14viewAreasCountEv@Base 4:14.12.0
  _ZNK6Kasten14MultiViewAreas21currentToolInlineViewEv@Base 5:0.26.2
  _ZNK6Kasten14MultiViewAreas6widgetEv@Base 4:14.12.0
- _ZNK6Kasten14MultiViewAreas7indexOfEPNS_12AbstractViewE@Base 4:14.12.0
  _ZNK6Kasten14MultiViewAreas8hasFocusEv@Base 4:14.12.0
  _ZNK6Kasten14MultiViewAreas8viewListEv@Base 4:14.12.0
  _ZNK6Kasten14MultiViewAreas9viewCountEv@Base 4:14.12.0

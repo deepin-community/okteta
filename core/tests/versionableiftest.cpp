@@ -34,11 +34,11 @@ void VersionableIfTest::init()
 
 void VersionableIfTest::cleanup()
 {
-    deleteVersionable(mObject);
-
     delete mRevertedToVersionIndexSpy;
     delete mHeadVersionDescriptionChangedSpy;
     delete mHeadVersionChangedSpy;
+
+    deleteVersionable(mObject);
 }
 
 void VersionableIfTest::clearSignalSpys()
@@ -156,3 +156,5 @@ void VersionableIfTest::testFill()
 #endif
 
 }
+
+#include "moc_versionableiftest.cpp"

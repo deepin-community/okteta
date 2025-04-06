@@ -10,11 +10,7 @@
 
 // lib
 #include "testdocument.hpp"
-// KF
-#include <KLocalizedString>
 // Qt
-#include <QUrl>
-#include <QByteArray>
 #include <QDataStream>
 #include <QFile>
 #include <QCoreApplication>
@@ -56,3 +52,5 @@ void TestDocumentFileLoadThread::run()
 }
 
 }
+
+#include "moc_testdocumentfileloadthread.cpp"

@@ -30,6 +30,11 @@ public:
     Piece(Address storageOffset, Size size, int storageId);
     Piece(const AddressRange& storageRange, int storageId);
     Piece();
+    Piece(const Piece&) = default; // trivial
+
+    ~Piece() = default; // trivial
+
+    Piece& operator=(const Piece&) = default; // trivial
 
 public:
     int storageId() const;

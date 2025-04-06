@@ -18,13 +18,12 @@
 #include "../../script/scripthandlerinfo.hpp"
 #include "../../script/scriptlogger.hpp"
 #include "../../script/classes/primitivescriptclass.hpp"
-
-#include <QScriptValue>
-#include <QScriptEngine>
-
-#include <KLocalizedString>
-
+// Okteta core
 #include <Okteta/AbstractByteArrayModel>
+// KF
+#include <KLocalizedString>
+// Qt
+#include <QScriptValue>
 
 template <typename T, class C>
 inline QScriptClass* BasicPrimitiveDataInformation<T, C>::scriptClass(ScriptHandlerInfo* handlerInfo) const
@@ -58,16 +57,15 @@ bool BasicPrimitiveDataInformation<T, C>::setData(const QVariant& value,
 }
 
 template <typename T, typename C>
-qint64 BasicPrimitiveDataInformation<T, C>::readData(Okteta::AbstractByteArrayModel* input,
+qint64 BasicPrimitiveDataInformation<T, C>::readData(const Okteta::AbstractByteArrayModel* input,
                                                      Okteta::Address address, BitCount64 bitsRemaining, quint8* bitOffset)
 {
     Q_ASSERT(mHasBeenUpdated); // update must have been called prior to reading except
-    const bool wasValid = mWasAbleToRead;
     if (bitsRemaining < BitCount64(size())) {
         mWasAbleToRead = false;
         mValue = 0;
 
-        if (wasValid != mWasAbleToRead) {
+        if (mWasAbleToReadBefore != mWasAbleToRead) {
             topLevelDataInformation()->setChildDataChanged();
         }
         return -1;
@@ -79,7 +77,7 @@ qint64 BasicPrimitiveDataInformation<T, C>::readData(Okteta::AbstractByteArrayMo
     // bit offset will always stay the same since type T uses a full number of bytes
     mValue = AllPrimitiveTypes::readValue<T>(input, address, effectiveByteOrder(), *bitOffset);
 
-    if (oldVal != mValue || wasValid != mWasAbleToRead) {
+    if (oldVal != mValue || mWasAbleToReadBefore != mWasAbleToRead) {
         topLevelDataInformation()->setChildDataChanged();
     }
     return size();

@@ -1,28 +1,43 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+set(SUTDIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-include_directories(
+add_library(OktetaCoreSourcesTestShim INTERFACE)
+target_include_directories(OktetaCoreSourcesTestShim INTERFACE
+  ${SUTDIR}
   ${CMAKE_CURRENT_BINARY_DIR}/.. # for oktetacore_export.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/.. # okteta core includes
+)
+# Configure export macros to be setup as with a static lib
+# as the source files are reused for the tests.
+# Saves doing a separate export header.
+target_compile_definitions(OktetaCoreSourcesTestShim INTERFACE
+  -DOKTETACORE_STATIC_DEFINE
 )
 
-# make sure to not use KDE_EXPORT or KDE_IMPORT because we link statically
-# against a small part of the libs
-add_definitions(-DOKTETACORE_STATIC_DEFINE)
-
 # helper
-set( oktetacoretestutil_LIB_SRCS
+set( OktetaCoreTestUtil_LIB_SRCS
   util/fill.cpp
 )
 
-add_library( oktetacoretestutil  STATIC ${oktetacoretestutil_LIB_SRCS} )
-target_link_libraries( oktetacoretestutil Qt5::Core )
+add_library( OktetaCoreTestUtil  STATIC ${OktetaCoreTestUtil_LIB_SRCS} )
+target_link_libraries( OktetaCoreTestUtil
+  PUBLIC
+    OktetaCore
+    Qt5::Core
+)
+
+# variant for static version of OktetaCore
+add_library(TestOktetaCoreTestUtil STATIC ${OktetaCoreTestUtil_LIB_SRCS})
+target_link_libraries(TestOktetaCoreTestUtil
+  PUBLIC
+    OktetaCoreSourcesTestShim
+    Qt5::Core
+)
 
 ecm_add_test(
   arraychangemetricstest.cpp
 #  ${CMAKE_CURRENT_SOURCE_DIR}/../arraychangemetrics.cpp
   TEST_NAME arraychangemetricstest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES Qt5::Test
+  LINK_LIBRARIES OktetaCoreSourcesTestShim Qt5::Test
 )
 
 
@@ -30,7 +45,7 @@ ecm_add_test(
   addressrangetest.cpp
   TEST_NAME addressrangetest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )
 
 
@@ -38,7 +53,7 @@ ecm_add_test(
   addressrangelisttest.cpp
   TEST_NAME addressrangelisttest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )
 
 
@@ -46,7 +61,7 @@ ecm_add_test(
   fixedsizebytearraymodeltest.cpp
   TEST_NAME fixedsizebytearraymodeltest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )
 
 
@@ -55,7 +70,7 @@ ecm_add_test(
   fixedsizebytearraymodelabstractbytearraymodeliftest.cpp
   TEST_NAME fixedsizebytearraymodelabstractbytearraymodeliftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES oktetacoretestutil testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore Qt5::Test
 )
 
 
@@ -72,7 +87,7 @@ ecm_add_test(
   bytearraymodelabstractbytearraymodeliftest.cpp
   TEST_NAME bytearraymodelabstractbytearraymodeliftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES oktetacoretestutil testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore Qt5::Test
 )
 
 
@@ -81,7 +96,7 @@ ecm_add_test(
   piecetablebytearraymodelabstractbytearraymodeliftest.cpp
   TEST_NAME piecetablebytearraymodelabstractbytearraymodeliftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES oktetacoretestutil testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCoreTestUtil TestOktetaCore Qt5::Test
 )
 
 
@@ -90,7 +105,7 @@ ecm_add_test(
   piecetablebytearraymodelversionableiftest.cpp
   TEST_NAME piecetablebytearraymodelversionableiftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES oktetacoretestutil OktetaCore Qt5::Test
+  LINK_LIBRARIES OktetaCoreTestUtil OktetaCore Qt5::Test
 )
 
 
@@ -106,7 +121,7 @@ ecm_add_test(
   charcodectest.cpp
   TEST_NAME charcodectest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES OktetaCore Qt5::Test KF5::I18n
+  LINK_LIBRARIES OktetaCore Qt5::Test
 )
 
 
@@ -114,7 +129,7 @@ ecm_add_test(
   textcharcodectest.cpp
   TEST_NAME textcharcodectest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test KF5::I18n KF5::Codecs
+  LINK_LIBRARIES TestOktetaCore Qt5::Test KF5::Codecs
 )
 
 
@@ -123,7 +138,7 @@ ecm_add_test(
   textcharcodeccharcodeciftest.cpp
   TEST_NAME textcharcodeccharcodeciftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test KF5::I18n KF5::Codecs
+  LINK_LIBRARIES TestOktetaCore Qt5::Test KF5::Codecs
 )
 
 
@@ -131,7 +146,7 @@ ecm_add_test(
   charcodeciftest.cpp ebcdic1047charcodeccharcodeciftest.cpp
   TEST_NAME ebcdic1047charcodeccharcodeciftest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )
 
 
@@ -139,7 +154,7 @@ ecm_add_test(
   bookmarktest.cpp
   TEST_NAME bookmarktest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES Qt5::Test
+  LINK_LIBRARIES OktetaCoreSourcesTestShim Qt5::Test
 )
 
 
@@ -147,7 +162,7 @@ ecm_add_test(
   bookmarklisttest.cpp
   TEST_NAME bookmarklisttest
   NAME_PREFIX libokteta-core-
-  LINK_LIBRARIES testoktetacore Qt5::Test KF5::I18n
+  LINK_LIBRARIES TestOktetaCore Qt5::Test
 )
 
 

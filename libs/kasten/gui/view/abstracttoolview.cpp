@@ -8,9 +8,6 @@
 
 #include "abstracttoolview.hpp"
 
-// Qt
-#include <Qt>
-
 namespace Kasten {
 
 class AbstractToolViewPrivate
@@ -24,3 +21,5 @@ AbstractToolView::AbstractToolView() = default;
 AbstractToolView::~AbstractToolView() = default;
 
 }
+
+#include "moc_abstracttoolview.cpp"

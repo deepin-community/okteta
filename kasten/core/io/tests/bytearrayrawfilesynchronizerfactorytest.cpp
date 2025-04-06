@@ -24,7 +24,7 @@
 #include <QFile>
 #include <QDataStream>
 
-static constexpr char TestDirectory[] = "bytearrayrawfilesynchronizertest";
+static constexpr char TestDirectory[] = "bytearrayrawfilesynchronizerfactorytest";
 static constexpr char TestFileName[] = "test.data";
 #if 0
 static constexpr char NotExistingUrl[] = "notexisting://";
@@ -41,7 +41,8 @@ void ByteArrayRawFileSynchronizerFactoryTest::initTestCase()
     const QString filePath = mFileSystem->createFilePath(QLatin1String(TestFileName));
     QFile file;
     file.setFileName(filePath);
-    file.open(QIODevice::WriteOnly);
+    const bool openSuccess = file.open(QIODevice::WriteOnly);
+    QVERIFY(openSuccess);
 
     QDataStream outStream(&file);
     outStream.writeRawData(byteArray.data(), byteArray.size());
@@ -82,7 +83,7 @@ void ByteArrayRawFileSynchronizerFactoryTest::testLoadFromUrl()
     Kasten::ByteArrayRawFileSynchronizerFactory* factory = new Kasten::ByteArrayRawFileSynchronizerFactory();
     AbstractDocument* document = factory->loadNewDocument(fileUrl);
 
-    ByteArrayDocument* byteArrayDocument = qobject_cast<ByteArrayDocument*>(document);
+    auto* byteArrayDocument = qobject_cast<ByteArrayDocument*>(document);
 
     QVERIFY(document != 0);
     QVERIFY(byteArrayDocument != 0);
@@ -139,3 +140,5 @@ TODO: save mit path als Parameter ? Oder separat setzen ? Wie Kopie speichern ?
 #endif
 
 QTEST_GUILESS_MAIN(ByteArrayRawFileSynchronizerFactoryTest)
+
+#include "moc_bytearrayrawfilesynchronizerfactorytest.cpp"

@@ -10,6 +10,7 @@
 #include "structurestool.hpp"
 #include "structuredefinitionfile.hpp"
 #include "structuresmanager.hpp"
+#include "structuretreemodel.hpp"
 #include "structlogging.hpp"
 // Okteta Kasten core
 #include <Kasten/Okteta/ByteArrayDocument>
@@ -21,6 +22,7 @@
 #include <KLocalizedString>
 // Qt
 #include <QModelIndex>
+#include <QByteArray>
 
 #include "script/scripthandler.hpp"
 #include "datatypes/datainformation.hpp"
@@ -33,6 +35,7 @@ StructuresTool::StructuresTool()
     , mManager(new StructuresManager(this))
     , mWritingData(false)
     , mCurrentItemDataChanged(false)
+    , mIsStructureMarked(false)
 {
     // leave mLoadedFiles empty for now, since otherwise loading slot will not work
     setObjectName(QStringLiteral("StructuresTool"));
@@ -67,15 +70,24 @@ QString StructuresTool::title() const
 
 void StructuresTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     // just a copy of the code in poddecodertool.h
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
+        if (mIsStructureMarked) {
+            unmark();
+        }
     }
     if (mByteArrayModel) {
         mByteArrayModel->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
+    // TODO; check if already same document used before
     ByteArrayDocument* document = mByteArrayView ?
                                   qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
     mByteArrayModel = document ? document->content() : nullptr;
@@ -96,7 +108,6 @@ void StructuresTool::onCursorPositionChange(Okteta::Address pos)
     if (mCursorIndex != pos) {
         mCursorIndex = pos;
         updateData(Okteta::ArrayChangeMetricsList());
-        emit cursorIndexChanged();
     }
 }
 
@@ -114,8 +125,7 @@ void StructuresTool::setByteOrder(int order)
 void StructuresTool::onContentsChange(const Okteta::ArrayChangeMetricsList& list)
 {
     qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "contents changed";
-    for (int i = 0; i < list.size(); ++i) {
-        const Okteta::ArrayChangeMetrics& acm = list.at(i);
+    for (const Okteta::ArrayChangeMetrics& acm : list) {
         qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "change: t=" << acm.type() << "o=" << acm.offset() << "a2=" << acm.removeLength() << "a3=" << acm.insertLength();
     }
 
@@ -135,22 +145,27 @@ bool StructuresTool::setData(const QVariant& value, int role, DataInformation* i
 
     TopLevelDataInformation* topLevel = item->topLevelDataInformation();
     const Okteta::Address structureStart = startAddress(topLevel);
+    // block immediate data updating
     mWritingData = true;
+
     bool ret = false;
     BitCount64 position = item->positionInFile(structureStart);
     const quint64 remainingBits = qMax(mByteArrayModel->size() * 8 - qint64(position), qint64(0));
     quint8 bitOffs = position % 8;
     ret = item->setData(value, mByteArrayModel, Okteta::Address(position / 8), remainingBits, bitOffs);
-    mWritingData = false; // finished
-    // XXX: this is inefficient, best would be to only update the changed value
-    updateData(Okteta::ArrayChangeMetricsList()); // update once after writing
+
+    // unblock updating and catch up
+    mWritingData = false;
+    updateData(mArrayChangesWhileWriting);
+    mArrayChangesWhileWriting.clear();
+
     return ret;
 }
 
 void StructuresTool::updateData(const Okteta::ArrayChangeMetricsList& list)
 {
     if (mWritingData) {
-        qCWarning(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "currently writing data, won't update";
+        mArrayChangesWhileWriting.append(list);
         return;
     }
     if (!mByteArrayModel) {
@@ -235,10 +250,9 @@ void StructuresTool::setSelectedStructuresInView()
     emit dataCleared();
 
     QRegExp regex(QStringLiteral("'(.+)':'(.+)'"));
-    QStringList loadedStructs = StructureViewPreferences::loadedStructures();
+    const QStringList loadedStructs = StructureViewPreferences::loadedStructures();
     qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "loadedStructs " << loadedStructs;
-    for (int i = 0; i < loadedStructs.size(); ++i) {
-        const QString& s = loadedStructs.at(i);
+    for (const QString& s : loadedStructs) {
         int pos = regex.indexIn(s);
         if (pos > -1) {
             QString pluginName = regex.cap(1);
@@ -280,10 +294,36 @@ void StructuresTool::setSelectedStructuresInView()
 Okteta::Address StructuresTool::startAddress(const TopLevelDataInformation* data) const
 {
     if (data->isLockedFor(mByteArrayModel)) {
-        return Okteta::Address(data->lockPositionFor(mByteArrayModel));
+        return data->lockPositionFor(mByteArrayModel);
     }
 
     return mCursorIndex;
+}
+
+Okteta::AddressRange StructuresTool::dataRange(const DataInformation* data) const
+{
+    Q_CHECK_PTR(data->topLevelDataInformation());
+    const Okteta::Address baseAddress = startAddress(data->topLevelDataInformation());
+    // FIXME support range of partial bytes
+    int length = data->size() / 8;
+    const int maxLen = mByteArrayModel->size() - baseAddress;
+    length = qMin(length, maxLen);
+    const Okteta::Address startOffset = Okteta::Address(data->positionInFile(baseAddress) / 8);
+    return Okteta::AddressRange::fromWidth(startOffset, length);
+}
+
+void StructuresTool::selectBytesInView(const QModelIndex& idx)
+{
+    if (!mByteArrayModel || !mByteArrayView || !idx.isValid()) {
+        return;
+    }
+    const auto* data = idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!data) {
+        return;
+    }
+    const Okteta::AddressRange selection = dataRange(data);
+    mByteArrayView->setSelection(selection.start(), selection.end());
+    mByteArrayView->setFocus();
 }
 
 void StructuresTool::mark(const QModelIndex& idx)
@@ -291,26 +331,31 @@ void StructuresTool::mark(const QModelIndex& idx)
     if (!mByteArrayModel || !mByteArrayView || !idx.isValid()) {
         return;
     }
-    const auto* data = static_cast<const DataInformation*>(idx.internalPointer());
+    const auto* data = idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
     if (!data) {
         return;
     }
-    Q_CHECK_PTR(data->topLevelDataInformation());
-    const Okteta::Address baseAddress = startAddress(data->topLevelDataInformation());
-    // FIXME support marking of partial bytes
-    int length = data->size() / 8;
-    const int maxLen = mByteArrayModel->size() - baseAddress;
-    length = qMin(length, maxLen);
-    const Okteta::Address startOffset = Okteta::Address(data->positionInFile(baseAddress) / 8);
-    const Okteta::AddressRange markingRange = Okteta::AddressRange::fromWidth(startOffset, length);
+    const Okteta::AddressRange markingRange = dataRange(data);
+
     mByteArrayView->setMarking(markingRange, true);
+    mIsStructureMarked = true;
 }
 
 void StructuresTool::unmark(/*const QModelIndex& idx*/)
 {
     if (mByteArrayView) {
         mByteArrayView->setMarking(Okteta::AddressRange());
+        mIsStructureMarked = false;
     }
+}
+
+QByteArray StructuresTool::bytes(const DataInformation* data) const
+{
+    const Okteta::AddressRange range = dataRange(data);
+    QByteArray bytes;
+    bytes.resize(range.width());
+    mByteArrayModel->copyTo(reinterpret_cast<Okteta::Byte*>(bytes.data()), range.start(), range.width());
+    return bytes;
 }
 
 void StructuresTool::validateAllStructures()
@@ -331,13 +376,13 @@ bool StructuresTool::isFileLoaded() const
 
 void StructuresTool::lockStructure(const QModelIndex& idx)
 {
-    if (!mByteArrayModel) { // no point without ByteArrayModel
+    if (!mByteArrayModel || !idx.isValid()) {
         return;
     }
-    if (!idx.isValid() || !idx.internalPointer()) {
+    auto* data = idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!data) {
         return;
     }
-    auto* data = static_cast<DataInformation*>(idx.internalPointer());
     TopLevelDataInformation* top = data->topLevelDataInformation();
     Q_ASSERT(top);
     if (top) {
@@ -347,32 +392,37 @@ void StructuresTool::lockStructure(const QModelIndex& idx)
 
 void StructuresTool::unlockStructure(const QModelIndex& idx)
 {
-    if (!mByteArrayModel) { // no point without ByteArrayModel
+    if (!mByteArrayModel || !idx.isValid()) {
         return;
     }
-    if (!idx.isValid() || !idx.internalPointer()) {
+    auto* data = idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!data) {
         return;
     }
-    auto* data = static_cast<DataInformation*>(idx.internalPointer());
     TopLevelDataInformation* top = data->topLevelDataInformation();
     Q_CHECK_PTR(top);
 
-    unmark();
+    const bool wasMarked = mIsStructureMarked;
+    if (wasMarked) {
+        unmark();
+    }
     top->unlockPosition(mByteArrayModel);
     // now read from the current position:
     top->read(mByteArrayModel, mCursorIndex, Okteta::ArrayChangeMetricsList(), true);
-    mark(idx); // we have to change the marked range, otherwise it stays at the previous locked offset
+    if (wasMarked) {
+        mark(idx); // we have to change the marked range, otherwise it stays at the previous locked offset
+    }
 }
 
 bool StructuresTool::isStructureLocked(const QModelIndex& idx) const
 {
-    if (!mByteArrayModel) { // no point without ByteArrayModel
+    if (!mByteArrayModel || !idx.isValid()) {
         return false;
     }
-    if (!idx.isValid() || !idx.internalPointer()) {
+    auto* data = idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!data) {
         return false;
     }
-    auto* data = static_cast<DataInformation*>(idx.internalPointer());
     TopLevelDataInformation* top = data->topLevelDataInformation();
     Q_ASSERT(top);
     if (top) {
@@ -384,7 +434,7 @@ bool StructuresTool::isStructureLocked(const QModelIndex& idx) const
 bool StructuresTool::canStructureBeLocked(const QModelIndex& idx) const
 {
     // we need a valid model and a valid index
-    return mByteArrayModel && idx.isValid() && idx.internalPointer();
+    return mByteArrayModel && idx.isValid() && idx.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
 }
 
 void StructuresTool::onChildItemDataChanged()
@@ -415,3 +465,5 @@ TopLevelDataInformation::List StructuresTool::allData() const
 }
 
 }
+
+#include "moc_structurestool.cpp"

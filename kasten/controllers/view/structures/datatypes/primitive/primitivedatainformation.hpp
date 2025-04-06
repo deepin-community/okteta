@@ -32,12 +32,14 @@ public:
     bool isPrimitive() const override;
     virtual AllPrimitiveTypes value() const = 0;
     virtual void setValue(AllPrimitiveTypes newValue) = 0;
+    virtual QVariant valueToQVariant() const = 0;
     virtual QScriptValue valueAsQScriptValue() const = 0;
     virtual PrimitiveDataType type() const = 0;
+    virtual QString valueToQString(AllPrimitiveTypes value) const = 0;
+    virtual QVariant valueToQVariant(AllPrimitiveTypes value) const = 0;
 
     unsigned int childCount() const override;
     DataInformation* childAt(unsigned int) const override;
-    bool canHaveChildren() const override;
     BitCount64 childPosition(const DataInformation*, Okteta::Address) const override;
     int indexOf(const DataInformation* const) const override;
 
@@ -89,10 +91,16 @@ public:
 
     PrimitiveDataType type() const override;
 
+    QVariant valueToQVariant() const override;
+
     QScriptValue valueAsQScriptValue() const override;
 
+    QString valueToQString(AllPrimitiveTypes value) const override;
+
+    QVariant valueToQVariant(AllPrimitiveTypes value) const override;
+
     // we have to do slightly more than just forward with this method
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining, quint8* bitOffset) override;
 
 protected:

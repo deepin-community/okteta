@@ -24,11 +24,15 @@ class AbstractColumnStylistPrivate;
 class OKTETAGUI_EXPORT AbstractColumnStylist
 {
 protected:
-    explicit AbstractColumnStylist(AbstractColumnStylistPrivate* d);
+    OKTETAGUI_NO_EXPORT explicit AbstractColumnStylist(AbstractColumnStylistPrivate* d);
 
 public:
     AbstractColumnStylist();
+    AbstractColumnStylist(const AbstractColumnStylist&) = delete;
+
     virtual ~AbstractColumnStylist();
+
+    AbstractColumnStylist& operator=(const AbstractColumnStylist&) = delete;
 
 public: // API to be reimplemented in the subclasses
     virtual const QPalette& palette() const = 0;

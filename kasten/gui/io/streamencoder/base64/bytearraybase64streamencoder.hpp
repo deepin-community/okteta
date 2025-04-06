@@ -11,10 +11,6 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
-// Qt
-#include <QString>
 
 namespace Kasten {
 extern const char base64EncodeMap[64];
@@ -24,18 +20,19 @@ class ByteArrayBase64StreamEncoder : public AbstractByteArrayStreamEncoder
     Q_OBJECT
 
 public:
-    static constexpr int inputGroupLength = 3;
-
-    static constexpr int outputLineLength = 76;
-    static constexpr int outputGroupLength = 4;
-    static constexpr int maxOutputGroupsPerLine = outputLineLength / outputGroupLength;
-
     enum class InputByteIndex
     {
         First = 0,
         Second,
         Third
     };
+
+private:
+    static constexpr int inputGroupLength = 3;
+
+    static constexpr int outputLineLength = 76;
+    static constexpr int outputGroupLength = 4;
+    static constexpr int maxOutputGroupsPerLine = outputLineLength / outputGroupLength;
 
 public:
     ByteArrayBase64StreamEncoder();

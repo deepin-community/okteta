@@ -25,22 +25,37 @@ class ByteArrayViewProfileLock;
 class ByteArrayViewProfileFileInfo
 {
 public:
-    ByteArrayViewProfileFileInfo(const QDateTime& lastModified, bool locked)
-        : mLastModified(lastModified)
-        , mLocked(locked)
-    {}
+    ByteArrayViewProfileFileInfo(const QDateTime& lastModified, bool locked);
+    ByteArrayViewProfileFileInfo(const ByteArrayViewProfileFileInfo&) = default;
 
-    const QDateTime& lastModified() const { return mLastModified; }
-    bool isLocked()                 const { return mLocked; }
+    ~ByteArrayViewProfileFileInfo() = default;
 
-    void setLastModified(const QDateTime& lastModified)  { mLastModified = lastModified; }
-    void setLocked(bool isLocked) { mLocked = isLocked; }
+    ByteArrayViewProfileFileInfo& operator=(const ByteArrayViewProfileFileInfo&) = default;
+
+public:
+    const QDateTime& lastModified() const;
+    bool isLocked() const;
+
+    void setLastModified(const QDateTime& lastModified);
+    void setLocked(bool isLocked);
 
 private:
     QDateTime mLastModified;
     bool mLocked;
 //     bool mUserOwned;
 };
+
+inline ByteArrayViewProfileFileInfo::ByteArrayViewProfileFileInfo(const QDateTime& lastModified, bool locked)
+    : mLastModified(lastModified)
+    , mLocked(locked)
+{}
+
+inline const QDateTime& ByteArrayViewProfileFileInfo::lastModified() const { return mLastModified; }
+inline bool ByteArrayViewProfileFileInfo::isLocked()                 const { return mLocked; }
+
+inline void ByteArrayViewProfileFileInfo::setLastModified(const QDateTime& lastModified)  { mLastModified = lastModified; }
+inline void ByteArrayViewProfileFileInfo::setLocked(bool isLocked) { mLocked = isLocked; }
+
 
 using ByteArrayViewProfileFileInfoLookup = QHash<ByteArrayViewProfile::Id, ByteArrayViewProfileFileInfo>;
 
@@ -75,16 +90,16 @@ Q_SIGNALS:
     void viewProfilesUnlocked(const QVector<Kasten::ByteArrayViewProfile::Id>& viewProfileIds);
 
 private:
-    QString filePathOfViewProfile(const ByteArrayViewProfile::Id& viewProfileId) const;
+    OKTETAKASTENGUI_NO_EXPORT QString filePathOfViewProfile(const ByteArrayViewProfile::Id& viewProfileId) const;
     // Returns the viewProfile as loaded from the file with the given fileName.
     // If the loading fails the viewProfile has no id set.
-    ByteArrayViewProfile loadViewProfile(const QString& fileName) const;
-    void saveViewProfile(const ByteArrayViewProfile& viewProfile) const;
-    void removeViewProfile(const ByteArrayViewProfile::Id& viewProfileId);
+    OKTETAKASTENGUI_NO_EXPORT ByteArrayViewProfile loadViewProfile(const QString& fileName) const;
+    OKTETAKASTENGUI_NO_EXPORT void saveViewProfile(const ByteArrayViewProfile& viewProfile) const;
+    OKTETAKASTENGUI_NO_EXPORT void removeViewProfile(const ByteArrayViewProfile::Id& viewProfileId);
 
 private Q_SLOTS:
-    void onViewProfilesFolderChanged(const QString& path);
-    void onDefaultViewProfileChanged(const QString& path);
+    OKTETAKASTENGUI_NO_EXPORT void onViewProfilesFolderChanged(const QString& path);
+    OKTETAKASTENGUI_NO_EXPORT void onDefaultViewProfileChanged(const QString& path);
 
 private:
     QVector<ByteArrayViewProfile> mViewProfiles;

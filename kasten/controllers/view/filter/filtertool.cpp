@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2008 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2008, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -21,18 +21,42 @@
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/ChangesDescribable>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QApplication>
 #include <QByteArray>
 
+
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char FilterTool::ConfigGroupId[];
+constexpr char FilterTool::OperationConfigKey[];
+
 
 FilterTool::FilterTool()
 {
     setObjectName(QStringLiteral("BinaryFilter"));
 
     mFilterList = ByteArrayFilterFactory::createFilters();
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    for (auto* filter : qAsConst(mFilterList)) {
+        filter->loadConfig(configGroup);
+    }
+
+    mFilterId = 0;
+    const QString operationId = configGroup.readEntry(OperationConfigKey);
+    if (!operationId.isEmpty()) {
+        for (int i = 0; i < mFilterList.size(); ++i) {
+            if (mFilterList[i]->id() == operationId) {
+                mFilterId = i;
+                break;
+            }
+        }
+    }
 }
 
 FilterTool::~FilterTool()
@@ -58,11 +82,16 @@ AbstractByteArrayFilterParameterSet* FilterTool::parameterSet(int filterId)
 
 void FilterTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -82,9 +111,38 @@ void FilterTool::setTargetModel(AbstractModel* model)
     emit charCodecChanged(newCharCodecName);
 }
 
-void FilterTool::filter(int filterId) const
+void FilterTool::saveParameterSet(int filterId)
 {
     AbstractByteArrayFilter* byteArrayFilter = mFilterList.at(filterId);
+
+    if (!byteArrayFilter) {
+        return;
+    }
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    byteArrayFilter->saveConfig(configGroup);
+}
+
+void FilterTool::setFilter(int filterId)
+{
+    if (mFilterId == filterId) {
+        return;
+    }
+
+    mFilterId = filterId;
+
+    AbstractByteArrayFilter* byteArrayFilter = mFilterList.at(mFilterId);
+    if (byteArrayFilter) {
+        KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+        configGroup.writeEntry(OperationConfigKey, byteArrayFilter->id());
+    }
+
+    emit filterChanged(mFilterId);
+}
+
+void FilterTool::filter() const
+{
+    AbstractByteArrayFilter* byteArrayFilter = mFilterList.at(mFilterId);
 
     if (byteArrayFilter) {
         const Okteta::AddressRange filteredSection = mByteArrayView->selection();
@@ -100,8 +158,7 @@ void FilterTool::filter(int filterId) const
         QApplication::restoreOverrideCursor();
 
         if (success) {
-            Okteta::ChangesDescribable* changesDescribable =
-                qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
+            auto* changesDescribable = qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
 
             if (changesDescribable) {
                 changesDescribable->openGroupedChange(byteArrayFilter->name());
@@ -127,3 +184,5 @@ void FilterTool::onApplyableChanged()
 }
 
 }
+
+#include "moc_filtertool.cpp"

@@ -2,20 +2,21 @@
 #
 # Tamas Szanto <taszanto@gmail.com>, 2004.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2014.
+# Kristof Kiszel <kiszel.kristof@gmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
-"PO-Revision-Date: 2014-09-02 10:38+0200\n"
-"Last-Translator: Kristóf Kiszel <ulysses@kubuntu.org>\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
+"PO-Revision-Date: 2021-10-30 12:58+0200\n"
+"Last-Translator: Kristof Kiszel <kiszel.kristof@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 21.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -32,21 +33,21 @@ msgstr "ulysses@kubuntu.org,taszanto@gmail.com"
 #: oktetapartreadwriteui.rc:5
 #, kde-format
 msgid "&File"
-msgstr ""
+msgstr "&Fájl"
 
 #. i18n: ectx: Menu (edit)
 #: oktetapartbrowserui.rc:8 oktetapartreadonlyui.rc:10
 #: oktetapartreadwriteui.rc:16
 #, kde-format
 msgid "&Edit"
-msgstr ""
+msgstr "S&zerkesztés"
 
 #. i18n: ectx: Menu (view)
 #: oktetapartbrowserui.rc:21 oktetapartreadonlyui.rc:26
 #: oktetapartreadwriteui.rc:39
 #, kde-format
 msgid "&View"
-msgstr ""
+msgstr "Né&zet"
 
 #. i18n: ectx: ToolBar (mainToolBar)
 #: oktetapartbrowserui.rc:43 oktetapartreadonlyui.rc:47

@@ -15,8 +15,8 @@
 class AbstractByteArrayChecksumParameterSet;
 
 class KComboBox;
-class QPushButton;
 class QLineEdit;
+class QAction;
 
 class QStackedWidget;
 
@@ -44,11 +44,12 @@ private:
 private Q_SLOTS: // gui
 //     void setDirty( bool dirty );
     void onOperationChange(int index);
-    void onCalculateClicked();
 
 private Q_SLOTS: // tool
+    void onAlgorithmChanged(int algorithmId);
     void onChecksumUptodateChanged(bool checksumUptodate);
     void onApplyableChanged(bool isApplyable);
+    void onValuesChanged();
     void onValidityChanged(bool isValid);
 
 private:
@@ -57,7 +58,7 @@ private:
     KComboBox* mAlgorithmComboBox;
     QStackedWidget* mParameterSetEditStack;
     QLineEdit* mChecksumLabel;
-    QPushButton* mCalculateButton;
+    QAction* mCalculateAction;
 };
 
 inline ChecksumTool* ChecksumView::tool() const { return mTool; }

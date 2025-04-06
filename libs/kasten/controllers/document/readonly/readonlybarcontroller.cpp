@@ -27,17 +27,22 @@ ReadOnlyBarController::ReadOnlyBarController(StatusBar* statusBar)
     statusBar->addWidget(mReadOnlyButton);
     connect(mReadOnlyButton, &QAbstractButton::clicked,
             this, &ReadOnlyBarController::setReadOnly);
-
-    setTargetModel(nullptr);
+    mReadOnlyButton->setChecked(false);
+    mReadOnlyButton->setEnabled(false);
 }
 
 void ReadOnlyBarController::setTargetModel(AbstractModel* model)
 {
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
+        return;
+    }
+
     if (mDocument) {
         mDocument->disconnect(mReadOnlyButton);
     }
 
-    mDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    mDocument = document;
 
     if (mDocument) {
         mReadOnlyButton->setChecked(mDocument->isReadOnly());
@@ -59,3 +64,5 @@ void ReadOnlyBarController::setReadOnly(bool isReadOnly)
 }
 
 }
+
+#include "moc_readonlybarcontroller.cpp"

@@ -11,8 +11,6 @@
 
 // lib
 #include "abstractviewarea.hpp"
-// Qt
-#include <Qt>
 
 namespace Kasten {
 
@@ -20,8 +18,11 @@ class AbstractViewAreaPrivate
 {
 public:
     explicit AbstractViewAreaPrivate(AbstractViewArea* viewArea);
+    AbstractViewAreaPrivate(const AbstractViewAreaPrivate&) = delete;
 
     virtual ~AbstractViewAreaPrivate();
+
+    AbstractViewAreaPrivate& operator=(const AbstractViewAreaPrivate&) = delete;
 
 protected:
     AbstractViewArea* const q_ptr;

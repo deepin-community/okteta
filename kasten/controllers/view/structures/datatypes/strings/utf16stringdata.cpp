@@ -91,7 +91,7 @@ QString Utf16StringData::completeString(bool skipInvalid) const
     return QString(data.constData(), i);
 }
 
-qint64 Utf16StringData::read(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+qint64 Utf16StringData::read(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                              BitCount64 bitsRemaining)
 {
     const int oldSize = count();
@@ -112,6 +112,7 @@ qint64 Utf16StringData::read(Okteta::AbstractByteArrayModel* input, Okteta::Addr
     mEofReached = false;
     if (((mMode & CharCount) && mLength.maxChars == 0)
         || ((mMode & ByteCount) && mLength.maxBytes < 2)) {
+        mCodePoints.clear();
         return 0;
     }
 

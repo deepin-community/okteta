@@ -212,7 +212,7 @@ bool FixedSizeByteArrayModel::swap(Address firstStart, const AddressRange& _seco
     }
 
     // copy smaller part to tempbuffer
-    Byte* tempBuffer = new Byte[smallPartLength];
+    auto* tempBuffer = new Byte[smallPartLength];
     memcpy(tempBuffer, &mData[smallPartStart], smallPartLength);
 
     // move the larger part
@@ -262,7 +262,7 @@ Size FixedSizeByteArrayModel::fill(Byte fillByte, Address offset, Size fillLengt
     return fillLength;
 }
 
-int FixedSizeByteArrayModel::compare(const AbstractByteArrayModel& other, const AddressRange& _otherRange, Address offset)
+int FixedSizeByteArrayModel::compare(const AbstractByteArrayModel& other, const AddressRange& _otherRange, Address offset) const
 {
     AddressRange otherRange(_otherRange);
     // qCDebug(LOG_OKTETA_CORE) << QString("offset: %1, otherRange: (%3/%4)" ).arg(offset).arg(otherRange.start()).arg(otherRange.end())
@@ -321,3 +321,5 @@ void FixedSizeByteArrayModel::reset(unsigned int offset, unsigned int length)
 }
 
 }
+
+#include "moc_fixedsizebytearraymodel.cpp"

@@ -16,12 +16,15 @@ class QShortcut;
 
 namespace Kasten {
 
-class AbstractToolWidget;
-
 class AbstractToolWidgetPrivate
 {
 public:
     explicit AbstractToolWidgetPrivate(AbstractToolWidget* parent);
+    AbstractToolWidgetPrivate(const AbstractToolWidgetPrivate&) = delete;
+
+    ~AbstractToolWidgetPrivate() = default;
+
+    AbstractToolWidgetPrivate& operator=(const AbstractToolWidgetPrivate&) = delete;
 
 public:
     void addButton(QPushButton* button, AbstractToolWidget::DefaultType defaultType);

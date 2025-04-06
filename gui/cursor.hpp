@@ -23,7 +23,11 @@ class Cursor
 {
 public:
     Cursor();
-    virtual ~Cursor();
+    Cursor(const Cursor&) = delete;
+
+    ~Cursor();
+
+    Cursor& operator=(const Cursor&) = delete;
 
 public:
     /** sets size of the full cursor */
@@ -46,6 +50,9 @@ private:
     PixelX ShapeX = -1;
     PixelX ShapeW = -1;
 };
+
+inline Cursor::Cursor() = default;
+inline Cursor::~Cursor() = default;
 
 inline QPixmap& Cursor::onPixmap()  { return OnPixmap; }
 inline QPixmap& Cursor::offPixmap() { return OffPixmap; }

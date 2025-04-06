@@ -25,8 +25,6 @@ class QBrush;
 
 namespace Okteta {
 
-class Bookmarkable;
-
 static constexpr AbstractByteArrayView::CodingTypes DefaultVisibleCodings =
     (AbstractByteArrayView::CodingTypes)(AbstractByteArrayView::ValueCodingId | AbstractByteArrayView::CharCodingId);
 
@@ -200,9 +198,9 @@ private: // API to be redefined
 
 private:
     void renderPlain(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex);
-    void renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag);
-    void renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag);
-    void renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, int flag);
+    void renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag);
+    void renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag);
+    void renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, unsigned int flag);
     void renderSelectionSpaceBehind(QPainter* painter, LinePosition linePosition);
     void renderSpaceBehind(QPainter* painter, const QBrush& brush, LinePosition linePosition);
     void renderBookmark(QPainter* painter, const QBrush& brush);
@@ -287,7 +285,6 @@ private: // buffering rendering data
     Line mRenderLine;
     PixelX mRenderX;
     PixelX mRenderWidth;
-    int mSpacingTrigger;
 
 private:
     ByteArrayRowColumnRenderer* const q_ptr;

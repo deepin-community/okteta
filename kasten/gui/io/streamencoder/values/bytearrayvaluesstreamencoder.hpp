@@ -16,12 +16,30 @@
 // Qt
 #include <QString>
 
+class KConfigGroup;
+
 namespace Kasten {
 
 class ValuesStreamEncoderSettings
 {
+private:
+    static constexpr char SeparatorConfigKey[] = "Separator";
+
+    static const QString DefaultSeparator;
+
 public:
     ValuesStreamEncoderSettings();
+    ValuesStreamEncoderSettings(const ValuesStreamEncoderSettings&) = default;
+
+    ~ValuesStreamEncoderSettings() = default;
+
+    ValuesStreamEncoderSettings& operator=(const ValuesStreamEncoderSettings&) = default;
+
+    bool operator==(const ValuesStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     Okteta::ValueCoding valueCoding = Okteta::HexadecimalCoding;
@@ -33,6 +51,9 @@ public:
 class ByteArrayValuesStreamEncoder : public AbstractByteArrayStreamEncoder
 {
     Q_OBJECT
+
+private:
+    static constexpr char ConfigGroupId[] = "ByteArrayValuesStreamEncoder";
 
 public:
     ByteArrayValuesStreamEncoder();
@@ -53,11 +74,6 @@ private:
 };
 
 inline ValuesStreamEncoderSettings ByteArrayValuesStreamEncoder::settings() const { return mSettings; }
-inline void ByteArrayValuesStreamEncoder::setSettings(const ValuesStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 }
 

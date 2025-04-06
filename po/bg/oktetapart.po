@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: khexedit2part\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2011-07-21 20:11+0300\n"
 "Last-Translator: Yasen Pramatarov <yasen@lindeas.com>\n"
 "Language-Team: Bulgarian <dict@linux.zonebg.com>\n"
@@ -20,12 +20,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Ясен Праматаров"
+msgstr ""
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "yasen@lindeas.com"
+msgstr ""
 
 #. i18n: ectx: Menu (file)
 #: oktetapartbrowserui.rc:5 oktetapartreadonlyui.rc:5
@@ -65,12 +65,12 @@ msgstr "Права"
 #: partfactory.cpp:33
 #, kde-format
 msgid "OktetaPart"
-msgstr "OktetaPart"
+msgstr ""
 
 #: partfactory.cpp:35
 #, kde-format
 msgid "Embedded hex editor"
-msgstr "Вграден шестнадесетичен редактор"
+msgstr ""
 
 #: partfactory.cpp:37
 #, kde-format
@@ -85,4 +85,4 @@ msgstr ""
 #: partfactory.cpp:39
 #, kde-format
 msgid "Author"
-msgstr "Author"
+msgstr ""

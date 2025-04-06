@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2008 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2008, 2023 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -10,12 +10,18 @@
 
 // KF
 #include <KLocalizedString>
+// Qt
+#include <QFontDatabase>
+#include <QMimeData>
+
+namespace Kasten {
 
 ContainedStringTableModel::ContainedStringTableModel(const QList<ContainedString>* containedStringList,
                                                      int offsetCoding,
                                                      QObject* parent)
     : QAbstractTableModel(parent)
     , mContainedStringList(containedStringList)
+    , mFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont))
 {
     mPrintFunction = Okteta::OffsetFormat::printFunction((Okteta::OffsetFormat::Format)offsetCoding);
 }
@@ -76,6 +82,8 @@ QVariant ContainedStringTableModel::data(const QModelIndex& index, int role) con
                 ;
             }
         }
+    } else if (role == Qt::FontRole) {
+        result = mFixedFont;
     }
 
     return result;
@@ -97,3 +105,54 @@ QVariant ContainedStringTableModel::headerData(int section, Qt::Orientation orie
 
     return result;
 }
+
+Qt::ItemFlags ContainedStringTableModel::flags(const QModelIndex& index) const
+{
+    return QAbstractTableModel::flags(index) | Qt::ItemIsDragEnabled;
+}
+
+static QString stringColumnAsText(const QModelIndexList& indexes)
+{
+    QString strings;
+
+    // assumes indexes are in row-wise order as seen on screen
+    // add tab between items in row, but for last linefeed
+    int lastRow = -1;
+    for (const QModelIndex& index : indexes) {
+        const int row = index.row();
+        if (row == lastRow) {
+            continue;
+        }
+        lastRow = row;
+        const QModelIndex stringIndex = index.siblingAtColumn(ContainedStringTableModel::StringColumnId);
+        strings.append(stringIndex.data(Qt::DisplayRole).toString());
+        strings.append(QLatin1Char('\n')); // TODO: specific linefeed for platforms
+    }
+
+    return strings;
+}
+
+QMimeData* ContainedStringTableModel::mimeData(const QModelIndexList& indexes) const
+{
+    if (indexes.isEmpty()) {
+        return nullptr;
+    }
+
+    auto* mimeData = new QMimeData;
+
+    const QString text = stringColumnAsText(indexes);
+    mimeData->setText(text);
+
+    return mimeData;
+}
+
+QStringList ContainedStringTableModel::mimeTypes() const
+{
+    return {
+        QStringLiteral("text/plain"),
+    };
+}
+
+}
+
+#include "moc_containedstringtablemodel.cpp"

@@ -30,19 +30,23 @@ OverwriteModeController::OverwriteModeController(KXMLGUIClient* guiClient)
     // TODO: or should we catch the signal from the view (needs to be added)
     actionCollection->setDefaultShortcut(mSetOverWriteAction, QKeySequence(Qt::Key_Insert));
     connect(mSetOverWriteAction, &KToggleAction::triggered, this, &OverwriteModeController::setOverWrite);
+    mSetOverWriteAction->setEnabled(false);
 
     actionCollection->addAction(QStringLiteral("set_overwrite"), mSetOverWriteAction);
-
-    setTargetModel(nullptr);
 }
 
 void OverwriteModeController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(mSetOverWriteAction);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     if (mByteArrayView) {
         mSetOverWriteAction->setChecked(mByteArrayView->isOverwriteMode());
@@ -62,3 +66,5 @@ void OverwriteModeController::setOverWrite(bool isOverWrite)
 }
 
 }
+
+#include "moc_overwritemodecontroller.cpp"

@@ -9,8 +9,6 @@
 #ifndef KASTEN_CHAR8_HPP
 #define KASTEN_CHAR8_HPP
 
-// Okteta gui
-#include <Okteta/OktetaGui>
 // Okteta core
 #include <Okteta/Character>
 // Qt
@@ -21,7 +19,12 @@ struct Char8
 {
 public:
     Char8(Okteta::Character c);
+    Char8(const Char8&) = default;
     Char8();
+
+    ~Char8() = default;
+
+    Char8& operator=(const Char8&) = default;
 
 public:
     QString toString(/** TODO: undefinedChar */) const;
@@ -32,11 +35,6 @@ public:
 
 inline Char8::Char8() = default;
 inline Char8::Char8(Okteta::Character c) : character(c) {}
-
-inline QString Char8::toString() const
-{
-    return QString(character.isUndefined() ? Okteta::DefaultUndefinedChar : (QChar)character);
-}
 
 Q_DECLARE_METATYPE(Char8)
 

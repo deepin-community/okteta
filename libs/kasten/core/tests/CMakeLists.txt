@@ -1,24 +1,16 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-set( SUTDIR ${CMAKE_CURRENT_SOURCE_DIR}/.. )
-
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}/..
-  ${SUTDIR}/..
-  ${SUTDIR}/document
-  ${SUTDIR}/io
-  ${SUTDIR}/io/filesystem
-  ${SUTDIR}
-)
-
 ########### util ###############
 
-set( kastencoretestutil_LIB_SRCS
+set( KastenCoreTestUtil_LIB_SRCS
   util/filesystem.cpp
 )
 
-add_library( kastencoretestutil  STATIC ${kastencoretestutil_LIB_SRCS} )
-target_link_libraries( kastencoretestutil Qt5::Test Qt5::Core)
+add_library( KastenCoreTestUtil  STATIC ${KastenCoreTestUtil_LIB_SRCS} )
+target_link_libraries( KastenCoreTestUtil
+  PUBLIC
+    Qt5::Core
+  PRIVATE
+    Qt5::Test
+)
 
 ########### io ###############
 
@@ -36,9 +28,8 @@ set( kastencoretestio_LIB_SRCS
 add_library( kastencoretestio  STATIC ${kastencoretestio_LIB_SRCS} )
 target_link_libraries( kastencoretestio
 PUBLIC
-  Qt5::Core
+  KastenCore
 PRIVATE
-  KF5::I18n
   KF5::CoreAddons
 )
 
@@ -65,7 +56,7 @@ ecm_add_test(
   LINK_LIBRARIES
   kastencoretestio
   KastenCore
-  kastencoretestutil
+  KastenCoreTestUtil
   Qt5::Test
 )
 
@@ -81,7 +72,7 @@ ecm_add_test(
   LINK_LIBRARIES
   kastencoretestio
   KastenCore
-  kastencoretestutil
+  KastenCoreTestUtil
   Qt5::Test
 )
 

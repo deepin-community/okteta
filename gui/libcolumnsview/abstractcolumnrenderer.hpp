@@ -12,6 +12,7 @@
 // lib
 #include "oktetagui_export.hpp"
 #include "pixelmetrics.hpp"
+#include "line.hpp"
 // Qt
 #include <QScopedPointer>
 
@@ -34,11 +35,15 @@ class OKTETAGUI_EXPORT AbstractColumnRenderer
 //    friend class ColumnsView;
 
 protected:
-    explicit AbstractColumnRenderer(AbstractColumnRendererPrivate* d);
+    OKTETAGUI_NO_EXPORT explicit AbstractColumnRenderer(AbstractColumnRendererPrivate* d);
 
 public:
     explicit AbstractColumnRenderer(AbstractColumnStylist* stylist);
+    AbstractColumnRenderer(const AbstractColumnRenderer&) = delete;
+
     virtual ~AbstractColumnRenderer();
+
+    AbstractColumnRenderer& operator=(const AbstractColumnRenderer&) = delete;
 
 public: // API to be reimplemented in the subclasses
     /** Before an update of the columns view each column that intersects with the area to be painted
@@ -50,7 +55,7 @@ public: // API to be reimplemented in the subclasses
      * @param xSpan
      * @param firstLineIndex no of the first of the range of lines to paint
      */
-    virtual void renderFirstLine(QPainter* painter, const PixelXRange& xSpan, int firstLineIndex);
+    virtual void renderFirstLine(QPainter* painter, const PixelXRange& xSpan, Line firstLineIndex);
     /** the actual painting call for a column's line.
      * The default implementation simply paints the background
      */

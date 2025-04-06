@@ -11,25 +11,63 @@
 
 // Kasten core
 #include <Kasten/AbstractModelDataGenerator>
-// Qt
-#include <QObject>
-#include <QString>
+
+class KConfigGroup;
 
 namespace Kasten {
 
 class ByteArrayPatternGeneratorSettings
 {
 public:
+    // matching Okteta::ByteArrayComboBox
+    enum Coding
+    {
+        InvalidCoding = -1,
+        HexadecimalCoding = 0,
+        DecimalCoding = 1,
+        OctalCoding = 2,
+        BinaryCoding = 3,
+        CharCoding = 4,
+        Utf8Coding = 5,
+        _CodingCount
+    };
+
+private:
+    static const QByteArray DefaultPattern;
+
+    static constexpr Coding DefaultPatternCoding = HexadecimalCoding;
+    static constexpr int DefaultCount = 1;
+
+    static constexpr char PatternConfigKey[] = "Pattern";
+    static constexpr char PatternCodingConfigKey[] = "PatternCoding";
+    static constexpr char CountConfigKey[] = "Count";
+
+public:
     ByteArrayPatternGeneratorSettings();
+    ByteArrayPatternGeneratorSettings(const ByteArrayPatternGeneratorSettings&) = default;
+
+    ~ByteArrayPatternGeneratorSettings() = default;
+
+    ByteArrayPatternGeneratorSettings& operator=(const ByteArrayPatternGeneratorSettings&) = default;
+
+    bool operator==(const ByteArrayPatternGeneratorSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     QByteArray pattern = QByteArray(1, 0);
+    Coding patternCoding = HexadecimalCoding;
     int count = 1;
 };
 
 class ByteArrayPatternGenerator : public AbstractModelDataGenerator
 {
     Q_OBJECT
+
+private:
+    static constexpr char ConfigGroupId[] = "ByteArrayPatternGenerator";
 
 public:
     ByteArrayPatternGenerator();
@@ -48,11 +86,6 @@ private:
 };
 
 inline ByteArrayPatternGeneratorSettings ByteArrayPatternGenerator::settings() const { return mSettings; }
-inline void ByteArrayPatternGenerator::setSettings(const ByteArrayPatternGeneratorSettings& settings)
-{
-    mSettings = settings;
-//     emit settingsChanged();
-}
 
 }
 

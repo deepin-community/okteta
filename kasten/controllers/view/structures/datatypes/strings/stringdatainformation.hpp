@@ -14,8 +14,6 @@
 #include "../dummydatainformation.hpp"
 #include "stringdata.hpp"
 
-class DummyDataInformation;
-
 class StringDataInformation : public DataInformationWithDummyChildren
 {
     DATAINFORMATION_CLONE_DECL(StringDataInformation, DataInformationWithDummyChildren);
@@ -37,14 +35,13 @@ public:
     StringDataInformation(const QString& name, StringType encoding, DataInformationBase* parent = nullptr);
     ~StringDataInformation() override;
 
-    bool canHaveChildren() const override;
     DataInformation* childAt(unsigned int) const override;
 
     bool setData(const QVariant& value, Okteta::AbstractByteArrayModel* input,
                  Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) override;
     bool setChildData(uint row, const QVariant& value, Okteta::AbstractByteArrayModel* out,
                       Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) override;
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining, quint8* bitOffset) override;
 
     BitCount32 size() const override;
@@ -60,6 +57,7 @@ public:
     Qt::ItemFlags childFlags(int row, int column, bool fileLoaded = true) const override;
     BitCount32 childSize(uint index) const override;
     QString childTypeName(uint index) const override;
+    QString childString(uint index) const override;
     void setChildWidgetData(uint index, QWidget* w) const override;
     QVariant dataFromChildWidget(uint index, const QWidget* w) const override;
     QWidget* createChildEditWidget(uint index, QWidget* parent) const override;
@@ -78,6 +76,7 @@ public:
     int stringLength() const;
     int stringByteLength() const;
     uint terminationMode() const;
+    QString childNameAt(int index) const;
     QString valueAt(int index) const;
     /** Removes this mode from the termination modes. If none is left, changes string to null terminated
      * @param mode The mode to remove
@@ -90,7 +89,7 @@ private:
     QString valueStringImpl() const override;
 
 private:
-    QScopedPointer<DummyDataInformation> mDummy;
+    mutable DummyDataInformation mDummy;
     QScopedPointer<StringData> mData;
     StringType mEncoding = StringType::InvalidEncoding;
 
@@ -149,6 +148,13 @@ inline int StringDataInformation::stringByteLength() const
 inline uint StringDataInformation::terminationMode() const
 {
     return mData->terminationMode();
+}
+
+inline QString StringDataInformation::childNameAt(int index) const
+{
+    Q_ASSERT((uint)index < mData->count());
+    // TODO termination char
+    return QString(QLatin1Char('[') + QString::number(index) + QLatin1Char(']'));
 }
 
 inline QString StringDataInformation::valueAt(int index) const

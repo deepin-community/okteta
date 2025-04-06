@@ -10,8 +10,6 @@
 
 // lib
 #include "filebytearraymodel_p.hpp"
-// Std
-#include <cstdlib>
 
 namespace Okteta {
 
@@ -87,3 +85,5 @@ bool FileByteArrayModel::close()
 }
 
 }
+
+#include "moc_filebytearraymodel.cpp"

@@ -11,28 +11,43 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
-// Qt
-#include <QString>
+
+class KConfigGroup;
 
 namespace Kasten {
 
 class Base32StreamEncoderSettings
 {
 public:
-    enum class AlgorithmId
+    enum class EncodingType
     {
         Classic = 0,
         Hex = 1,
-        ZHex = 2
+        ZHex = 2,
+        _Count,
     };
+
+private:
+    static constexpr EncodingType DefaultEncodingType = EncodingType::Classic;
+
+    static constexpr char EncodingTypeConfigKey[] = "EncodingType";
 
 public:
     Base32StreamEncoderSettings();
+    Base32StreamEncoderSettings(const Base32StreamEncoderSettings&) = default;
+
+    ~Base32StreamEncoderSettings() = default;
+
+    Base32StreamEncoderSettings& operator=(const Base32StreamEncoderSettings&) = default;
+
+    bool operator==(const Base32StreamEncoderSettings& other) const;
 
 public:
-    AlgorithmId algorithmId = AlgorithmId::Classic;
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
+
+public:
+    EncodingType encodingType = EncodingType::Classic;
 };
 
 class ByteArrayBase32StreamEncoder : public AbstractByteArrayStreamEncoder
@@ -40,12 +55,6 @@ class ByteArrayBase32StreamEncoder : public AbstractByteArrayStreamEncoder
     Q_OBJECT
 
 public:
-    static constexpr int inputGroupLength = 5;
-
-    static constexpr int outputLineLength = 76;
-    static constexpr int outputGroupLength = 8;
-    static constexpr int maxOutputGroupsPerLine = outputLineLength / outputGroupLength;
-
     enum class InputByteIndex
     {
         First = 0,
@@ -54,6 +63,15 @@ public:
         Fourth,
         Fifth
     };
+
+private:
+    static constexpr int inputGroupLength = 5;
+
+    static constexpr int outputLineLength = 76;
+    static constexpr int outputGroupLength = 8;
+    static constexpr int maxOutputGroupsPerLine = outputLineLength / outputGroupLength;
+
+    static constexpr char ConfigGroupId[] = "ByteArrayBase32StreamEncoder";
 
 public:
     ByteArrayBase32StreamEncoder();
@@ -74,11 +92,6 @@ private:
 };
 
 inline Base32StreamEncoderSettings ByteArrayBase32StreamEncoder::settings() const { return mSettings; }
-inline void ByteArrayBase32StreamEncoder::setSettings(const Base32StreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 }
 

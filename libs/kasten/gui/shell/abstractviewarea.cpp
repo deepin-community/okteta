@@ -9,9 +9,6 @@
 #include "abstractviewarea.hpp"
 #include "abstractviewarea_p.hpp"
 
-// Qt
-#include <Qt>
-
 namespace Kasten {
 
 AbstractViewArea::AbstractViewArea()
@@ -26,3 +23,5 @@ AbstractViewArea::AbstractViewArea(AbstractViewAreaPrivate* d)
 AbstractViewArea::~AbstractViewArea() = default;
 
 }
+
+#include "moc_abstractviewarea.cpp"

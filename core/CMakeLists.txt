@@ -18,6 +18,7 @@ oktetacore_add_sublibrary(codecs
         DecimalByteCodec
         USASCIICharCodec
         EBCDIC1047CharCodec
+        IBM874CharCodec
         JISX0201CharCodec
         HexadecimalByteCodec
         OctalByteCodec
@@ -123,10 +124,22 @@ okteta_add_pkgconfig(Core NAMESPACE Okteta
 
 
 if(BUILD_TESTING)
-  add_library( testoktetacore STATIC ${oktetacore_LIB_OBJS} )
-  set_target_properties( testoktetacore PROPERTIES COMPILE_FLAGS -DOKTETACORE_STATIC_DEFINE )
-  target_include_directories( testoktetacore PUBLIC ${CMAKE_CURRENT_BINARY_DIR} )
-  target_link_libraries( testoktetacore Qt5::Core KF5::I18n KF5::Codecs )
+  add_library( TestOktetaCore STATIC ${oktetacore_LIB_OBJS} )
+  # Configure export macros to be setup as with a static lib
+  # as the source files are reused for static TestOktetaCore
+  # Saves doing a separate export header.
+  target_compile_definitions( TestOktetaCore
+    PUBLIC
+      OKTETACORE_STATIC_DEFINE
+  )
+  target_link_libraries( TestOktetaCore
+    PUBLIC
+      Qt5::Core
+    PRIVATE
+      KF5::I18n
+      KF5::Codecs
+  )
+
   add_subdirectory( piecetable/tests )
   add_subdirectory( tests )
 endif()

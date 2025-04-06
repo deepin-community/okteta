@@ -8,9 +8,6 @@
 
 #include "abstractselectionview.hpp"
 
-// Qt
-#include <Qt>
-
 namespace Kasten {
 
 class AbstractSelectionViewPrivate
@@ -24,3 +21,5 @@ AbstractSelectionView::AbstractSelectionView() = default;
 AbstractSelectionView::~AbstractSelectionView() = default;
 
 }
+
+#include "moc_abstractselectionview.cpp"

@@ -9,7 +9,7 @@
 #include "bytearrayrawfilereloadthread.hpp"
 
 // Okteta core
-#include <Okteta/PieceTableByteArrayModel>
+#include <Okteta/Address>
 // KF
 #include <KLocalizedString>
 // Qt
@@ -62,3 +62,5 @@ void ByteArrayRawFileReloadThread::run()
 }
 
 }
+
+#include "moc_bytearrayrawfilereloadthread.cpp"

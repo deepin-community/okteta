@@ -18,6 +18,7 @@
 #include "controller/valueeditor.hpp"
 #include "controller/tabcontroller.hpp"
 #include "offsetcolumnrenderer.hpp"
+#include "fontscalingzoomstate.hpp"
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/CharCodec>
@@ -47,7 +48,6 @@ class AbstractByteArrayViewPrivate : public ColumnsViewPrivate
 {
 public:
     explicit AbstractByteArrayViewPrivate(AbstractByteArrayView* parent);
-    AbstractByteArrayViewPrivate() = delete;
 
     ~AbstractByteArrayViewPrivate() override;
 
@@ -101,7 +101,12 @@ public: // value access
     AbstractByteArrayView::CharCoding charCoding() const;
     const QString& charCodingName() const;
 
-    double zoomLevel() const;
+public: // zooming values
+    double zoomScale() const;
+    int zoomInLevelsSize() const;
+    int zoomOutLevelsSize() const;
+    double zoomScaleForLevel(int zoomLevel) const;
+    int zoomLevelForScale(double zoomScale) const;
 
 public:
     void init();
@@ -138,7 +143,7 @@ public: // zooming
     void zoomOut();
     void zoomTo(int pointSize);
     void unZoom();
-    void setZoomLevel(double level);
+    void setZoomScale(double zoomScale);
 
 public: // interaction
     void selectAll(bool select);
@@ -173,10 +178,12 @@ public: // events
     void timerEvent(QTimerEvent* timerEvent);
     bool viewportEvent(QEvent* event);
 
+    void keyPressEvent(QKeyEvent* keyEvent);
     void mousePressEvent(QMouseEvent* mousePressEvent);
     void mouseReleaseEvent(QMouseEvent* mouseReleaseEvent);
     void mouseMoveEvent(QMouseEvent* mouseMoveEvent);
     void mouseDoubleClickEvent(QMouseEvent* mouseDoubleClickEvent);
+    void wheelEvent(QWheelEvent* wheelEvent);
 
 public: // slots
     void onContentsChanged(const ArrayChangeMetricsList& changeList);
@@ -193,6 +200,9 @@ protected:
     void adaptController();
     void cancelByteEditor();
     void finishByteEditor();
+
+protected:
+    const QFont& renderingFont() const;
     void initPainterFromWidget(QPainter* painter) const;
 
 protected:
@@ -229,6 +239,7 @@ protected: // API to be implemented
     virtual int fittingBytesPerLine() const = 0;
     /** recalcs all dependent values with the actual NoOfBytesPerLine  */
     virtual void adjustToLayoutNoOfBytesPerLine() = 0;
+    virtual void adjustTToScaledFont() = 0;
     /** repaints all the parts that are signed as changed */
     virtual void updateChanged() = 0;
 
@@ -296,18 +307,14 @@ protected:
     bool mOverWriteOnly : 1;
     /** flag if overwrite mode is active */
     bool mOverWrite : 1;
-    /** flag whether the font is changed due to a zooming */
-    bool mInZooming : 1;
     /** flag if the cursor should be invisible */
     bool mCursorPaused : 1;
     /** flag if the cursor is visible when blinking */
     bool mBlinkCursorVisible : 1;
     /** flag if the cursor is visible */
     bool mCursorVisible : 1;
-
-    /** font size as set by user (used for zooming) */
-    int mDefaultFontSize;
-    double mZoomLevel = 1.0;
+    /** flag if the current focus was received by a mouse click */
+    bool m_wasFocussedByMouseClick : 1;
 
     // parameters
     /** */
@@ -322,6 +329,9 @@ protected:
     AbstractByteArrayView::LayoutStyle mResizeStyle;
 
 private:
+    FontScalingZoomState m_fontScalingZoomState;
+
+private:
     Q_DECLARE_PUBLIC(AbstractByteArrayView)
 };
 
@@ -333,7 +343,9 @@ inline bool AbstractByteArrayViewPrivate::isOverwriteMode() const { return mOver
 inline bool AbstractByteArrayViewPrivate::isOverwriteOnly() const { return mOverWriteOnly; }
 inline bool AbstractByteArrayViewPrivate::isViewReadOnly()      const { return mReadOnly; }
 inline bool AbstractByteArrayViewPrivate::isEffectiveReadOnly() const { return mReadOnly || mByteArrayModel->isReadOnly(); }
-inline double AbstractByteArrayViewPrivate::zoomLevel()        const { return mZoomLevel; }
+inline double AbstractByteArrayViewPrivate::zoomScale()         const { return m_fontScalingZoomState.scale(); }
+inline int AbstractByteArrayViewPrivate::zoomInLevelsSize()     const { return m_fontScalingZoomState.inLevelsSize(); }
+inline int AbstractByteArrayViewPrivate::zoomOutLevelsSize()    const { return m_fontScalingZoomState.outLevelsSize(); }
 
 inline ByteArrayTableLayout* AbstractByteArrayViewPrivate::layout()      const { return mTableLayout; }
 inline ByteArrayTableCursor* AbstractByteArrayViewPrivate::tableCursor() const { return mTableCursor; }
@@ -378,6 +390,12 @@ inline void AbstractByteArrayViewPrivate::finishByteEditor()
 {
     mValueEditor->finishEdit();
 }
+
+inline const QFont& AbstractByteArrayViewPrivate::renderingFont() const
+{
+    return m_fontScalingZoomState.font();
+}
+
 inline void AbstractByteArrayViewPrivate::setTabChangesFocus(bool tabChangesFocus)
 {
     mTabController->setTabChangesFocus(tabChangesFocus);

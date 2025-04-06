@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2011 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2011, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -14,20 +14,115 @@
 #include <Kasten/Okteta/ByteArrayView>
 // Okteta Kasten core
 #include <Kasten/Okteta/ByteArrayDocument>
+// libconfigentries
+#include <bytearraycodingconfigentry.hpp>
 // Okteta core
 #include <Okteta/CharCodec>
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/ChangesDescribable>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QApplication>
 
+
+template <>
+inline Kasten::CharsetConversionTool::ConversionDirection KConfigGroup::readEntry(const char *key,
+                                                                                   const Kasten::CharsetConversionTool::ConversionDirection &defaultValue) const
+{
+    const QString entry = readEntry(key, QString());
+    const Kasten::CharsetConversionTool::ConversionDirection direction =
+        (entry == QLatin1String("From")) ?    Kasten::CharsetConversionTool::ConvertFrom :
+        (entry == QLatin1String("To")) ?      Kasten::CharsetConversionTool::ConvertTo :
+        /* else */                            defaultValue;
+    return direction;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key,
+                                     const Kasten::CharsetConversionTool::ConversionDirection &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    const QString valueString =
+        (value == Kasten::CharsetConversionTool::ConvertFrom) ? QLatin1String("From") : QLatin1String("To");
+    writeEntry(key, valueString, flags);
+}
+
 namespace Kasten {
+// helper class for KConfigGroup API
+class ByteParameter
+{
+public:
+    Okteta::Byte value;
+
+    operator Okteta::Byte() const { return value; }
+};
+}
+
+template <>
+inline Kasten::ByteParameter KConfigGroup::readEntry(const char *key,
+                                                     const Kasten::ByteParameter &defaultValue) const
+{
+    const int storageValue = readEntry(key, -1);
+    if ((0 <= storageValue) && (storageValue <= 255)) {
+        return Kasten::ByteParameter{static_cast<Okteta::Byte>(storageValue)};
+    }
+    return defaultValue;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key,
+                                     const Kasten::ByteParameter &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    writeEntry(key, static_cast<uint>(value.value), flags);
+}
+
+template <>
+inline Kasten::CharsetConversionTool::Coding
+KConfigGroup::readEntry(const char *key,
+                        const Kasten::CharsetConversionTool::Coding &defaultValue) const
+{
+    return static_cast<Kasten::CharsetConversionTool::Coding>(readEntry(key, static_cast<Kasten::ByteArrayCoding>(defaultValue)));
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key,
+                                     const Kasten::CharsetConversionTool::Coding &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    writeEntry(key, static_cast<Kasten::ByteArrayCoding>(value), flags);
+}
+
+namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char CharsetConversionTool::ConfigGroupId[];
+constexpr char CharsetConversionTool::OtherCharCodecNameConfigKey[];
+constexpr char CharsetConversionTool::ConversionDirectionConfigKey[];
+constexpr char CharsetConversionTool::SubstituteMissingCharsConfigKey[];
+constexpr char CharsetConversionTool::SubstituteByteConfigKey[];
+constexpr char CharsetConversionTool::SubstituteByteCodingConfigKey[];
+
+constexpr bool CharsetConversionTool::DefaultSubstituteMissingChars;
+constexpr Okteta::Byte CharsetConversionTool::DefaultSubstituteByte;
+constexpr CharsetConversionTool::Coding CharsetConversionTool::DefaultSubstituteByteCoding;
+constexpr CharsetConversionTool::ConversionDirection CharsetConversionTool::DefaultConversionDirection;
+
 
 CharsetConversionTool::CharsetConversionTool()
 {
     setObjectName(QStringLiteral("CharsetConversion"));
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    mOtherCharCodecName = configGroup.readEntry(OtherCharCodecNameConfigKey);
+    mConversionDirection = configGroup.readEntry(ConversionDirectionConfigKey, DefaultConversionDirection);
+    mSubstitutingMissingChars = configGroup.readEntry(SubstituteMissingCharsConfigKey, DefaultSubstituteMissingChars);
+    mSubstituteByte = configGroup.readEntry(SubstituteByteConfigKey, ByteParameter{DefaultSubstituteByte});
+    mSubstituteByteCoding = configGroup.readEntry(SubstituteByteCodingConfigKey, DefaultSubstituteByteCoding);
 }
 
 CharsetConversionTool::~CharsetConversionTool() = default;
@@ -44,6 +139,13 @@ QString CharsetConversionTool::title() const
 {
     return i18nc("@title:window of the tool to convert between charsets",
                  "Charset Conversion");
+}
+
+QString CharsetConversionTool::targetCharCodecName() const
+{
+    return (mConversionDirection == ConvertTo) ?
+        mOtherCharCodecName :
+        mByteArrayView ? mByteArrayView->charCodingName() : QString();
 }
 
 QString CharsetConversionTool::otherCharCodecName() const
@@ -66,13 +168,24 @@ Okteta::Byte CharsetConversionTool::substituteByte() const
     return mSubstituteByte;
 }
 
+CharsetConversionTool::Coding CharsetConversionTool::substituteByteCoding() const
+{
+    return mSubstituteByteCoding;
+}
+
+
 void CharsetConversionTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -80,9 +193,13 @@ void CharsetConversionTool::setTargetModel(AbstractModel* model)
 
     if (mByteArrayView && mByteArrayModel) {
         connect(mByteArrayView,  &ByteArrayView::charCodecChanged,
+                this, &CharsetConversionTool::onViewCharCodecChanged);
+        connect(mByteArrayView,  &ByteArrayView::charCodecChanged,
                 this, &CharsetConversionTool::onViewChanged);
         connect(mByteArrayView,  &ByteArrayView::selectedDataChanged,
                 this, &CharsetConversionTool::onViewChanged);
+
+        onViewCharCodecChanged(mByteArrayView->charCodingName());
     }
 
     onViewChanged();
@@ -95,22 +212,72 @@ void CharsetConversionTool::setOtherCharCodecName(const QString& codecName)
     }
 
     mOtherCharCodecName = codecName;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(OtherCharCodecNameConfigKey, mOtherCharCodecName);
+
+    if (mConversionDirection == ConvertTo) {
+        emit targetCharCodecChanged(mOtherCharCodecName);
+    }
     emit isApplyableChanged(isApplyable());
 }
 
 void CharsetConversionTool::setConversionDirection(int conversionDirection)
 {
+    if (mConversionDirection == (ConversionDirection)conversionDirection) {
+        return;
+    }
+
+    const QString oldTargetCharCodecName = CharsetConversionTool::targetCharCodecName();
+
     mConversionDirection = (ConversionDirection)conversionDirection;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(ConversionDirectionConfigKey, mConversionDirection);
+
+    const QString newTargetCharCodecName = CharsetConversionTool::targetCharCodecName();
+
+    if (oldTargetCharCodecName != newTargetCharCodecName) {
+        emit targetCharCodecChanged(newTargetCharCodecName);
+    }
 }
 
 void CharsetConversionTool::setSubstitutingMissingChars(bool isSubstitutingMissingChars)
 {
+    if (mSubstitutingMissingChars == isSubstitutingMissingChars) {
+        return;
+    }
+
     mSubstitutingMissingChars = isSubstitutingMissingChars;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(SubstituteMissingCharsConfigKey, mSubstitutingMissingChars);
+
+    emit isSubstitutingMissingCharsChanged(mSubstitutingMissingChars);
 }
 
-void CharsetConversionTool::setSubstituteByte(int byte)
+void CharsetConversionTool::setSubstituteByte(Okteta::Byte byte)
 {
-    mSubstituteByte = (Okteta::Byte)byte;
+    if (mSubstituteByte == byte) {
+        return;
+    }
+
+    mSubstituteByte = byte;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(SubstituteByteConfigKey, ByteParameter{mSubstituteByte});
+}
+
+void CharsetConversionTool::setSubstituteByteCoding(Coding coding)
+{
+    if (mSubstituteByteCoding == coding) {
+        return;
+    }
+
+    mSubstituteByteCoding = coding;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(SubstituteByteCodingConfigKey, mSubstituteByteCoding);
 }
 
 void CharsetConversionTool::convertChars()
@@ -138,8 +305,7 @@ void CharsetConversionTool::convertChars()
     const bool success = charsetConversionJob->exec();
 
     if (success) { // TODO: if nothing needed to be converted, just report and don't add change
-        Okteta::ChangesDescribable* changesDescribable =
-            qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
+        auto* changesDescribable = qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
 
         if (changesDescribable) {
             const QString description =
@@ -166,9 +332,18 @@ void CharsetConversionTool::convertChars()
     emit conversionDone(success, convertedBytesCount, failedPerByteCount);
 }
 
+void CharsetConversionTool::onViewCharCodecChanged(const QString& charCodecName)
+{
+    if (mConversionDirection == ConvertFrom) {
+        emit targetCharCodecChanged(charCodecName);
+    }
+}
+
 void CharsetConversionTool::onViewChanged()
 {
     emit isApplyableChanged(isApplyable());
 }
 
 }
+
+#include "moc_charsetconversiontool.cpp"

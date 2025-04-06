@@ -17,7 +17,6 @@
 #include <Okteta/Address>
 
 class KComboBox;
-class KSqueezedTextLabel;
 class QLabel;
 class QString;
 
@@ -40,6 +39,7 @@ public: // AbstractXmlGuiController API
 
 private:
     void fixWidths(int offsetCoding);
+    void clearDisplay();
 
 private Q_SLOTS:
     void setOverwriteMode(bool overwrite);

@@ -6,13 +6,10 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "modsumbytearraychecksumparametersetedit.hpp"
+#include "crc64bytearraychecksumparametersetedit.hpp"
 
 // parameterset
 #include "crc64bytearraychecksumparameterset.hpp"
-#include "crc64bytearraychecksumparametersetedit.hpp"
-// Okteta Kasten gui
-#include <Kasten/Okteta/ByteArrayComboBox>
 // KF
 #include <KLocalizedString>
 #include <KComboBox>
@@ -64,3 +61,5 @@ void Crc64ByteArrayChecksumParameterSetEdit::getParameterSet(AbstractByteArrayCh
 
     crc64ParameterSet->setCrc64Variant(static_cast<Crc64Variant>(mVariantComboBox->currentIndex()));
 }
+
+#include "moc_crc64bytearraychecksumparametersetedit.cpp"

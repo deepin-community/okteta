@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: all2.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2004-09-20 15:44+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud@mandrakesoft.com>\n"
 "Language-Team: cy <LL@li.org>\n"
@@ -81,3 +81,33 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "Awdur"
+
+#, fuzzy
+#~| msgid "&Binary"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "&Deuaidd"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "&Colofnau"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "&Colofnau"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "&Colofnau"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "&Colofnau"
