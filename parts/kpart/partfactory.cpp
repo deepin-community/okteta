@@ -7,6 +7,7 @@
 */
 
 #include "partfactory.hpp"
+#include "partfactory-config.hpp"
 
 // part
 #include "part.hpp"
@@ -23,7 +24,6 @@
 #if KPARTS_VERSION >= QT_VERSION_CHECK(5, 77, 0)
 #include <KPluginMetaData>
 #endif
-#include <KLocalizedString>
 
 OktetaPartFactory::OktetaPartFactory()
 #if KPARTS_VERSION >= QT_VERSION_CHECK(5, 77, 0)
@@ -34,7 +34,7 @@ OktetaPartFactory::OktetaPartFactory()
                  QStringLiteral(OKTETA_VERSION),
                  i18n("Embedded hex editor"),
                  KAboutLicense::LGPL_V2_1,
-                 i18n("Copyright 2003-%1 Friedrich W. H. Kossebau", QStringLiteral("2021")))
+                 i18n("Copyright 2003-%1 Friedrich W. H. Kossebau", QStringLiteral("2024")))
 {
     mAboutData.addAuthor(i18n("Friedrich W. H. Kossebau"), i18n("Author"), QStringLiteral("kossebau@kde.org"));
 #endif
@@ -76,7 +76,7 @@ QObject* OktetaPartFactory::create(const char* iface,
                                    const QString& keyword)
 {
     Q_UNUSED(parentWidget)
-    Q_UNUSED(keyword);
+    Q_UNUSED(keyword)
 
     const OktetaPart::Modus modus =
         (args.contains(QStringLiteral("Browser/View")) ||
@@ -92,3 +92,5 @@ QObject* OktetaPartFactory::create(const char* iface,
 
     return part;
 }
+
+#include "moc_partfactory.cpp"

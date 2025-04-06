@@ -11,20 +11,25 @@
 // tool
 #include "infotool.hpp"
 #include "statistictablemodel.hpp"
+#include "statisticdisplaymodel.hpp"
 #include <infoviewsettings.h>
+// utils
+#include <labelledtoolbarwidget.hpp>
 // KF
-#include <KGuiItem>
+#include <KStandardAction>
 #include <KLocalizedString>
 // Qt
 #include <QApplication>
+#include <QClipboard>
 #include <QSortFilterProxyModel>
-#include <QFontDatabase>
-#include <QPushButton>
+#include <QToolBar>
 #include <QLabel>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QHeaderView>
 #include <QTreeView>
-#include <QFontMetrics>
+#include <QAction>
+#include <QIcon>
+#include <QMimeData>
 
 namespace Kasten {
 
@@ -34,11 +39,12 @@ InfoView::InfoView(InfoTool* tool, QWidget* parent)
 {
     auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
-    auto* topLineLayout = new QHBoxLayout();
+    auto* buildToolBar = new QToolBar(this);
+    buildToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    QLabel* label = new QLabel(i18nc("@label size of selected bytes", "Size:"), this);
-    topLineLayout->addWidget(label);
+    auto* label = new QLabel(i18nc("@label size of selected bytes", "Size:"), this);
 
     mSizeLabel = new QLabel(this);
     const QString sizeToolTip =
@@ -46,29 +52,29 @@ InfoView::InfoView(InfoTool* tool, QWidget* parent)
               "The number of the bytes the statistic was built for.");
     label->setToolTip(sizeToolTip);
     mSizeLabel->setToolTip(sizeToolTip);
-    topLineLayout->addWidget(mSizeLabel, 10);
+    auto* labelledSizeLabel = new LabelledToolBarWidget(label, mSizeLabel, this);
+    buildToolBar->addWidget(labelledSizeLabel);
     connect(mTool->statisticTableModel(), &StatisticTableModel::sizeChanged,
             this, &InfoView::setByteArraySize);
 
-    topLineLayout->addStretch();
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    buildToolBar->addWidget(stretcher);
 
-    const KGuiItem updateGuiItem =
-        KGuiItem(i18nc("@action:button build the statistic of the byte frequency",
-                       "&Build"),
-                 QStringLiteral("run-build"),
-                 i18nc("@info:tooltip",
-                       "Builds the byte frequency statistic for the bytes in the selected range."),
-                 xi18nc("@info:whatsthis",
-                        "If you press the <interface>Build</interface> button,"
-                        " the byte frequency statistic is built for the bytes in the selected range."));
-    mUpdateButton = new QPushButton(this);
-    KGuiItem::assign(mUpdateButton, updateGuiItem);
-    mUpdateButton->setEnabled(mTool->isApplyable());
-    connect(mTool, &InfoTool::isApplyableChanged, mUpdateButton, &QPushButton::setEnabled);
-    connect(mUpdateButton, &QPushButton::clicked, mTool, &InfoTool::updateStatistic);
-    topLineLayout->addWidget(mUpdateButton);
+    mUpdateAction =
+        buildToolBar->addAction(QIcon::fromTheme(QStringLiteral("run-build")),
+                                i18nc("@action:button build the statistic of the byte frequency",
+                                      "&Build"),
+                                mTool, &InfoTool::updateStatistic);
+    mUpdateAction->setToolTip(i18nc("@info:tooltip",
+                                    "Builds the byte frequency statistic for the bytes in the selected range."));
+    mUpdateAction->setWhatsThis(xi18nc("@info:whatsthis",
+                                       "If you press the <interface>Build</interface> button,"
+                                       " the byte frequency statistic is built for the bytes in the selected range."));
+    mUpdateAction->setEnabled(mTool->isApplyable());
+    connect(mTool, &InfoTool::isApplyableChanged, mUpdateAction, &QAction::setEnabled);
 
-    baseLayout->addLayout(topLineLayout);
+    baseLayout->addWidget(buildToolBar);
 
     mStatisticTableView = new QTreeView(this);
     // TODO: find a signal/event emitted when fixedfont changes
@@ -78,35 +84,61 @@ InfoView::InfoView(InfoTool* tool, QWidget* parent)
 //              this, &InfoView::resizeColumnsWidth );
 //     connect( KGlobalSettings::self(), &KGlobalSettings::kdisplayStyleChanged,
 //              this, &InfoView::resizeColumnsWidth );
-    setFixedFontByGlobalSettings(); // do this before setting model
     mStatisticTableView->setObjectName(QStringLiteral("StatisticTable"));
     mStatisticTableView->setRootIsDecorated(false);
     mStatisticTableView->setItemsExpandable(false);
     mStatisticTableView->setUniformRowHeights(true);
     mStatisticTableView->setAllColumnsShowFocus(true);
+    mStatisticTableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mStatisticTableView->setDragEnabled(true);
+    mStatisticTableView->setDragDropMode(QAbstractItemView::DragOnly);
     mStatisticTableView->setSortingEnabled(true);
     QHeaderView* header = mStatisticTableView->header();
-    header->setFont(font());
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setStretchLastSection(false);
+    auto* displayModel = new StatisticDisplayModel(mStatisticTableView, this);
+    displayModel->setSourceModel(mTool->statisticTableModel());
     // TODO: write subclass to filter count and percent by num, not string
     auto* proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setDynamicSortFilter(true);
-    proxyModel->setSourceModel(mTool->statisticTableModel());
+    proxyModel->setSortRole(StatisticTableModel::SortRole);
+    proxyModel->setSourceModel(displayModel);
     mStatisticTableView->setModel(proxyModel);
     mStatisticTableView->sortByColumn(StatisticTableModel::CountId, Qt::DescendingOrder);
     connect(mTool->statisticTableModel(), &StatisticTableModel::headerChanged, this, &InfoView::updateHeader);
+    connect(mStatisticTableView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &InfoView::onTableSelectionChanged);
 
     baseLayout->addWidget(mStatisticTableView, 10);
 
+    // actions
+    auto* actionsToolBar = new QToolBar(this);
+    actionsToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
+
+    // TODO: use own strings like in StringsExtractView
+    mCopyAction =  KStandardAction::copy(this, &InfoView::onCopyButtonClicked,  this);
+    mCopyAction->setShortcut(QKeySequence());
+    actionsToolBar->addAction(mCopyAction);
+
+    auto* actionsStretcher = new QWidget(this);
+    actionsStretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    actionsToolBar->addWidget(actionsStretcher);
+
+    baseLayout->addWidget(actionsToolBar);
+
+    // init
     setByteArraySize(mTool->size());
+    onTableSelectionChanged();
 
     // if nothing has changed reuse the old values. This means the info view is fully constructed much quicker.
     const QList<int> columnsWidth = InfoViewSettings::columnsWidth();
     const QString styleName = QApplication::style()->objectName();
-    const QString fixedFontData = QFontDatabase::systemFont(QFontDatabase::FixedFont).toString();
-    if (columnsWidth.size() < StatisticTableModel::NoOfIds || styleName != InfoViewSettings::style()
-        || fixedFontData != InfoViewSettings::fixedFont()) {
+    const QString fontData = mStatisticTableView->font().toString();
+    const QString fixedFontData = mTool->statisticTableModel()->fixedFont().toString();
+    if ((StatisticTableModel::NoOfIds > columnsWidth.size()) ||
+        (styleName != InfoViewSettings::style()) ||
+        (fontData != InfoViewSettings::font()) ||
+        (fixedFontData != InfoViewSettings::fixedFont())) {
         resizeColumnsWidth();
     } else {
         for (int i = 0; i < StatisticTableModel::NoOfIds; ++i) {
@@ -126,7 +158,8 @@ InfoView::~InfoView()
 
     InfoViewSettings::setColumnsWidth(columnsWidth);
     InfoViewSettings::setStyle(QApplication::style()->objectName());
-    InfoViewSettings::setFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont).toString());
+    InfoViewSettings::setFont(mStatisticTableView->font().toString());
+    InfoViewSettings::setFixedFont(mTool->statisticTableModel()->fixedFont().toString());
     InfoViewSettings::self()->save();
 }
 
@@ -153,9 +186,27 @@ void InfoView::setByteArraySize(int size)
     mSizeLabel->setText(sizeText);
 }
 
-void InfoView::setFixedFontByGlobalSettings()
+void InfoView::onCopyButtonClicked()
 {
-    mStatisticTableView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    const QItemSelectionModel* selectionModel = mStatisticTableView->selectionModel();
+
+    const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+    QMimeData* mimeData = mStatisticTableView->model()->mimeData(selectedIndexes);
+
+    QApplication::clipboard()->setMimeData(mimeData);
 }
 
+void InfoView::onTableSelectionChanged()
+{
+    const QItemSelectionModel* selectionModel = mStatisticTableView->selectionModel();
+
+    // TODO: selectionModel->selectedIndexes() is a expensive operation,
+    // but with Qt 4.4.3 hasSelection() has the flaw to return true with a current index
+    const bool hasSelection = !selectionModel->selectedIndexes().isEmpty();
+    mCopyAction->setEnabled(hasSelection);
 }
+
+
+}
+
+#include "moc_infoview.cpp"

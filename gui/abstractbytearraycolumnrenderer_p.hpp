@@ -25,7 +25,6 @@ class QBrush;
 
 namespace Okteta {
 
-class Bookmarkable;
 
 class AbstractByteArrayColumnRendererPrivate : public AbstractColumnRendererPrivate
 {
@@ -46,7 +45,7 @@ public:
     void prepareRendering(const PixelXRange& Xs);
 
 public:
-    void renderLinePositions(QPainter* painter, Line lineIndex, const LineRange& linePositions);
+    void renderLinePositions(QPainter* painter, Line lineIndex, const LinePositionRange& linePositions);
     /** paints a cursor based on the type of the byte.
      * @param painter The QPainter
      * @param byteIndex Index of the byte to paint the cursor for. If -1 a space is used as char.
@@ -147,9 +146,9 @@ protected: // API to be redefined
 
 protected:
     void renderPlain(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex);
-    void renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag);
-    void renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, int flag);
-    void renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, int flag);
+    void renderSelection(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag);
+    void renderMarking(QPainter* painter, const LinePositionRange& linePositions, Address byteIndex, unsigned int flag);
+    void renderRange(QPainter* painter, const QBrush& brush, const LinePositionRange& linePositions, unsigned int flag);
     void renderSelectionSpaceBehind(QPainter* painter, LinePosition linePosition);
     void renderSpaceBehind(QPainter* painter, const QBrush& brush, LinePosition linePosition);
     void renderBookmark(QPainter* painter, const QBrush& brush);
@@ -209,7 +208,6 @@ protected: // buffering rendering data
     Line mRenderLine;
     PixelX mRenderX;
     PixelX mRenderWidth;
-    int mSpacingTrigger;
 
 protected:
     AbstractByteArrayColumnRenderer* const q_ptr;

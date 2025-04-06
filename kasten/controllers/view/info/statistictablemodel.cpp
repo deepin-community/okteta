@@ -17,22 +17,24 @@
 #include <KColorScheme>
 // Qt
 #include <QApplication>
+#include <QFontDatabase>
 
 namespace Kasten {
 
 static constexpr QChar StatisticsDefaultSubstituteChar =  QLatin1Char('.');
 static constexpr QChar StatisticsDefaultUndefinedChar =   QChar(QChar::ReplacementCharacter);
-static constexpr Okteta::ValueCoding DefaultValueCoding =  Okteta::HexadecimalCoding;
+static constexpr Okteta::ValueCoding StatisticsDefaultValueCoding =  Okteta::HexadecimalCoding;
 static constexpr int StatisticsByteSetSize = 256;
 
 StatisticTableModel::StatisticTableModel(int* byteCount, QObject* parent)
     : QAbstractTableModel(parent)
     , mByteCount(byteCount)
-    , mValueCoding(DefaultValueCoding)
-    , mValueCodec(Okteta::ValueCodec::createCodec(DefaultValueCoding))
+    , mValueCoding(StatisticsDefaultValueCoding)
+    , mValueCodec(Okteta::ValueCodec::createCodec(StatisticsDefaultValueCoding))
     , mCharCodec(Okteta::CharCodec::createCodec(Okteta::LocalEncoding))
     , mSubstituteChar(StatisticsDefaultSubstituteChar)
     , mUndefinedChar(StatisticsDefaultUndefinedChar)
+    , mFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont))
 {
 }
 
@@ -121,7 +123,8 @@ int StatisticTableModel::columnCount(const QModelIndex& parent) const
 QVariant StatisticTableModel::data(const QModelIndex& index, int role) const
 {
     QVariant result;
-    if (role == Qt::DisplayRole) {
+    if ((role == Qt::DisplayRole) ||
+        (role == SortRole)) {
         const unsigned char byte = index.row();
         const int column = index.column();
         switch (column)
@@ -131,7 +134,7 @@ QVariant StatisticTableModel::data(const QModelIndex& index, int role) const
             const Okteta::Character decodedChar = mCharCodec->decode(byte);
             result =
                 decodedChar.isUndefined() ?
-                    i18nc("@item:intable character is not defined", "undef.") :
+                    QString(mUndefinedChar) :
                 !decodedChar.isPrint() ?
                     QString(mSubstituteChar) :
                     QString(static_cast<QChar>(decodedChar));
@@ -152,17 +155,33 @@ QVariant StatisticTableModel::data(const QModelIndex& index, int role) const
                      QVariant(mByteCount[byte]);
             break;
         case PercentId:
-            result = (mSize > 0) ?
-                     // TODO: before we printed only a string (which killed sorting) with QString::number( x, 'f', 6 )
-                     // Qt now cuts trailing 0s, results in unaligned numbers, not so beautiful.
-                     QVariant(100.0 * (double)mByteCount[byte] / mSize) :
-                     QVariant(QStringLiteral("-"));
+            if (role == SortRole) {
+                result =  (mSize == -1) ?
+                        QVariant() :
+                        QVariant(mByteCount[byte]);
+            } else {
+                result = (mSize > 0) ?
+                        QVariant(100.0 * (double)mByteCount[byte] / mSize) :
+                        QVariant();
+            }
             break;
         default:
             ;
         }
+    } else if (role == Qt::ToolTipRole) {
+        const int column = index.column();
+        if (column == CharacterId) {
+            const unsigned char byte = index.row();
+            const Okteta::Character decodedChar = mCharCodec->decode(byte);
+            if (decodedChar.isUndefined()) {
+                // reusing old string in string freeze
+                result = i18nc("@item:intable character is not defined", "undef.");
+            }
+        }
     } else if (role == Qt::TextAlignmentRole) {
-        result = Qt::AlignRight;
+        result = static_cast<int>(Qt::AlignVCenter | Qt::AlignRight);
+    } else if (role == Qt::FontRole) {
+        result = mFixedFont;
     } else if (role == Qt::ForegroundRole) {
         const int column = index.column();
         bool isInactive = false;
@@ -238,3 +257,5 @@ QVariant StatisticTableModel::headerData(int section, Qt::Orientation orientatio
 }
 
 }
+
+#include "moc_statistictablemodel.cpp"

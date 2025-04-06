@@ -10,7 +10,6 @@
 
 // Kasten gui
 #include <Kasten/AbstractDocumentStrategy>
-#include <Kasten/SelectedDataWriteable>
 // Kasten core
 #include <Kasten/ModelCodecManager>
 #include <Kasten/AbstractModelDataGenerator>
@@ -19,11 +18,7 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KStandardAction>
 #include <KXMLGUIClient>
-// Qt
-#include <QApplication>
-#include <QMimeData>
 
 namespace Kasten {
 
@@ -85,7 +80,7 @@ CreatorController::CreatorController(ModelCodecManager* modelCodecManager,
             const QString title = generator->typeName();
             const QString iconName = QStringLiteral("document-new");  // generator->iconName();
 
-            QAction* action = new QAction(QIcon::fromTheme(iconName), title, this);
+            auto* action = new QAction(QIcon::fromTheme(iconName), title, this);
             action->setData(QVariant::fromValue(generator));
             connect(action, &QAction::triggered,
                     this, &CreatorController::onNewFromGeneratorActionTriggered);
@@ -124,3 +119,5 @@ void CreatorController::onNewFromGeneratorActionTriggered()
 }
 
 }
+
+#include "moc_creatorcontroller.cpp"

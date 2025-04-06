@@ -11,11 +11,22 @@
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QTextStream>
 
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char ByteArrayXxencodingStreamEncoder::ConfigGroupId[];
+constexpr char XxencodingStreamEncoderSettings::FileNameConfigKey[];
+
+constexpr int ByteArrayXxencodingStreamEncoder::xxInputLineLength;
+constexpr int ByteArrayXxencodingStreamEncoder::maxXxInputGroupsPerLine;
+
+const QString XxencodingStreamEncoderSettings::DefaultFileName;
 
 static constexpr char xxencodeMap[64] = {
     '+', '-', '0', '1', '2', '3', '4', '5',
@@ -29,11 +40,6 @@ static constexpr char xxencodeMap[64] = {
 };
 static constexpr const char* paddingData[2] = {"++", "+"};
 
-static constexpr int defaultxxInputLineLength = 45;
-static constexpr int xxInputLineLength = defaultxxInputLineLength;
-static constexpr int xxInputGroupLength = 3;
-static constexpr int maxXxInputGroupsPerLine = xxInputLineLength / xxInputGroupLength;
-
 static inline constexpr char xxmapByte(char byte) { return xxencodeMap[static_cast<int>(byte)]; }
 
 static inline constexpr const char* xxpadding(ByteArrayXxencodingStreamEncoder::InputByteIndex index)
@@ -41,15 +47,44 @@ static inline constexpr const char* xxpadding(ByteArrayXxencodingStreamEncoder::
     return paddingData[static_cast<int>(index) - 1];
 }
 
-XxencodingStreamEncoderSettings::XxencodingStreamEncoderSettings()
-    : fileName(QStringLiteral("okteta-export"))
-{}
+XxencodingStreamEncoderSettings::XxencodingStreamEncoderSettings() = default;
+
+bool XxencodingStreamEncoderSettings::operator==(const XxencodingStreamEncoderSettings& other) const
+{
+    return (fileName == other.fileName);
+}
+
+void XxencodingStreamEncoderSettings::loadConfig(const KConfigGroup& configGroup)
+{
+    fileName = configGroup.readEntry(FileNameConfigKey, DefaultFileName);
+}
+
+void XxencodingStreamEncoderSettings::saveConfig(KConfigGroup& configGroup) const
+{
+    configGroup.writeEntry(FileNameConfigKey, fileName);
+}
+
 
 ByteArrayXxencodingStreamEncoder::ByteArrayXxencodingStreamEncoder()
     : AbstractByteArrayStreamEncoder(i18nc("name of the encoding target", "Xxencoding"), QStringLiteral("text/x-xxencode"))
-{}
+{
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    mSettings.loadConfig(configGroup);
+}
 
 ByteArrayXxencodingStreamEncoder::~ByteArrayXxencodingStreamEncoder() = default;
+
+void ByteArrayXxencodingStreamEncoder::setSettings(const XxencodingStreamEncoderSettings& settings)
+{
+    if (mSettings == settings) {
+        return;
+    }
+
+    mSettings = settings;
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    mSettings.saveConfig(configGroup);
+    emit settingsChanged();
+}
 
 // TODO: make this algorithm shared with ByteArrayUuencodingStreamEncoder again
 bool ByteArrayXxencodingStreamEncoder::encodeDataToStream(QIODevice* device,
@@ -57,7 +92,7 @@ bool ByteArrayXxencodingStreamEncoder::encodeDataToStream(QIODevice* device,
                                                           const Okteta::AbstractByteArrayModel* byteArrayModel,
                                                           const Okteta::AddressRange& range)
 {
-    Q_UNUSED(byteArrayView);
+    Q_UNUSED(byteArrayView)
 
     const char header[] = "begin";
     const char footer[] = "\n+\nend\n";
@@ -130,3 +165,5 @@ bool ByteArrayXxencodingStreamEncoder::encodeDataToStream(QIODevice* device,
 }
 
 }
+
+#include "moc_bytearrayxxencodingstreamencoder.cpp"

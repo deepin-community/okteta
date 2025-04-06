@@ -45,30 +45,35 @@ BookmarksController::BookmarksController(KXMLGUIClient* guiClient)
     KActionCollection* actionCollection = mGuiClient->actionCollection();
 
     mCreateAction = KStandardAction::addBookmark(this, &BookmarksController::createBookmark, this);
+    mCreateAction->setEnabled(false);
 
     mDeleteAction = new QAction(QIcon::fromTheme(QStringLiteral("bookmark-remove")),
                                 i18nc("@action:inmenu", "Remove Bookmark"), this);
     mDeleteAction->setObjectName(QStringLiteral("bookmark_remove"));
     connect(mDeleteAction, &QAction::triggered, this, &BookmarksController::deleteBookmark);
     actionCollection->setDefaultShortcut(mDeleteAction, Qt::CTRL | Qt::SHIFT | Qt::Key_B);
+    mDeleteAction->setEnabled(false);
 
     mDeleteAllAction = new QAction(QIcon::fromTheme(QStringLiteral("bookmark-remove")),
                                    i18nc("@action:inmenu", "Remove All Bookmarks"), this);
     mDeleteAllAction->setObjectName(QStringLiteral("bookmark_remove_all"));
     connect(mDeleteAllAction, &QAction::triggered, this, &BookmarksController::deleteAllBookmarks);
+    mDeleteAllAction->setEnabled(false);
 //     actionCollection->setDefaultShortcut( mDeleteAllAction, Qt::CTRL | Qt::Key_G );
 
     mGotoNextBookmarkAction = new QAction(QIcon::fromTheme(QStringLiteral("go-next")),
                                           i18nc("@action:inmenu", "Go to Next Bookmark"), this);
     mGotoNextBookmarkAction->setObjectName(QStringLiteral("bookmark_next"));
     connect(mGotoNextBookmarkAction, &QAction::triggered, this, &BookmarksController::gotoNextBookmark);
-    actionCollection->setDefaultShortcut(mGotoNextBookmarkAction, Qt::ALT | Qt::Key_Down);
+    mGotoNextBookmarkAction->setEnabled(false);
+    actionCollection->setDefaultShortcut(mGotoNextBookmarkAction, Qt::ALT | Qt::Key_PageDown);
 
     mGotoPreviousBookmarkAction = new QAction(QIcon::fromTheme(QStringLiteral("go-previous")),
                                               i18nc("@action:inmenu", "Go to Previous Bookmark"), this);
     mGotoPreviousBookmarkAction->setObjectName(QStringLiteral("bookmark_previous"));
     connect(mGotoPreviousBookmarkAction, &QAction::triggered, this, &BookmarksController::gotoPreviousBookmark);
-    actionCollection->setDefaultShortcut(mGotoPreviousBookmarkAction, Qt::ALT | Qt::Key_Up);
+    mGotoPreviousBookmarkAction->setEnabled(false);
+    actionCollection->setDefaultShortcut(mGotoPreviousBookmarkAction, Qt::ALT | Qt::Key_PageUp);
 
     mBookmarksActionGroup = new QActionGroup(this);   // TODO: do we use this only for the signal mapping?
 //     mBookmarksActionGroup->setExclusive( true );
@@ -82,14 +87,17 @@ BookmarksController::BookmarksController(KXMLGUIClient* guiClient)
         mGotoNextBookmarkAction,
         mGotoPreviousBookmarkAction
     });
-
-    setTargetModel(nullptr);
 }
 
 BookmarksController::~BookmarksController() = default;
 
 void BookmarksController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
@@ -97,8 +105,9 @@ void BookmarksController::setTargetModel(AbstractModel* model)
         mByteArray->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
+    // TODO; check if already same document used before
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
     mByteArray = document ? document->content() : nullptr;
@@ -128,10 +137,10 @@ void BookmarksController::setTargetModel(AbstractModel* model)
     } else {
         mCreateAction->setEnabled(false);
         mDeleteAction->setEnabled(false);
+        mGotoNextBookmarkAction->setEnabled(false);
+        mGotoPreviousBookmarkAction->setEnabled(false);
     }
     mDeleteAllAction->setEnabled(hasBookmarks);
-    mGotoNextBookmarkAction->setEnabled(hasBookmarks);
-    mGotoPreviousBookmarkAction->setEnabled(hasBookmarks);
 }
 
 void BookmarksController::updateBookmarks()
@@ -144,7 +153,7 @@ void BookmarksController::updateBookmarks()
         return;
     }
 
-    const int startOffset = mByteArrayView->startOffset();
+    const Okteta::Address startOffset = mByteArrayView->startOffset();
     Okteta::OffsetFormat::print printFunction =
         Okteta::OffsetFormat::printFunction((Okteta::OffsetFormat::Format)mByteArrayView->offsetCoding());
 
@@ -176,7 +185,7 @@ void BookmarksController::updateBookmarks()
 void BookmarksController::onBookmarksAdded(const QVector<Okteta::Bookmark>& bookmarks)
 {
     Q_UNUSED(bookmarks)
-    const int currentPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address currentPosition = mByteArrayView->cursorPosition();
     onCursorPositionChanged(currentPosition);
 
     const int bookmarksCount = mBookmarks->bookmarksCount();
@@ -190,7 +199,7 @@ void BookmarksController::onBookmarksAdded(const QVector<Okteta::Bookmark>& book
 void BookmarksController::onBookmarksRemoved(const QVector<Okteta::Bookmark>& bookmarks)
 {
     Q_UNUSED(bookmarks)
-    const int currentPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address currentPosition = mByteArrayView->cursorPosition();
     onCursorPositionChanged(currentPosition);
 
     const int bookmarksCount = mBookmarks->bookmarksCount();
@@ -212,8 +221,8 @@ void BookmarksController::onCursorPositionChanged(Okteta::Address newPosition)
     if (hasBookmarks) {
         isAtBookmark = mBookmarks->containsBookmarkFor(newPosition);
         Okteta::BookmarksConstIterator bookmarksIterator = mBookmarks->createBookmarksConstIterator();
-        hasPrevious = bookmarksIterator.findPreviousFrom(newPosition);
-        hasNext = bookmarksIterator.findNextFrom(newPosition);
+        hasPrevious = bookmarksIterator.findPreviousFrom(newPosition - 1);
+        hasNext = bookmarksIterator.findNextFrom(newPosition + 1);
     } else {
         isAtBookmark = false;
         hasPrevious = false;
@@ -228,7 +237,7 @@ void BookmarksController::onCursorPositionChanged(Okteta::Address newPosition)
 
 void BookmarksController::createBookmark()
 {
-    const int cursorPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address cursorPosition = mByteArrayView->cursorPosition();
 
     // search for text at cursor
     const Okteta::CharCodec* charCodec = Okteta::CharCodec::createCodec(mByteArrayView->charCodingName());
@@ -253,7 +262,7 @@ void BookmarksController::createBookmark()
     bookmarkEditPopup->open();
 }
 
-void BookmarksController::addBookmark(int cursorPosition, const QString& name)
+void BookmarksController::addBookmark(Okteta::Address cursorPosition, const QString& name)
 {
     Okteta::Bookmark bookmark(cursorPosition);
     bookmark.setName(name);
@@ -264,7 +273,7 @@ void BookmarksController::addBookmark(int cursorPosition, const QString& name)
 
 void BookmarksController::deleteBookmark()
 {
-    const int cursorPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address cursorPosition = mByteArrayView->cursorPosition();
     const QVector<Okteta::Bookmark> bookmarks { cursorPosition };
     mBookmarks->removeBookmarks(bookmarks);
 }
@@ -276,32 +285,34 @@ void BookmarksController::deleteAllBookmarks()
 
 void BookmarksController::gotoNextBookmark()
 {
-    const int currentPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address positionAfter = mByteArrayView->cursorPosition() + 1;
 
     Okteta::BookmarksConstIterator bookmarksIterator = mBookmarks->createBookmarksConstIterator();
-    const bool hasNext = bookmarksIterator.findNextFrom(currentPosition);
+    const bool hasNext = bookmarksIterator.findNextFrom(positionAfter);
     if (hasNext) {
-        const int newPosition = bookmarksIterator.next().offset();
+        const Okteta::Address newPosition = bookmarksIterator.next().offset();
         mByteArrayView->setCursorPosition(newPosition);
     }
 }
 
 void BookmarksController::gotoPreviousBookmark()
 {
-    const int currentPosition = mByteArrayView->cursorPosition();
+    const Okteta::Address positionBefore = mByteArrayView->cursorPosition() - 1;
 
     Okteta::BookmarksConstIterator bookmarksIterator = mBookmarks->createBookmarksConstIterator();
-    const bool hasPrevious = bookmarksIterator.findPreviousFrom(currentPosition);
+    const bool hasPrevious = bookmarksIterator.findPreviousFrom(positionBefore);
     if (hasPrevious) {
-        const int newPosition = bookmarksIterator.previous().offset();
+        const Okteta::Address newPosition = bookmarksIterator.previous().offset();
         mByteArrayView->setCursorPosition(newPosition);
     }
 }
 
 void BookmarksController::onBookmarkTriggered(QAction* action)
 {
-    const int newPosition = action->data().toInt();
+    const Okteta::Address newPosition = action->data().toInt();
     mByteArrayView->setCursorPosition(newPosition);
 }
 
 }
+
+#include "moc_bookmarkscontroller.cpp"

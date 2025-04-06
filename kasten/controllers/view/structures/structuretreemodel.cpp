@@ -12,8 +12,9 @@
 #include "datatypes/datainformationwithchildren.hpp"
 #include "datatypes/topleveldatainformation.hpp"
 #include "datatypes/array/arraydatainformation.hpp"
-
+// Qt
 #include <QFont>
+#include <QMimeData>
 
 namespace Kasten {
 
@@ -102,6 +103,16 @@ QVariant StructureTreeModel::data(const QModelIndex& index, int role) const
     }
 
     auto* item = static_cast<DataInformation*> (index.internalPointer());
+
+    if (role == DataInformationRole) {
+        // Using ArrayDataInformation::childAt() needed with DataInformationWithDummyChildren for updated dummy
+        if (item->parent()->isArray()) {
+            ArrayDataInformation* array = item->parent()->asArray();
+            item = array->childAt(index.row());
+        }
+        return QVariant::fromValue(item);
+    }
+
     const int column = index.column();
     if (role == Qt::FontRole) {
         if (column == 0 && item->parent()->isTopLevel()) {
@@ -127,16 +138,14 @@ bool StructureTreeModel::setData(const QModelIndex& index, const QVariant& value
         return false;
     }
 
-    if (!index.internalPointer()) {
+    auto* item = index.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!item) {
         qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "item == NULL";
         return false;
     }
 
-    auto* item = static_cast<DataInformation*> (index.internalPointer());
     bool change = mTool->setData(value, role, item, index.row());
-    if (change) {
-        emit dataChanged(index, index);
-    }
+
     return change;
 }
 
@@ -146,7 +155,38 @@ Qt::ItemFlags StructureTreeModel::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
     }
     auto* item = static_cast<DataInformation*> (index.internalPointer());
-    return item->flags(index.column(), mTool->isFileLoaded());
+    Qt::ItemFlags flags = item->flags(index.column(), mTool->isFileLoaded());
+    if (item->wasAbleToRead()) {
+        flags |= Qt::ItemIsDragEnabled;
+    }
+
+    return flags;
+}
+
+QMimeData* StructureTreeModel::mimeData(const QModelIndexList& indexes) const
+{
+    if (indexes.isEmpty()) {
+        return nullptr;
+    }
+
+    const QModelIndex index = indexes.first();
+
+    auto* item = index.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+
+    auto* mimeData = new QMimeData;
+
+    mimeData->setText(item->valueString());
+    mimeData->setData(QStringLiteral("application/octet-stream"), mTool->bytes(item));
+
+    return mimeData;
+}
+
+QStringList StructureTreeModel::mimeTypes() const
+{
+    return {
+        QStringLiteral("application/octet-stream"),
+        QStringLiteral("text/plain"),
+    };
 }
 
 QVariant StructureTreeModel::headerData(int section, Qt::Orientation orientation,
@@ -250,3 +290,5 @@ void StructureTreeModel::onToolDataClear()
 }
 
 }
+
+#include "moc_structuretreemodel.cpp"

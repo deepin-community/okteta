@@ -42,7 +42,7 @@ void BookmarkEditPopup::setName(const QString& name)
     mBookmarkNameLineEdit->selectAll();
 }
 
-void BookmarkEditPopup::setCursorPosition(int cursorPosition)
+void BookmarkEditPopup::setCursorPosition(Okteta::Address cursorPosition)
 {
     m_cursorPosition = cursorPosition;
 }
@@ -57,3 +57,5 @@ void BookmarkEditPopup::onFinished(int result)
 }
 
 }
+
+#include "moc_bookmarkeditpopup.cpp"

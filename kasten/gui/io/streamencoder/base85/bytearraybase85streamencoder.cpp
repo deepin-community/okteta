@@ -53,7 +53,7 @@ bool ByteArrayBase85StreamEncoder::encodeDataToStream(QIODevice* device,
                                                       const Okteta::AbstractByteArrayModel* byteArrayModel,
                                                       const Okteta::AddressRange& range)
 {
-    Q_UNUSED(byteArrayView);
+    Q_UNUSED(byteArrayView)
 
     bool success = true;
 
@@ -118,3 +118,5 @@ bool ByteArrayBase85StreamEncoder::encodeDataToStream(QIODevice* device,
 }
 
 }
+
+#include "moc_bytearraybase85streamencoder.cpp"

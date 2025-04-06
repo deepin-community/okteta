@@ -15,6 +15,9 @@
 #include <QRect>
 
 class QPrinter;
+
+namespace FramesPrint {
+
 class AbstractFrameRenderer;
 
 class FramesToPaperPrinter : public QObject
@@ -28,6 +31,7 @@ public:
 public:
     void setPaperRect(QRect paperRect);
     void setPageRect(QRect pageRect);
+    void setPageMargins(QMargins pageMargins);
 
     void addFrameRenderer(AbstractFrameRenderer* frameRenderer);
 
@@ -35,6 +39,8 @@ public:
 
 public:
     QRect pageRect() const;
+    QMargins pageMargins() const;
+    QRect contentsRect() const;
 
 Q_SIGNALS:
     void printedPage(int pageIndex);
@@ -43,6 +49,9 @@ private:
     QVector<AbstractFrameRenderer*> mFrameRendererList;
     QRect mPaperRect;
     QRect mPageRect;
+    QMargins mPageMargins;
 };
+
+}
 
 #endif

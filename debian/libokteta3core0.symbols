@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 5:0.26.2 amd64
+# SymbolsHelper-Confirmed: 5:0.26.11 amd64 i386
 libOkteta3Core.so.0 libokteta3core0 #MINVER#
 * Build-Depends-Package: okteta-dev
  _ZN6Okteta10ValueCodec11createCodecENS_11ValueCodingE@Base 4:14.12.0
@@ -70,9 +70,7 @@ libOkteta3Core.so.0 libokteta3core0 #MINVER#
  _ZN6Okteta22AbstractByteArrayModel6insertEiPKhi@Base 4:14.12.0
  _ZN6Okteta22AbstractByteArrayModel6removeERKNS_11NumberRangeIiiEE@Base 5:0.26.2
  _ZN6Okteta22AbstractByteArrayModelC1EP7QObject@Base 4:14.12.0
- _ZN6Okteta22AbstractByteArrayModelC1EPNS_29AbstractByteArrayModelPrivateEP7QObject@Base 5:0.26.2
  _ZN6Okteta22AbstractByteArrayModelC2EP7QObject@Base 4:14.12.0
- _ZN6Okteta22AbstractByteArrayModelC2EPNS_29AbstractByteArrayModelPrivateEP7QObject@Base 5:0.26.2
  _ZN6Okteta22AbstractByteArrayModelD0Ev@Base 4:14.12.0
  _ZN6Okteta22AbstractByteArrayModelD1Ev@Base 4:14.12.0
  _ZN6Okteta22AbstractByteArrayModelD2Ev@Base 4:14.12.0

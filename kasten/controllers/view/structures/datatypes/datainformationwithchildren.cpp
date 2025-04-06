@@ -7,15 +7,15 @@
 */
 
 #include "datainformationwithchildren.hpp"
+
 #include "topleveldatainformation.hpp"
 #include "../parsers/scriptvalueconverter.hpp"
-#include "../script/scriptutils.hpp"
 #include "../script/scripthandlerinfo.hpp"
 #include "../script/classes/structunionscriptclass.hpp"
 #include "../script/scriptlogger.hpp"
-
+// KF
 #include <KLocalizedString>
-#include <QScriptEngine>
+// Qt
 #include <QLineEdit>
 
 DataInformationWithChildren::DataInformationWithChildren(const QString& name,
@@ -64,7 +64,7 @@ QWidget* DataInformationWithChildren::createEditWidget(QWidget* parent) const
 
 QVariant DataInformationWithChildren::dataFromWidget(const QWidget* w) const
 {
-    Q_UNUSED(w);
+    Q_UNUSED(w)
     Q_ASSERT(false);
     return {};
 }
@@ -261,11 +261,6 @@ QVector<DataInformation*> DataInformationWithChildren::cloneList(const QVector<D
 unsigned int DataInformationWithChildren::childCount() const
 {
     return mChildren.size();
-}
-
-bool DataInformationWithChildren::canHaveChildren() const
-{
-    return true;
 }
 
 bool DataInformationWithChildren::isDataInformationWithChildren() const

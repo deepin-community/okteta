@@ -17,6 +17,7 @@
 #include <KColorScheme>
 // Qt
 #include <QApplication>
+#include <QFontDatabase>
 
 namespace Kasten {
 
@@ -29,6 +30,7 @@ ByteTableModel::ByteTableModel(QObject* parent)
     , mCharCodec(Okteta::CharCodec::createCodec(Okteta::LocalEncoding))
     , mSubstituteChar(ByteTableDefaultSubstituteChar)
     , mUndefinedChar(ByteTableDefaultUndefinedChar)
+    , mFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont))
 {
     constexpr Okteta::ValueCoding CodingIds[NofOfValueCodings] = {
         Okteta::DecimalCoding,
@@ -114,7 +116,7 @@ QVariant ByteTableModel::data(const QModelIndex& index, int role) const
             const Okteta::Character decodedChar = mCharCodec->decode(byte);
             content =
                 decodedChar.isUndefined() ?
-                    i18nc("@item:intable character is not defined", "undef.") :
+                   QString(mUndefinedChar) :
                 !decodedChar.isPrint() ?
                     QString(mSubstituteChar) :
                     QString(static_cast<QChar>(decodedChar));
@@ -136,8 +138,20 @@ QVariant ByteTableModel::data(const QModelIndex& index, int role) const
                 result = colorScheme.foreground(KColorScheme::InactiveText);
             }
         }
+    } else if (role == Qt::ToolTipRole) {
+        const int column = index.column();
+        if (column == CharacterId) {
+            const unsigned char byte = index.row();
+            const Okteta::Character decodedChar = mCharCodec->decode(byte);
+            if (decodedChar.isUndefined()) {
+                // reusing old string in string freeze
+                result = i18nc("@item:intable character is not defined", "undef.");
+            }
+        }
     } else if (role == Qt::TextAlignmentRole) {
-        result = Qt::AlignRight;
+        result = static_cast<int>(Qt::AlignVCenter | Qt::AlignRight);
+    } else if (role == Qt::FontRole) {
+        result = mFixedFont;
     }
 
     return result;
@@ -178,3 +192,5 @@ QVariant ByteTableModel::headerData(int section, Qt::Orientation orientation, in
 }
 
 }
+
+#include "moc_bytetablemodel.cpp"

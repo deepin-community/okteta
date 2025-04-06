@@ -1,10 +1,9 @@
 Source: okteta
 Section: kde
 Priority: optional
-Maintainer: Debian/Kubuntu Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
 Uploaders: Aurélien COUDERC <coucouf@debian.org>,
-           Sune Vuorela <sune@debian.org>,
-Build-Depends: cmake (>= 3.0~),
+Build-Depends: cmake (>= 3.16~),
                debhelper-compat (= 13),
                extra-cmake-modules (>= 5.48.0~),
                gettext,
@@ -25,16 +24,16 @@ Build-Depends: cmake (>= 3.0~),
                libkf5widgetsaddons-dev (>= 5.48.0~),
                libkf5xmlgui-dev (>= 5.48.0~),
                libqca-qt5-2-dev (>= 2.1.0),
-               pkg-config,
+               pkgconf,
                pkg-kde-tools (>= 0.15.23~),
                qtbase5-dev (>= 5.9.0~),
                qtdeclarative5-dev (>= 5.9.0~),
                qtscript5-dev (>= 5.9.0~),
                qttools5-dev (>= 5.9.0~),
                shared-mime-info (>= 0.30),
-               xauth,
-               xvfb,
-Standards-Version: 4.5.1
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 Homepage: https://apps.kde.org/en/okteta
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/okteta
@@ -137,14 +136,6 @@ Architecture: all
 Section: localization
 Multi-Arch: foreign
 Depends: ${misc:Depends}
-Breaks: libkasten3core3 (<< 5:0.26.2),
-        libkasten3okteta1core1 (<< 5:0.26.2),
-        libokteta2core2 (<< 5:0.26.2),
-        libokteta2gui2 (<< 5:0.26.2),
-Replaces: libkasten3core3 (<< 5:0.26.2),
-          libkasten3okteta1core1 (<< 5:0.26.2),
-          libokteta2core2 (<< 5:0.26.2),
-          libokteta2gui2 (<< 5:0.26.2),
 Description: translations of okteta/kasten libraries
  Okteta is a simple editor for the raw data of files. This type of program is
  also called hexadecimal editor or binary editor.

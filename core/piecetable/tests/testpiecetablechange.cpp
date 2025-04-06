@@ -10,7 +10,6 @@
 
 // lib
 #include <piecetable/piecetable.hpp>
-#include <arraychangemetrics.hpp>
 // Qt
 #include <QString>
 
@@ -46,7 +45,7 @@ AddressRange TestPieceTableChange::apply(PieceTable* pieceTable) const
 
 AddressRange TestPieceTableChange::revert(PieceTable* pieceTable) const
 {
-    const Piece replaced = pieceTable->replaceOne(mPosition, mReplacedStoragePosition, mReplacedStorageId);
+    pieceTable->replaceOne(mPosition, mReplacedStoragePosition, mReplacedStorageId);
 
     return AddressRange(mPosition, mPosition);
 }

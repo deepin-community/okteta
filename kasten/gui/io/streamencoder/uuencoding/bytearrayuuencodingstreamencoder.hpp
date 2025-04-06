@@ -11,28 +11,45 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
 // Qt
 #include <QString>
+
+class KConfigGroup;
 
 namespace Kasten {
 
 class UuencodingStreamEncoderSettings
 {
 public:
-    enum class AlgorithmId
+    enum class EncodingType
     {
         Historical = 0,
         Base64 = 1
     };
 
+private:
+    static constexpr char FileNameConfigKey[] = "FileName";
+    static constexpr char EncodingTypeConfigKey[] = "EncodingType";
+    static constexpr EncodingType DefaultEncodingType = EncodingType::Base64;
+    static const QString DefaultFileName;
+
 public:
     UuencodingStreamEncoderSettings();
+    UuencodingStreamEncoderSettings(const UuencodingStreamEncoderSettings&) = default;
+
+    ~UuencodingStreamEncoderSettings() = default;
+
+    UuencodingStreamEncoderSettings& operator=(const UuencodingStreamEncoderSettings&) = default;
+
+    bool operator==(const UuencodingStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     QString fileName;
-    AlgorithmId algorithmId = AlgorithmId::Base64;
+    EncodingType encodingType = EncodingType::Base64;
 };
 
 class ByteArrayUuencodingStreamEncoder : public AbstractByteArrayStreamEncoder
@@ -46,6 +63,14 @@ public:
         Second,
         Third
     };
+
+private:
+    static constexpr int defaultUuInputLineLength = 45;
+    static constexpr int uuInputLineLength = defaultUuInputLineLength;
+    static constexpr int uuInputGroupLength = 3;
+    static constexpr int maxInputGroupsPerLine = uuInputLineLength / uuInputGroupLength;
+
+    static constexpr char ConfigGroupId[] = "ByteArrayUuencodingStreamEncoder";
 
 public:
     ByteArrayUuencodingStreamEncoder();
@@ -66,11 +91,6 @@ private:
 };
 
 inline UuencodingStreamEncoderSettings ByteArrayUuencodingStreamEncoder::settings() const { return mSettings; }
-inline void ByteArrayUuencodingStreamEncoder::setSettings(const UuencodingStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 }
 

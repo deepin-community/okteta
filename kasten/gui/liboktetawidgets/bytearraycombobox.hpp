@@ -25,7 +25,7 @@ class OKTETAKASTENGUI_EXPORT ByteArrayComboBox : public QWidget
     Q_OBJECT
 
 public:
-    // TODO: same as in kbytearrayvalidator.h, we need a global enum containing both value and char codings...
+    // TODO: same as in ByteArrayValidator, we need a global enum containing both value and char codings...
     // matching Okteta::ValueCoding
     enum Coding
     {
@@ -44,6 +44,7 @@ public:
 
 public: // set
     void setByteArray(const QByteArray& byteArray);
+    void setFormat(Coding codecId);
     void setCharCodec(const QString& charCodecName);
     void setMaxLength(int maxLength);
     void setMinLength(int minLength);

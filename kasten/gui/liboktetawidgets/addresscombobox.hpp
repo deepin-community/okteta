@@ -28,7 +28,7 @@ class OKTETAKASTENGUI_EXPORT AddressComboBox : public QWidget
     Q_OBJECT
 
 public:
-    // TODO: same as in kbytearrayvalidator.h, we need a global enum containing both value and char codings...
+    // TODO: same as in AddressValidator, we need a global enum containing both value and char codings...
     // matching Okteta::ValueCoding
     // TODO: turn into flags, so the codings to be used can be defined
     enum Coding
@@ -36,9 +36,21 @@ public:
         InvalidCoding = -1,
         HexadecimalCoding = 0,
         DecimalCoding = 1,
+        ExpressionCoding = 2,
+        /// Not used
         OctalCoding = 2,
+        /// Not used
         BinaryCoding = 3,
+        /// Not used
         CharCoding = 4
+    };
+    // TODO: same as in AddressValidator, we need a global enum
+    enum AddressType
+    {
+        InvalidAddressType = -1,
+        AbsoluteAddress = 0,
+        RelativeForwards,
+        RelativeBackwards
     };
 
 public:
@@ -46,12 +58,12 @@ public:
     ~AddressComboBox() override;
 
 public: // set
+    void setFormat(Coding codingId);
     void rememberCurrentAddress();
 
 public: // get
     Address address() const;
     int format() const;
-    /** Is actually of type AddressValidator::AddressType */
     int addressType() const;
 
 Q_SIGNALS:

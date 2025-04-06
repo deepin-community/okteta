@@ -14,8 +14,34 @@
 // Qt
 #include <QByteArray>
 
+class KConfigGroup;
+
 class OperandByteArrayFilterParameterSet : public AbstractByteArrayFilterParameterSet
 {
+public:
+    // matching Okteta::ByteArrayComboBox
+    enum Coding
+    {
+        InvalidCoding = -1,
+        HexadecimalCoding = 0,
+        DecimalCoding = 1,
+        OctalCoding = 2,
+        BinaryCoding = 3,
+        CharCoding = 4,
+        Utf8Coding = 5,
+        _CodingCount
+    };
+
+private:
+    static constexpr OperandByteArrayFilterParameterSet::Coding DefaultOperandFormat = OperandByteArrayFilterParameterSet::HexadecimalCoding;
+    static constexpr bool DefaultAlignAtEnd = false;
+
+    static const QByteArray DefaultOperand;
+
+    static constexpr char OperandConfigKey[] = "Operand";
+    static constexpr char ByteOrderConfigKey[] = "OperandFormat";
+    static constexpr char AlignAtEndConfigKey[] = "AlignAtEnd";
+
 public:
     OperandByteArrayFilterParameterSet();
     ~OperandByteArrayFilterParameterSet() override;
@@ -25,17 +51,21 @@ public: // AbstractByteArrayFilterParameterSet API
 
 public:
     void setOperand(const QByteArray& operand);
-    void setOperandFormat(int operandFormat);
+    void setOperandFormat(Coding operandFormat);
     void setAlignAtEnd(bool alignAtEnd);
 
 public:
     QByteArray operand() const;
-    int operandFormat() const;
+    Coding operandFormat() const;
     bool alignAtEnd() const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 private:
     QByteArray mOperand;
-    int mOperandFormat = 0;
+    Coding mOperandFormat = HexadecimalCoding;
     bool mAlignAtEnd = false;
 };
 

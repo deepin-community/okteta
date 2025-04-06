@@ -29,13 +29,13 @@ SelectRangeTool::SelectRangeTool()
 
 SelectRangeTool::~SelectRangeTool() = default;
 
-int SelectRangeTool::currentSelectionStart() const
+Okteta::Address SelectRangeTool::currentSelectionStart() const
 {
     return mByteArrayView ?
            mByteArrayView->startOffset() + mByteArrayView->selection().start() :
            -1;
 }
-int SelectRangeTool::currentSelectionEnd() const
+Okteta::Address SelectRangeTool::currentSelectionEnd() const
 {
     return mByteArrayView ?
            mByteArrayView->startOffset() + mByteArrayView->selection().end() :
@@ -49,8 +49,8 @@ bool SelectRangeTool::isUsable() const
 
 bool SelectRangeTool::isApplyable() const
 {
-    const int start = finalTargetSelectionStart();
-    const int end =   finalTargetSelectionEnd();
+    const Okteta::Address start = finalTargetSelectionStart();
+    const Okteta::Address end =   finalTargetSelectionEnd();
 
     return (mByteArrayView && mByteArrayModel
             && (start <= end)
@@ -62,6 +62,11 @@ QString SelectRangeTool::title() const { return i18nc("@title:window of the tool
 
 void SelectRangeTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     const bool oldIsUsable = isUsable();
     const bool oldIsApplyable = isApplyable();
 
@@ -72,8 +77,9 @@ void SelectRangeTool::setTargetModel(AbstractModel* model)
         mByteArrayModel->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
+    // TODO; check if already same document used before
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
     mByteArrayModel = document ? document->content() : nullptr;
@@ -144,16 +150,16 @@ void SelectRangeTool::setIsEndBackwards(bool isEndBackwards)
 
 void SelectRangeTool::select()
 {
-    const int start = finalTargetSelectionStart();
-    const int end =   finalTargetSelectionEnd();
+    const Okteta::Address start = finalTargetSelectionStart();
+    const Okteta::Address end =   finalTargetSelectionEnd();
 
     mByteArrayView->setSelection(start, end);
     mByteArrayView->setFocus();
 }
 
-int SelectRangeTool::finalTargetSelectionStart() const
+Okteta::Address SelectRangeTool::finalTargetSelectionStart() const
 {
-    const int start =
+    const Okteta::Address start =
         (!mByteArrayView) ?
             -1 :
         mIsEndRelative && mIsEndBackwards ?
@@ -164,9 +170,9 @@ int SelectRangeTool::finalTargetSelectionStart() const
     return start;
 }
 
-int SelectRangeTool::finalTargetSelectionEnd() const
+Okteta::Address SelectRangeTool::finalTargetSelectionEnd() const
 {
-    const int end =
+    const Okteta::Address end =
         (!mByteArrayView) ?
             -1 :
         (!mIsEndRelative) ?
@@ -186,3 +192,5 @@ void SelectRangeTool::onContentsChanged()
 }
 
 }
+
+#include "moc_selectrangetool.cpp"

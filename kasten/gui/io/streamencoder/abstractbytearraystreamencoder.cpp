@@ -20,7 +20,8 @@
 
 namespace Kasten {
 
-static constexpr int MaxPreviewSize = 100;
+// C++11 needs a definition for static constexpr members
+constexpr int AbstractByteArrayStreamEncoder::MaxPreviewSize;
 
 AbstractByteArrayStreamEncoder::AbstractByteArrayStreamEncoder(const QString& remoteTypeName,
                                                                const QString& remoteMimeType)
@@ -94,3 +95,5 @@ QString AbstractByteArrayStreamEncoder::previewData(AbstractModel* model, const 
 }
 
 }
+
+#include "moc_abstractbytearraystreamencoder.cpp"

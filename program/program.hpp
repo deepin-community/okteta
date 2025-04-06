@@ -25,17 +25,20 @@ class OktetaProgram
 {
 public:
     OktetaProgram(int& argc, char* argv[]);
+    OktetaProgram(const OktetaProgram&) = delete;
     ~OktetaProgram();
+
+    OktetaProgram& operator=(const OktetaProgram&) = delete;
 
 public:
     int execute();
     void quit();
 
 public:
-    DocumentManager* documentManager();
-    ViewManager* viewManager();
-    MultiDocumentStrategy* documentStrategy();
-    ByteArrayViewProfileManager* byteArrayViewProfileManager();
+    DocumentManager* documentManager() const;
+    ViewManager* viewManager() const;
+    MultiDocumentStrategy* documentStrategy() const;
+    ByteArrayViewProfileManager* byteArrayViewProfileManager() const;
 
 private:
     QApplication mApp;
@@ -49,10 +52,10 @@ private:
     ByteArrayViewProfileManager* mByteArrayViewProfileManager;
 };
 
-inline DocumentManager* OktetaProgram::documentManager() { return mDocumentManager; }
-inline ViewManager* OktetaProgram::viewManager()         { return mViewManager; }
-inline MultiDocumentStrategy* OktetaProgram::documentStrategy() { return mDocumentStrategy; }
-inline ByteArrayViewProfileManager* OktetaProgram::byteArrayViewProfileManager() { return mByteArrayViewProfileManager; }
+inline DocumentManager* OktetaProgram::documentManager() const { return mDocumentManager; }
+inline ViewManager* OktetaProgram::viewManager() const { return mViewManager; }
+inline MultiDocumentStrategy* OktetaProgram::documentStrategy() const { return mDocumentStrategy; }
+inline ByteArrayViewProfileManager* OktetaProgram::byteArrayViewProfileManager() const { return mByteArrayViewProfileManager; }
 
 }
 

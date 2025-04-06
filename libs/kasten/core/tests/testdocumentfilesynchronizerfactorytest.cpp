@@ -22,7 +22,7 @@
 #include <QDataStream>
 #include <QUrl>
 
-static constexpr char TestDirectory[] = "testdocumentfile1synchronizertest";
+static constexpr char TestDirectory[] = "testdocumentfilesynchronizerfactorytest";
 static constexpr char TestFileName1[] = "test1.data";
 #if 0
 static constexpr char TestFileName2[] = "test2.data";
@@ -40,7 +40,8 @@ void TestDocumentFileSynchronizerFactoryTest::writeToFile(const QString& filePat
 {
     QFile file;
     file.setFileName(filePath);
-    file.open(QIODevice::WriteOnly);
+    const bool openSuccess = file.open(QIODevice::WriteOnly);
+    QVERIFY(openSuccess);
 
     QDataStream outStream(&file);
     outStream.writeRawData(header.data(), header.size());
@@ -75,7 +76,7 @@ void TestDocumentFileSynchronizerFactoryTest::checkFileContent(const QUrl& fileU
     auto* factory = new Kasten::TestDocumentFileSynchronizerFactory(header);
 #if 0
     AbstractDocument* document = factory->loadNewDocument(fileUrl);
-    Kasten::TestDocument* testDocument = qobject_cast<Kasten::TestDocument*>(document);
+    auto* testDocument = qobject_cast<Kasten::TestDocument*>(document);
     QVERIFY(testDocument != 0);
     QCOMPARE(*testDocument->data(), data);
 
@@ -87,7 +88,7 @@ void TestDocumentFileSynchronizerFactoryTest::checkFileContent(const QUrl& fileU
 // ------------------------------------------------------------------ tests ----
 void TestDocumentFileSynchronizerFactoryTest::testCreate()
 {
-    Kasten::TestDocumentFileSynchronizerFactory* factory = new Kasten::TestDocumentFileSynchronizerFactory();
+    auto* factory = new Kasten::TestDocumentFileSynchronizerFactory();
 
     QVERIFY(factory != nullptr);
 
@@ -102,7 +103,7 @@ void TestDocumentFileSynchronizerFactoryTest::testLoadFromFile()
     Kasten::TestDocumentFileSynchronizerFactory* factory = new Kasten::TestDocumentFileSynchronizerFactory();
     AbstractDocument* document = factory->loadNewDocument(fileUrl);
 
-    Kasten::TestDocument* testDocument = qobject_cast<Kasten::TestDocument*>(document);
+    auto* testDocument = qobject_cast<Kasten::TestDocument*>(document);
 
     QVERIFY(document != 0);
     QVERIFY(testDocument != 0);
@@ -144,7 +145,7 @@ void TestDocumentFileSynchronizerFactoryTest::testLoadSaveFile()
     Kasten::TestDocumentFileSynchronizerFactory* factory = new Kasten::TestDocumentFileSynchronizerFactory();
     AbstractDocument* document = factory->loadNewDocument(fileUrl);
 
-    Kasten::TestDocument* testDocument = qobject_cast<Kasten::TestDocument*>(document);
+    auto* testDocument = qobject_cast<Kasten::TestDocument*>(document);
     QVERIFY(testDocument != 0);
     // change and save
     testDocument->setData(otherData);
@@ -166,7 +167,7 @@ void TestDocumentFileSynchronizerFactoryTest::testLoadReloadFile()
     Kasten::TestDocumentFileSynchronizerFactory* factory = new Kasten::TestDocumentFileSynchronizerFactory();
     AbstractDocument* document = factory->loadNewDocument(fileUrl);
 
-    Kasten::TestDocument* testDocument = qobject_cast<Kasten::TestDocument*>(document);
+    auto* testDocument = qobject_cast<Kasten::TestDocument*>(document);
     QVERIFY(testDocument != 0);
 
     // change on disc and reload
@@ -212,3 +213,5 @@ void TestDocumentFileSynchronizerFactoryTest::testConnectToFile()
 #endif
 
 QTEST_GUILESS_MAIN(TestDocumentFileSynchronizerFactoryTest)
+
+#include "moc_testdocumentfilesynchronizerfactorytest.cpp"

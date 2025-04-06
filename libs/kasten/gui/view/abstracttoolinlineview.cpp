@@ -8,9 +8,6 @@
 
 #include "abstracttoolinlineview.hpp"
 
-// Qt
-#include <Qt>
-
 namespace Kasten {
 
 class AbstractToolInlineViewPrivate
@@ -28,3 +25,5 @@ void AbstractToolInlineView::activate()
 }
 
 }
+
+#include "moc_abstracttoolinlineview.cpp"

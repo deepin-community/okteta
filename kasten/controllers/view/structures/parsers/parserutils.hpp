@@ -11,7 +11,6 @@
 
 #include <QDebug>
 #include <QStringList>
-#include <KLocalizedString>
 
 #include "../datatypes/datainformation.hpp"
 #include "../datatypes/strings/stringdatainformation.hpp"
@@ -62,10 +61,11 @@ struct ParserInfo
 class ChildrenParser
 {
 public:
+    virtual ~ChildrenParser() = default;
+
     virtual DataInformation* next() = 0;
     virtual bool hasNext() = 0;
     virtual void setParent(DataInformation* parent) = 0;
-    virtual ~ChildrenParser() = default;
 };
 
 /**

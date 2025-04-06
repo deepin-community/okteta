@@ -15,9 +15,7 @@
 #include <QVariant>
 #include <QScriptValue>
 
-class DummyDataInformation;
 class AbstractArrayData;
-class PrimitiveDataInformation;
 
 class ArrayDataInformation : public DataInformationWithDummyChildren
 {
@@ -45,7 +43,7 @@ public:
 
     BitCount32 size() const override;
 
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining, quint8* bitOffset) override;
     bool setData(const QVariant& value, Okteta::AbstractByteArrayModel* out,
                  Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) override;
@@ -56,8 +54,8 @@ public:
     QVariant childData(int row, int column, int role) const override;
     DataInformation* childAt(unsigned int idx) const override;
     unsigned int childCount() const override;
-    bool canHaveChildren() const override;
     QString childTypeName(uint index) const override;
+    QString childString(uint index) const override;
     int indexOf(const DataInformation* const data) const override;
     BitCount32 childSize(uint index) const override;
 
@@ -79,6 +77,7 @@ public:
 private:
     QScriptClass* scriptClass(ScriptHandlerInfo* handlerInfo) const override;
     QString typeNameImpl() const override;
+    QString valueStringImpl() const override;
 
 private:
     QScopedPointer<AbstractArrayData> mData;

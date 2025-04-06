@@ -24,19 +24,21 @@ namespace Kasten {
 ModifiedBarController::ModifiedBarController(StatusBar* statusBar)
 {
     mLocalStateLabel = new IconLabel(statusBar);
+    mLocalStateLabel->setEnabled(false);
     statusBar->addWidget(mLocalStateLabel);
 
     mRemoteStateLabel = new IconLabel(statusBar);
+    mRemoteStateLabel->setEnabled(false);
     statusBar->addWidget(mRemoteStateLabel);
 
-    setTargetModel(nullptr);
+    onLocalSyncStateChanged(LocalInSync);
+    onRemoteSyncStateChanged(RemoteInSync);
 }
 
 void ModifiedBarController::setTargetModel(AbstractModel* model)
 {
-    AbstractDocument* newDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
-
-    if (mDocument == newDocument) {
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
         return;
     }
 
@@ -44,7 +46,7 @@ void ModifiedBarController::setTargetModel(AbstractModel* model)
         mDocument->disconnect(this);
     }
 
-    mDocument = newDocument;
+    mDocument = document;
 
     if (mDocument) {
         connect(mDocument, &Kasten::AbstractDocument::synchronizerChanged,
@@ -154,3 +156,5 @@ void ModifiedBarController::onSynchronizerDeleted(QObject* synchronizer)
 }
 
 }
+
+#include "moc_modifiedbarcontroller.cpp"

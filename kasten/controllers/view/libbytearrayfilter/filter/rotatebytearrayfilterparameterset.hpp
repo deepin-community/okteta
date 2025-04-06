@@ -12,8 +12,17 @@
 // lib
 #include "abstractbytearrayfilterparameterset.hpp"
 
+class KConfigGroup;
+
 class RotateByteArrayFilterParameterSet : public AbstractByteArrayFilterParameterSet
 {
+private:
+    static constexpr int DefaultGroupSize = 1;
+    static constexpr int DefaultMoveBitWidth = 0;
+
+    static constexpr char GroupSizeConfigKey[] = "GroupSize";
+    static constexpr char MoveBitWidthConfigKey[] = "MoveBitWidth";
+
 public:
     RotateByteArrayFilterParameterSet();
     ~RotateByteArrayFilterParameterSet() override;
@@ -28,6 +37,10 @@ public:
 public:
     int groupSize() const;
     int moveBitWidth() const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 private:
     int mGroupSize = 1;

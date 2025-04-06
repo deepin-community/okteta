@@ -19,7 +19,7 @@ template <typename T, class C>
 class BasicPrimitiveDataInformation : public PrimitiveDataInformation
 {
 public:
-    BasicPrimitiveDataInformation(const QString& name, DataInformation* parent = nullptr);
+    explicit BasicPrimitiveDataInformation(const QString& name, DataInformation* parent = nullptr);
     ~BasicPrimitiveDataInformation() override;
     PrimitiveDataType type() const override;
     AllPrimitiveTypes value() const override;
@@ -31,10 +31,13 @@ public:
     void setWidgetData(QWidget* w) const override;
 
     QScriptValue valueAsQScriptValue() const override;
+    QVariant valueToQVariant() const override;
+    QString valueToQString(AllPrimitiveTypes value) const override;
+    QVariant valueToQVariant(AllPrimitiveTypes value) const override;
     BitCount32 size() const override; // TODO declare final with c++11 so it can be inlined
     bool setData(const QVariant& value, Okteta::AbstractByteArrayModel* out,
                  Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) override;
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining, quint8* bitOffset) override;
 
 protected:
@@ -127,6 +130,24 @@ QString BasicPrimitiveDataInformation<T, C>::valueStringImpl() const
 {
     Q_ASSERT(mWasAbleToRead);
     return C::staticValueString(mValue);
+}
+
+template <typename T, typename C>
+QVariant BasicPrimitiveDataInformation<T, C>::valueToQVariant() const
+{
+    return C::staticToQVariant(mValue);
+}
+
+template <typename T, typename C>
+QString BasicPrimitiveDataInformation<T, C>::valueToQString(AllPrimitiveTypes value) const
+{
+    return C::staticValueString(value.value<T>());
+}
+
+template <typename T, typename C>
+QVariant BasicPrimitiveDataInformation<T, C>::valueToQVariant(AllPrimitiveTypes value) const
+{
+    return C::staticToQVariant(value.value<T>());
 }
 
 #endif /* KASTEN_BASICPRIMITIVEDATAINFORMATION_HPP */

@@ -13,7 +13,6 @@
 #include <Kasten/ToolViewDockWidget>
 // KF
 #include <KXMLGUIClient>
-#include <KXMLGUIFactory>
 // Qt
 #include <QAction>
 
@@ -56,3 +55,5 @@ void ToolListMenuController::updateActions()
 }
 
 }
+
+#include "moc_toollistmenucontroller.cpp"

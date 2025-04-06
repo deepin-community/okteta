@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: khexedit2part\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2007-01-01 16:17+0330\n"
 "Last-Translator: Tahereh Dadkhahfar <dadkhahfar@itland.ir>\n"
 "Language-Team: Persian <kde-i18-fa@kde.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -87,3 +87,132 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "نویسنده"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "کدبندی &مقدار‌"
+
+#, fuzzy
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "&شانزده‌شانزدهی‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "&ده‌دهی‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "&هشت‌هشتی‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "&دودویی‌"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "کدبندی &نویسه‌"
+
+#, fuzzy
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "نمایش نویسه‌های &غیرقابل چاپ )۳۲<(‌"
+
+#, fuzzy
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "انحراف از &خط‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "ستون &مقادیر‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "ستون &نویسه‌ها‌"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "&تغییر اندازه سبک‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "&بدون تغییر اندازه‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "&قفل گروه‌ها‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "کاربرد اندازه &کامل‌"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "&ستونها‌"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "&هر دو ستون‌"
+
+#~ msgid "&Value Coding"
+#~ msgstr "کدبندی &مقدار‌"
+
+#~ msgid "&Hexadecimal"
+#~ msgstr "&شانزده‌شانزدهی‌"
+
+#~ msgid "&Decimal"
+#~ msgstr "&ده‌دهی‌"
+
+#~ msgid "&Octal"
+#~ msgstr "&هشت‌هشتی‌"
+
+#~ msgid "&Binary"
+#~ msgstr "&دودویی‌"
+
+#~ msgid "&Char Encoding"
+#~ msgstr "کدبندی &نویسه‌"
+
+#~ msgid "Show &Unprintable Chars (<32)"
+#~ msgstr "نمایش نویسه‌های &غیرقابل چاپ )۳۲<(‌"
+
+#~ msgid "&Resize Style"
+#~ msgstr "&تغییر اندازه سبک‌"
+
+#~ msgid "&No Resize"
+#~ msgstr "&بدون تغییر اندازه‌"
+
+#~ msgid "&Lock Groups"
+#~ msgstr "&قفل گروه‌ها‌"
+
+#~ msgid "&Full Size Usage"
+#~ msgstr "کاربرد اندازه &کامل‌"
+
+#~ msgid "&Line Offset"
+#~ msgstr "انحراف از &خط‌"
+
+#~ msgid "&Columns"
+#~ msgstr "&ستونها‌"
+
+#~ msgid "&Values Column"
+#~ msgstr "ستون &مقادیر‌"
+
+#~ msgid "&Chars Column"
+#~ msgstr "ستون &نویسه‌ها‌"
+
+#~ msgid "&Both Columns"
+#~ msgstr "&هر دو ستون‌"

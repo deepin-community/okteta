@@ -17,8 +17,9 @@
 #include <KActionCollection>
 #include <KToolBar>
 #include <KLocalizedString>
+#include <kio_version.h>
 // Qt
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QUrl>
 #include <QDir>
 
@@ -55,18 +56,37 @@ void FileSystemBrowserView::init()
 
     // view
     mDirOperator = new KDirOperator(QUrl::fromLocalFile(QDir::homePath()), this);
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    mDirOperator->setViewMode(KFile::Detail);
+#else
     mDirOperator->setView(KFile::Detail);
+#endif
     connect(mDirOperator, &KDirOperator::urlEntered, this, &FileSystemBrowserView::setNavigatorUrl);
     connect(mDirOperator, &KDirOperator::fileSelected, this, &FileSystemBrowserView::openFile);
     layout->addWidget(mDirOperator);
 
     // fill toolbar
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    constexpr KDirOperator::Action toolbarActions[] = {
+        KDirOperator::Back,
+        KDirOperator::Forward,
+        KDirOperator::Up,
+        KDirOperator::Home,
+        KDirOperator::ShortView,
+        KDirOperator::DetailedView,
+        KDirOperator::TreeView,
+    };
+
+    for (const KDirOperator::Action toolbarAction : toolbarActions) {
+        QAction* action = mDirOperator->action(toolbarAction);
+#else
     constexpr const char* ToolbarActionNames[] =
     { "back", "forward", "up", "home", "short view", "detailed view", "tree view"  };
 
     const KActionCollection* dirOperatorActionCollection = mDirOperator->actionCollection();
     for (auto* actionName : ToolbarActionNames) {
         QAction* action = dirOperatorActionCollection->action(QLatin1String(actionName));
+#endif
         if (action) {
             mToolbar->addAction(action);
         }
@@ -107,3 +127,5 @@ void FileSystemBrowserView::openFile(const KFileItem& fileItem)
 }
 
 }
+
+#include "moc_filesystembrowserview.cpp"

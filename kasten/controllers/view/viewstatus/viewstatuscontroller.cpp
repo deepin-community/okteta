@@ -15,15 +15,11 @@
 #include <Kasten/StatusBar>
 // Okteta core
 #include <Okteta/CharCodec>
-#include <Okteta/OktetaCore>
 // KF
-#include <KSqueezedTextLabel>
 #include <KComboBox>
 #include <KLocalizedString>
 // Qt
-#include <QLayout>
 #include <QLabel>
-#include <QFontMetrics>
 
 // TODO: make status bar capable to hide entries if size is too small, use priorisation
 
@@ -35,9 +31,11 @@ ViewStatusController::ViewStatusController(StatusBar* statusBar)
     mPrintFunction = Okteta::OffsetFormat::printFunction(Okteta::OffsetFormat::Hexadecimal);
 
     mOffsetLabel = new QLabel(statusBar);
+    mOffsetLabel->setEnabled(false);
     statusBar->addWidget(mOffsetLabel);
 
     mSelectionLabel = new QLabel(statusBar);
+    mSelectionLabel->setEnabled(false);
     statusBar->addWidget(mSelectionLabel);
 
     const QString insertModeText = i18nc("@info:status short for: Insert mode",    "INS");
@@ -48,6 +46,7 @@ ViewStatusController::ViewStatusController(StatusBar* statusBar)
     mOverwriteModeToggleButton->setCheckedState(overwriteModeText, overwriteModeTooltip);
     statusBar->addWidget(mOverwriteModeToggleButton);
     connect(mOverwriteModeToggleButton, &ToggleButton::clicked, this, &ViewStatusController::setOverwriteMode);
+    mOverwriteModeToggleButton->setEnabled(false);
 
     mValueCodingComboBox = new KComboBox(statusBar);
     const QStringList list {
@@ -61,6 +60,7 @@ ViewStatusController::ViewStatusController(StatusBar* statusBar)
         i18nc("@info:tooltip", "Coding of the value interpretation in the current view."));
     connect(mValueCodingComboBox, QOverload<int>::of(&KComboBox::activated),
             this, &ViewStatusController::setValueCoding);
+    mValueCodingComboBox->setEnabled(false);
     statusBar->addWidget(mValueCodingComboBox);
 
     mCharCodingComboBox = new KComboBox(statusBar);
@@ -69,18 +69,19 @@ ViewStatusController::ViewStatusController(StatusBar* statusBar)
         i18nc("@info:tooltip", "Encoding in the character column of the current view."));
     connect(mCharCodingComboBox, QOverload<int>::of(&KComboBox::activated),
             this, &ViewStatusController::setCharCoding);
+    mCharCodingComboBox->setEnabled(false);
     statusBar->addWidget(mCharCodingComboBox);
 
     fixWidths(Okteta::OffsetFormat::Hexadecimal);
 
-    setTargetModel(nullptr);
+    clearDisplay();
 }
 
 // the letter C can be very wide, that is why with proportional fonts there seems too much space used, but isn't
 // see https://frinring.wordpress.com/2008/10/14/better-width-with-open-sources/
 void ViewStatusController::fixWidths(int offsetCoding)
 {
-    const QFontMetrics metrics = mStatusBar->fontMetrics();
+    auto* sizeEstimationDummyLabel = new QLabel(mStatusBar);
 
     // mOffsetLabel
     constexpr int hexDigitsCount = 16;
@@ -105,7 +106,8 @@ void ViewStatusController::fixWidths(int offsetCoding)
         }
 
         const QString offsetText = i18n("Offset: %1", offset);
-        const int offsetWidth = metrics.boundingRect(offsetText).width();
+        sizeEstimationDummyLabel->setText(offsetText);
+        const int offsetWidth = sizeEstimationDummyLabel->sizeHint().width();
         if (largestOffsetWidth < offsetWidth) {
             largestOffsetWidth = offsetWidth;
         }
@@ -116,7 +118,8 @@ void ViewStatusController::fixWidths(int offsetCoding)
         const QString selectionString = i18nc("@info:status selection: start offset - end offset ()",
                                               "Selection: %1 - %2 (%3)", offset, offset, bytesCount);
 
-        const int selectionWidth = metrics.boundingRect(selectionString).width();
+        sizeEstimationDummyLabel->setText(selectionString);
+        const int selectionWidth = sizeEstimationDummyLabel->sizeHint().width();
         if (largestSelectionWidth < selectionWidth) {
             if (i < firstLetterIndex) {
                 widestDigitIndex = i;
@@ -125,6 +128,8 @@ void ViewStatusController::fixWidths(int offsetCoding)
         }
     }
 
+    delete sizeEstimationDummyLabel;
+
     mOffsetLabel->setFixedWidth(largestOffsetWidth);
     mSelectionLabel->setFixedWidth(largestSelectionWidth);
     mStatusBar->updateLayout();
@@ -132,12 +137,17 @@ void ViewStatusController::fixWidths(int offsetCoding)
 
 void ViewStatusController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
         mByteArrayView->disconnect(mOverwriteModeToggleButton);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     const bool hasView = (mByteArrayView != nullptr);
     if (hasView) {
@@ -160,11 +170,7 @@ void ViewStatusController::setTargetModel(AbstractModel* model)
         connect(mByteArrayView, &ByteArrayView::charCodecChanged,
                 this, &ViewStatusController::onCharCodecChanged);
     } else {
-        mOffsetLabel->setText(i18nc("@info:status offset value not available", "Offset: -"));
-        mSelectionLabel->setText(i18nc("@info:status offset value not available", "Selection: -"));
-        mOverwriteModeToggleButton->setChecked(false);
-        mValueCodingComboBox->setCurrentIndex(0);
-        mCharCodingComboBox->setCurrentIndex(0);
+        clearDisplay();
     }
 
     mOffsetLabel->setEnabled(hasView);
@@ -189,6 +195,15 @@ void ViewStatusController::setCharCoding(int charCoding)
 {
     mByteArrayView->setCharCoding(Okteta::CharCodec::codecNames()[charCoding]);
     mByteArrayView->setFocus();
+}
+
+void ViewStatusController::clearDisplay()
+{
+    mOffsetLabel->setText(i18nc("@info:status offset value not available", "Offset: -"));
+    mSelectionLabel->setText(i18nc("@info:status offset value not available", "Selection: -"));
+    mOverwriteModeToggleButton->setChecked(false);
+    mValueCodingComboBox->setCurrentIndex(0);
+    mCharCodingComboBox->setCurrentIndex(0);
 }
 
 void ViewStatusController::onCursorPositionChanged(Okteta::Address offset)
@@ -247,3 +262,5 @@ void ViewStatusController::onCharCodecChanged(const QString& charCodecName)
 }
 
 }
+
+#include "moc_viewstatuscontroller.cpp"

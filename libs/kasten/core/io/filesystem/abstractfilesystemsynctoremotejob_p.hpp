@@ -15,7 +15,6 @@
 // library
 #include "abstractmodelfilesystemsynchronizer.hpp"
 // Qt
-#include <QUrl>
 #include <QTemporaryFile>
 
 namespace Kasten {
@@ -23,7 +22,6 @@ class AbstractFileSystemSyncToRemoteJobPrivate : public AbstractSyncToRemoteJobP
 {
 public:
     AbstractFileSystemSyncToRemoteJobPrivate(AbstractFileSystemSyncToRemoteJob* parent, AbstractModelFileSystemSynchronizer* synchronizer);
-    AbstractFileSystemSyncToRemoteJobPrivate() = delete;
 
     ~AbstractFileSystemSyncToRemoteJobPrivate() override;
 

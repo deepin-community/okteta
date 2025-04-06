@@ -22,7 +22,6 @@
 #include <Kasten/AbstractModel>
 // KF
 #include <KXMLGUIClient>
-#include <KXMLGUIFactory>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KSelectAction>
@@ -49,16 +48,21 @@ CopyAsController::CopyAsController(ModelCodecViewManager* modelCodecViewManager,
 
     guiClient->actionCollection()->addAction(QStringLiteral("copy_as"), mCopyAsSelectAction);
 
-    setTargetModel(nullptr);
+    updateActions();
 }
 
 void CopyAsController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const dataSelectableModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    if (dataSelectableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    mModel = dataSelectableModel;
     mSelectionControl = mModel ? qobject_cast<If::DataSelectable*>(mModel) : nullptr;
 
     if (mSelectionControl) {
@@ -88,7 +92,7 @@ void CopyAsController::updateActions()
             mCopyAsSelectAction->addAction(action);
         }
     } else {
-        QAction* noneAction = new QAction(i18nc("@item There are no encoders.", "Not available."), mCopyAsSelectAction);
+        auto* noneAction = new QAction(i18nc("@item There are no encoders.", "Not available."), mCopyAsSelectAction);
         noneAction->setEnabled(false);
         mCopyAsSelectAction->addAction(noneAction);
     }
@@ -107,8 +111,8 @@ void CopyAsController::onActionTriggered(QAction* action)
         mModelCodecViewManager->createConfigEditor(encoder);
 
     if (configEditor) {
-        CopyAsDialog* dialog = new CopyAsDialog(encoder->remoteTypeName(), configEditor, encoder,
-                                                QApplication::activeWindow());
+        auto* dialog = new CopyAsDialog(encoder->remoteTypeName(), configEditor, encoder,
+                                        QApplication::activeWindow());
         dialog->setData(mModel, selection);
         connect(dialog, &CopyAsDialog::copyAccepted, this, &CopyAsController::triggerExecution);
         dialog->open();
@@ -145,3 +149,5 @@ void CopyAsController::triggerExecution(AbstractModelStreamEncoder* encoder,
 }
 
 }
+
+#include "moc_copyascontroller.cpp"

@@ -11,7 +11,7 @@
 // lib
 #include <abstractmodelstreamencoderconfigeditor.hpp>
 // Qt
-#include <QLayout>
+#include <QHBoxLayout>
 
 namespace Kasten {
 
@@ -39,3 +39,5 @@ AbstractSelectionView* ModelEncoderFileSystemExporterConfigEditor::createPreview
 }
 
 }
+
+#include "moc_modelencoderfilesystemexporterconfigeditor.cpp"

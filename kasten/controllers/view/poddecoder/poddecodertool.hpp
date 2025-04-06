@@ -14,7 +14,6 @@
 // Kasten core
 #include <Kasten/AbstractTool>
 // Okteta core
-#include <Okteta/OktetaCore>
 #include <Okteta/Address>
 // Qt
 #include <QVector>
@@ -24,6 +23,8 @@ class AbstractTypeCodec;
 class CharCodec;
 class AbstractByteArrayModel;
 }
+
+class QByteArray;
 
 namespace Kasten {
 class AbstractDifferentSizeDialog;
@@ -37,6 +38,14 @@ public:
     static constexpr int MaxPODSize = sizeof(double);
     // ensure strict alignment for double as needed on some architectures (e.g. PA-RISC)
     using Aligned64Bit = union { unsigned char Data[MaxPODSize]; double Dummy; };
+
+private:
+    static constexpr char ConfigGroupId[] = "PODDecoderTool";
+    static constexpr char ByteOrderConfigKey[] = "ByteOrder";
+    static constexpr char UnsignedAsHexConfigKey[] = "UnsignedAsHexadecimal";
+
+    static constexpr QSysInfo::Endian DefaultByteOrder = QSysInfo::ByteOrder;
+    static constexpr bool DefaultUnsignedAsHex = true;
 
 public:
     PODDecoderTool();
@@ -53,15 +62,18 @@ public:
     bool isApplyable() const; // candidate for AbstractTool API
     bool isReadOnly() const;
     QVariant value(int podId) const;
+    QByteArray bytes(int podId) const;
     QString nameOfPOD(int podId) const;
     int podCount() const;
 
+    // TODO: add option to display & edit data in locale
     bool isUnsignedAsHex() const;
     QSysInfo::Endian byteOrder() const;
     Okteta::CharCodec* charCodec() const;
 
 public:
     void setData(const QVariant& data, int podId);
+    void selectBytesInView(int podId);
     void markPOD(int podId);
     void unmarkPOD();
 

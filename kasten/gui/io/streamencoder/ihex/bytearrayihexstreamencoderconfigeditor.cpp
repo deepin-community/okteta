@@ -15,7 +15,6 @@
 #include <KComboBox>
 // Qt
 #include <QFormLayout>
-#include <QLabel>
 
 namespace Kasten {
 
@@ -65,3 +64,5 @@ void ByteArrayIHexStreamEncoderConfigEditor::onSettingsChanged()
 }
 
 }
+
+#include "moc_bytearrayihexstreamencoderconfigeditor.cpp"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oktetapart\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2010-01-31 10:31+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: ਪੰਜਾਬੀ <punjabi-users@lists.sf.net>\n"
@@ -87,3 +87,74 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "ਲੇਖਕ"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "ਮੁੱਲ ਕੋਡਿੰਗ(&V)"
+
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "ਹੈਕਸਾ ਡੈਸੀਮਲ(&H)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "ਡੈਸੀਮਲ(&D)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "ਆਕਟਲ(&O)"
+
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "ਬਾਈਨਰੀ(&B)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "ਅੱਖਰ ਇੰਕੋਡਿੰਗ(&C)"
+
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "ਨਾ-ਛਪਣਯੋਗ ਅੱਖਰ ਵੇਖੋ(&N)"
+
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "ਲਾਇਨ ਆਫਸੈੱਟ(&L)"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "ਮੁੱਲ ਕਾਲਮ(&V)"
+
+#, fuzzy
+#~| msgctxt "@item:inmenu"
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "ਅੱਖਰ ਕਾਲਮ(&C)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "ਮੁੜ-ਆਕਾਰ ਸਟਾਇਲ(&R)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "ਕੋਈ ਮੁੜ-ਆਕਾਰ ਨਹੀਂ(&N)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "ਗਰੁੱਪ ਲਾਕ(&L)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "ਪੂਰਾ ਆਕਾਰ ਵਰਤੋਂ(&F)"
+
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "ਕਾਲਮ(&C)"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "ਦੋਵੇਂ ਕਾਲਮ(&B)"

@@ -7,13 +7,16 @@
 */
 
 #include "printtool.hpp"
+#include "printtool-config.hpp"
 
 // controller
 #include "printjob.hpp"
 #include "printdialog.hpp"
+#include "printpreviewdialog.hpp"
 #include "framestopaperprinter.hpp"
 #include "headerfooterframerenderer.hpp"
-#include "bytearrayframerenderer.hpp"
+#include "bytearraycolumnframerenderer.hpp"
+#include "bytearrayrowframerenderer.hpp"
 // Okteta Kasten gui
 #include <Kasten/Okteta/ByteArrayView>
 // Okteta Kasten core
@@ -25,14 +28,168 @@
 // KF
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KConfigGroup>
+#include <KSharedConfig>
 // Qt
 #include <QApplication>
 #include <QPrinter>
-#include <QPageLayout>
-#include <QFont>
-#include <QFontMetrics>
 
 namespace Kasten {
+
+// in sync with QPageLayout::Unit & QPageSize::Unit
+enum PageUnit {
+    PageMillimeter,
+    PagePoint,
+    PageInch,
+    PagePica,
+    PageDidot,
+    PageCicero
+};
+
+static
+PageUnit pageUnitFromString(const QString& string, PageUnit defaultUnit)
+{
+    return
+        (string == QLatin1String("Millimeter")) ? PageMillimeter :
+        (string == QLatin1String("Point")) ?      PagePoint :
+        (string == QLatin1String("Inch")) ?       PageInch :
+        (string == QLatin1String("Pica")) ?       PagePica :
+        (string == QLatin1String("Didot")) ?      PageDidot :
+        (string == QLatin1String("Cicero")) ?     PageCicero :
+        /* else */                                defaultUnit;
+}
+
+static
+QString pageUnitAsString(PageUnit unit)
+{
+    return
+        (unit == PagePoint) ?  QStringLiteral("Point") :
+        (unit == PageInch) ?   QStringLiteral("Inch") :
+        (unit == PagePica) ?   QStringLiteral("Pica") :
+        (unit == PageDidot) ?  QStringLiteral("Didot") :
+        (unit == PageCicero) ? QStringLiteral("Cicero") :
+                               QStringLiteral("Millimeter");
+}
+
+template <typename T>
+static
+T pageUnitFromString(const QString& string, T defaultUnit)
+{
+    return static_cast<T>(pageUnitFromString(string, static_cast<PageUnit>(defaultUnit)));
+}
+
+template <typename T>
+static
+QString pageUnitAsString(T unit)
+{
+    return pageUnitAsString(static_cast<PageUnit>(unit));;
+}
+
+}
+
+template <>
+inline QPageLayout::Unit KConfigGroup::readEntry(const char *key, const QPageLayout::Unit &defaultValue) const
+{
+    const QString entry = readEntry(key, QString());
+    const QPageLayout::Unit unit = Kasten::pageUnitFromString<QPageLayout::Unit>(entry, defaultValue);
+    return unit;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const QPageLayout::Unit &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    const QString valueString = Kasten::pageUnitAsString<QPageLayout::Unit>(value);
+    writeEntry(key, valueString, flags);
+}
+
+template <>
+inline QPageSize::Unit KConfigGroup::readEntry(const char *key, const QPageSize::Unit &defaultValue) const
+{
+    const QString entry = readEntry(key, QString());
+    const QPageSize::Unit unit = Kasten::pageUnitFromString<QPageSize::Unit>(entry, defaultValue);
+    return unit;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const QPageSize::Unit &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    const QString valueString = Kasten::pageUnitAsString<QPageSize::Unit>(value);
+    writeEntry(key, valueString, flags);
+}
+
+template <>
+inline QPageLayout::Orientation KConfigGroup::readEntry(const char *key, const QPageLayout::Orientation &defaultValue) const
+{
+    const QString entry = readEntry(key, QString());
+    const QPageLayout::Orientation orientation =
+        (entry == QLatin1String("Portrait")) ?  QPageLayout::Portrait :
+        (entry == QLatin1String("Landscape")) ? QPageLayout::Landscape :
+        /* else */                             defaultValue;
+    return orientation;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const QPageLayout::Orientation &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    const QString valueString =
+        (value == QPageLayout::Portrait) ? QLatin1String("Portrait") : QLatin1String("Landscape");
+    writeEntry(key, valueString, flags);
+}
+
+template <>
+inline QPageSize::PageSizeId KConfigGroup::readEntry(const char *key, const QPageSize::PageSizeId &defaultValue) const
+{
+    const QString entry = readEntry(key, QString());
+
+    if (!entry.isEmpty()) {
+        for (int i = 0; i < QPageSize::LastPageSize; ++i) {
+            const auto id = static_cast<QPageSize::PageSizeId>(i);
+            const QString pageSizekey = QPageSize::key(id);
+            if (pageSizekey == entry) {
+                return id;
+            }
+        }
+    }
+    return defaultValue;
+}
+
+template <>
+inline void KConfigGroup::writeEntry(const char *key, const QPageSize::PageSizeId &value,
+                                     KConfigBase::WriteConfigFlags flags)
+{
+    const QString valueString = QPageSize::key(value);
+    writeEntry(key, valueString, flags);
+}
+
+namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char PrintTool::ConfigGroupId[];
+
+constexpr char PrintTool::PageLayoutUnitConfigKey[];
+
+constexpr QPageLayout::Unit PrintTool::DefaultPageLayoutUnit;
+constexpr char PrintTool::PageMarginLeftConfigKey[];
+constexpr char PrintTool::PageMarginRightConfigKey[];
+constexpr char PrintTool::PageMarginTopConfigKey[];
+constexpr char PrintTool::PageMarginBottomConfigKey[];
+
+constexpr char PrintTool::PageSizeIdConfigKey[];
+constexpr char PrintTool::PageSizeUnitConfigKey[];
+constexpr char PrintTool::PageWidthConfigKey[];
+constexpr char PrintTool::PageHeightConfigKey[];
+constexpr char PrintTool::PageOrientationConfigKey[];
+
+constexpr qreal PrintTool::DefaultPageMarginLeft;
+constexpr qreal PrintTool::DefaultPageMarginRight;
+constexpr qreal PrintTool::DefaultPageMarginTop;
+constexpr qreal PrintTool::DefaultPageMarginBottom;
+constexpr QPageLayout::Orientation PrintTool::DefaultPageOrientation;
+constexpr QPageSize::PageSizeId PrintTool::DefaultPageSizeId;
+constexpr QPageSize::Unit PrintTool::DefaultPageSizeUnit;
 
 PrintTool::PrintTool() = default;
 
@@ -40,20 +197,98 @@ PrintTool::~PrintTool() = default;
 
 void PrintTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
 //     if( mByteArrayView ) mByteArrayView->disconnect( this );
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     mDocument = mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
     mByteArrayModel = mDocument ? mDocument->content() : nullptr;
 
     const bool hasView = (mByteArrayView && mByteArrayModel);
     emit viewChanged(hasView);
+
+}
+
+void PrintTool::loadConfig(QPrinter* printer) const
+{
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    QPageLayout pageLayout = printer->pageLayout();
+
+    const QPageLayout::Unit pageUnit = configGroup.readEntry(PageLayoutUnitConfigKey, DefaultPageLayoutUnit);
+    pageLayout.setUnits(pageUnit);
+
+    const qreal leftMargin = configGroup.readEntry(PageMarginLeftConfigKey, DefaultPageMarginLeft);
+    const qreal rightMargin = configGroup.readEntry(PageMarginRightConfigKey, DefaultPageMarginRight);
+    const qreal topMargin = configGroup.readEntry(PageMarginTopConfigKey, DefaultPageMarginTop);
+    const qreal bottomMargin = configGroup.readEntry(PageMarginBottomConfigKey, DefaultPageMarginBottom);
+    const QMarginsF margins = QMarginsF(leftMargin, topMargin, rightMargin, bottomMargin);
+    pageLayout.setMargins(margins);
+
+    const QPageLayout::Orientation pageOrientation =  configGroup.readEntry(PageOrientationConfigKey, DefaultPageOrientation);
+    pageLayout.setOrientation(pageOrientation);
+
+    const QPageSize::PageSizeId pageSizeId = configGroup.readEntry(PageSizeIdConfigKey, DefaultPageSizeId);
+    QPageSize pageSize;
+    if (pageSizeId == QPageSize::Custom) {
+        const QPageSize::Unit pageSizeUnit = configGroup.readEntry(PageSizeUnitConfigKey, DefaultPageSizeUnit);
+        const QSizeF defaultCustomSize = QPageSize::definitionSize(DefaultPageSizeId);
+        const qreal pageWidth = configGroup.readEntry(PageWidthConfigKey, defaultCustomSize.width());
+        const qreal pageHeight = configGroup.readEntry(PageHeightConfigKey, defaultCustomSize.height());
+        pageSize = QPageSize(QSizeF(pageWidth, pageHeight), pageSizeUnit, QString(), QPageSize::ExactMatch);
+    } else {
+        pageSize = QPageSize(pageSizeId);
+    }
+    pageLayout.setPageSize(pageSize);
+
+    printer->setPageLayout(pageLayout);
+}
+
+void PrintTool::storeConfig(const QPrinter* printer)
+{
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+
+    const QPageLayout pageLayout = printer->pageLayout();
+
+    const QPageLayout::Unit layoutUnit = pageLayout.units();
+    configGroup.writeEntry(PageLayoutUnitConfigKey, layoutUnit);
+
+    const QMarginsF margins = pageLayout.margins();
+    configGroup.writeEntry(PageMarginLeftConfigKey, margins.left());
+    configGroup.writeEntry(PageMarginRightConfigKey, margins.right());
+    configGroup.writeEntry(PageMarginTopConfigKey, margins.top());
+    configGroup.writeEntry(PageMarginBottomConfigKey, margins.bottom());
+
+    const QPageLayout::Orientation orientation = pageLayout.orientation();
+    configGroup.writeEntry(PageOrientationConfigKey, orientation);
+
+    const QPageSize pageSize = pageLayout.pageSize();
+
+    const QPageSize::PageSizeId pageSizeId = pageSize.id();
+    configGroup.writeEntry(PageSizeIdConfigKey, pageSizeId);
+
+    if (pageSizeId == QPageSize::Custom) {
+        const QPageSize::Unit sizeUnit = pageSize.definitionUnits();
+        configGroup.writeEntry(PageSizeUnitConfigKey, sizeUnit);
+        const QSizeF definitionSize =  pageSize.definitionSize();
+        configGroup.writeEntry(PageWidthConfigKey, definitionSize.width());
+        configGroup.writeEntry(PageHeightConfigKey, definitionSize.height());
+    } else {
+        configGroup.deleteEntry(PageSizeUnitConfigKey);
+        configGroup.deleteEntry(PageWidthConfigKey);
+        configGroup.deleteEntry(PageHeightConfigKey);
+    }
 }
 
 void PrintTool::print()
 {
     auto* printer = new QPrinter;
+
+    loadConfig(printer);
 
 //     LayoutDialogPage* layoutPage = new LayoutDialogPage();
 //     QList<QWidget*> customDialogPages;
@@ -69,36 +304,68 @@ void PrintTool::print()
     printDialog->open();
 }
 
+void PrintTool::printPreview()
+{
+    auto* printer = new QPrinter;
+
+    loadConfig(printer);
+
+    auto* previewDialog = new PrintPreviewDialog(printer, QApplication::activeWindow());
+
+    connect(previewDialog, &QPrintPreviewDialog::paintRequested,
+            this, &PrintTool::triggerPrintPreview);
+    previewDialog->show();
+}
+
 void PrintTool::triggerPrint(QPrinter* printer)
+{
+    const bool success = doPrint(printer);
+
+    delete printer;
+
+    if (!success) {
+        const QString message = i18nc("@info", "Could not print.");
+
+        KMessageBox::error(QApplication::activeWindow(), message, i18nc("@title:window", "Print Byte Array %1", mDocument->title()));
+    }
+}
+
+void PrintTool::triggerPrintPreview(QPrinter* printer)
+{
+    doPrint(printer);
+}
+
+bool PrintTool::doPrint(QPrinter* printer)
 {
     const QString creator = QStringLiteral("Print Plugin for Okteta " OKTETA_VERSION);   // no i18n(), keep space at end as separator
     printer->setCreator(creator);
 
-    FramesToPaperPrinter framesPrinter;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    FramesPrint::FramesToPaperPrinter framesPrinter;
     const QPageLayout pageLayout = printer->pageLayout();
     const int printerResolution = printer->resolution();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     framesPrinter.setPaperRect(pageLayout.fullRectPixels(printerResolution));
     framesPrinter.setPageRect(pageLayout.paintRectPixels(printerResolution));
 #else
     framesPrinter.setPaperRect(printer->paperRect());
     framesPrinter.setPageRect(printer->pageRect());
 #endif
+    framesPrinter.setPageMargins(pageLayout.marginsPixels(printerResolution));
     printer->setFullPage(true);
 
-    PrintInfo info;
-    const QRect pageRect = framesPrinter.pageRect();
+    FramesPrint::PrintInfo info;
+    const QRect pageRect = framesPrinter.contentsRect();
     const int left = pageRect.left();
     const int width = pageRect.width();
 
-    auto* headerFrameRenderer = new HeaderFooterFrameRenderer(&info);
+    auto* headerFrameRenderer = new FramesPrint::HeaderFooterFrameRenderer(&info);
     headerFrameRenderer->setTexts(QStringLiteral("%d"),
                                     QStringLiteral("%f"),
                                     i18nc("in the header of the printed page, e.g. Page 2 of 20", "Page %p of %P"));
     headerFrameRenderer->setWidth(width);
     headerFrameRenderer->setPos(pageRect.topLeft());
 
-    auto* footerFrameRenderer = new HeaderFooterFrameRenderer(&info);
+    auto* footerFrameRenderer = new FramesPrint::HeaderFooterFrameRenderer(&info);
     footerFrameRenderer->setTexts(i18nc("in the footer of the printed page, e.g. Printed by: Joe User",
                                         "Printed by: %U"),
                                     QString(),
@@ -109,7 +376,9 @@ void PrintTool::triggerPrint(QPrinter* printer)
 
     const int contentHeight = pageRect.height() - footerFrameRenderer->height() - headerFrameRenderer->height();
     const int contentTop = pageRect.top() + headerFrameRenderer->height();
-    auto* byteArrayFrameRenderer = new ByteArrayFrameRenderer;
+    auto* byteArrayFrameRenderer = (mByteArrayView->viewModus() == ByteArrayView::ColumnViewId) ?
+        static_cast<AbstractByteArrayFrameRenderer*>(new ByteArrayColumnFrameRenderer()) :
+        static_cast<AbstractByteArrayFrameRenderer*>(new ByteArrayRowFrameRenderer());
     byteArrayFrameRenderer->setPos(left, contentTop);
     byteArrayFrameRenderer->setWidth(width);
     byteArrayFrameRenderer->setHeight(contentHeight);
@@ -120,15 +389,16 @@ void PrintTool::triggerPrint(QPrinter* printer)
     }
     byteArrayFrameRenderer->setByteArrayModel(mByteArrayModel, range.start(), range.width());
 
-    // TODO: use noOfBytesPerLine of view, scale resolution down if it does not fit the page
+    // TODO: scale resolution down if it does not fit the page
     const int noOfBytesPerLine = mByteArrayView->noOfBytesPerLine();
-//         byteArrayFrameRenderer->setNoOfBytesPerLine( mByteArrayView->noOfBytesPerLine() );
+    byteArrayFrameRenderer->setNoOfBytesPerLine(mByteArrayView->noOfBytesPerLine());
 
     const Okteta::Address startOffset = mByteArrayView->startOffset() + range.start();
     const int line = startOffset / noOfBytesPerLine;
     const Okteta::Address firstLineOffset = mByteArrayView->firstLineOffset() + line * noOfBytesPerLine;
     byteArrayFrameRenderer->setFirstLineOffset(firstLineOffset);
     byteArrayFrameRenderer->setStartOffset(startOffset);
+    byteArrayFrameRenderer->setOffsetCoding((Okteta::OffsetFormat::Format)mByteArrayView->offsetCoding());
 
     byteArrayFrameRenderer->setCharCoding(mByteArrayView->charCodingName());
     byteArrayFrameRenderer->setBufferSpacing(mByteArrayView->byteSpacingWidth(),
@@ -157,18 +427,16 @@ void PrintTool::triggerPrint(QPrinter* printer)
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
+    storeConfig(printer);
+
     auto* printJob = new PrintJob(&framesPrinter, 0, byteArrayFrameRenderer->framesCount() - 1, printer);
     const bool success = printJob->exec();
 
-    delete printer;
-
     QApplication::restoreOverrideCursor();
 
-    if (!success) {
-        const QString message = i18nc("@info", "Could not print.");
-
-        KMessageBox::sorry(QApplication::activeWindow(), message, i18nc("@title:window", "Print Byte Array %1", mDocument->title()));
-    }
+    return success;
 }
 
 }
+
+#include "moc_printtool.cpp"

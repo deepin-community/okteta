@@ -46,7 +46,9 @@ bool ByteArrayModelIoDevice::open(OpenMode openMode)
         return false;
     }
 
-    seek(0);
+    if (!seek(0)) {
+        return false;
+    }
 
     return true;
 }
@@ -74,9 +76,11 @@ qint64 ByteArrayModelIoDevice::readData(char* data, qint64 maxlength)
 
 qint64 ByteArrayModelIoDevice::writeData(const char* data, qint64 length)
 {
-    Q_UNUSED(data);
-    Q_UNUSED(length);
+    Q_UNUSED(data)
+    Q_UNUSED(length)
     return -1;
 }
 
 }
+
+#include "moc_bytearraymodeliodevice.cpp"

@@ -33,19 +33,23 @@ ViewModeController::ViewModeController(KXMLGUIClient* guiClient)
     connect(mViewModeAction, QOverload<int>::of(&KSelectAction::triggered),
 #endif
             this, &ViewModeController::setViewMode);
+    mViewModeAction->setEnabled(false);
 
     guiClient->actionCollection()->addAction(QStringLiteral("viewmode"), mViewModeAction);
-
-    setTargetModel(nullptr);
 }
 
 void ViewModeController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     const bool hasView = (mByteArrayView != nullptr);
     if (hasView) {
@@ -68,3 +72,5 @@ void ViewModeController::onViewModusChanged(int viewModus)
 }
 
 }
+
+#include "moc_viewmodecontroller.cpp"

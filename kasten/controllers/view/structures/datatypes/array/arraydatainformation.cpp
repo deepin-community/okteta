@@ -127,7 +127,7 @@ BitCount64 ArrayDataInformation::childPosition(const DataInformation* child, Okt
     return mParent->asDataInformation()->childPosition(this, start) + mData->offset(child);
 }
 
-qint64 ArrayDataInformation::readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+qint64 ArrayDataInformation::readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                                       BitCount64 bitsRemaining, quint8* bitOffset)
 {
     if (*bitOffset != 0) {
@@ -182,6 +182,11 @@ QString ArrayDataInformation::typeNameImpl() const
     return mData->typeName();
 }
 
+QString ArrayDataInformation::valueStringImpl() const
+{
+    return mData->valueString();
+}
+
 BitCount32 ArrayDataInformation::size() const
 {
     return mData->size();
@@ -202,14 +207,14 @@ unsigned int ArrayDataInformation::childCount() const
     return mData->length();
 }
 
-bool ArrayDataInformation::canHaveChildren() const
-{
-    return true;
-}
-
 QString ArrayDataInformation::childTypeName(uint index) const
 {
     return mData->dataAt(index, DataInformation::ColumnType, Qt::DisplayRole).toString();
+}
+
+QString ArrayDataInformation::childString(uint index) const
+{
+    return mData->dataAt(index, DataInformation::ColumnValue, Qt::DisplayRole).toString();
 }
 
 int ArrayDataInformation::indexOf(const DataInformation* const data) const

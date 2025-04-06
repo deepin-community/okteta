@@ -16,7 +16,6 @@
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
 // Qt
-#include <QApplication>
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 #include <QDragLeaveEvent>
@@ -26,16 +25,6 @@
 namespace Okteta {
 
 static constexpr char DropperOctetStreamFormatName[] = "application/octet-stream";
-
-Dropper::Dropper(AbstractByteArrayView* view)
-    : mByteArrayView(view)
-    , mIsActive(false)
-{
-}
-
-Dropper::~Dropper() = default;
-
-bool Dropper::isActive() const { return mIsActive; }
 
 bool Dropper::handleDragEnterEvent(QDragEnterEvent* dragEnterEvent)
 {

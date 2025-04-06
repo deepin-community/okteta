@@ -10,20 +10,25 @@
 
 // Kasten gui
 #include <Kasten/Zoomable>
+#include <Kasten/ZoomLevelsQueryable>
 // Kasten core
 #include <Kasten/AbstractModel>
 // KF
 #include <KLocalizedString>
+#include <KStandardAction>
 // Qt
 #include <QSlider>
 #include <QToolButton>
-#include <QLayout>
+#include <QHBoxLayout>
 #include <QApplication>
 #include <QHelpEvent>
 
 namespace Kasten {
 
 static constexpr int ZoomSliderWidth = 150;
+
+static constexpr int DefaultZoomSliderZoomOutLevelsSize = 49;
+static constexpr int DefaultZoomSliderZoomInLevelsSize = 50;
 
 // TODO: look at Dolphin/Krita/KOffice zoom tool
 
@@ -33,79 +38,117 @@ static constexpr int ZoomSliderWidth = 150;
 ZoomSlider::ZoomSlider(QWidget* parent)
     : QWidget(parent)
 {
-    mZoomOutButton = new QToolButton(this);
-    mZoomOutButton->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out")));
-    mZoomOutButton->setAutoRaise(true);
+    auto* zoomNormalButton = new QToolButton(this);
+    m_zoomNormalAction = KStandardAction::actualSize(this, &ZoomSlider::zoomNormal, this);
+    m_zoomNormalAction->setShortcut(QKeySequence()); // unset shortcut, here no integration into main menu
+    m_zoomNormalAction->setEnabled(false);
+    zoomNormalButton->setDefaultAction(m_zoomNormalAction);
+    zoomNormalButton->setAutoRaise(true);
 
+    auto* zoomOutButton = new QToolButton(this);
+    m_zoomOutAction = KStandardAction::zoomOut(this, &ZoomSlider::zoomOut, this);
+    m_zoomOutAction->setShortcut(QKeySequence()); // unset shortcut, here no integration into main menu
+    m_zoomOutAction->setEnabled(false);
+    zoomOutButton->setDefaultAction(m_zoomOutAction);
+    zoomOutButton->setAutoRaise(true);
+
+    // slider: use 0 as 100 % value, negative values for zoom-out levels, positive for zoom-in levels
     mSlider = new QSlider(Qt::Horizontal, this);
+    mSlider->setSingleStep(1);   // mZoomControl->zoomLevelSingleStep()?
+    mSlider->setPageStep(5);   // mZoomControl->zoomLevelPageStep()?
+    mSlider->setEnabled(false);
 
-    mZoomInButton = new QToolButton(this);
-    mZoomInButton->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in")));
-    mZoomInButton->setAutoRaise(true);
+    auto* zoomInButton = new QToolButton(this);
+    m_zoomInAction = KStandardAction::zoomIn(this, &ZoomSlider::zoomIn,  this);
+    m_zoomInAction->setShortcut(QKeySequence()); // unset shortcut, here no integration into main menu
+    m_zoomInAction->setEnabled(false);
+    zoomInButton->setDefaultAction(m_zoomInAction);
+    zoomInButton->setAutoRaise(true);
 
     auto* layout = new QHBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(mZoomOutButton);
+    layout->addWidget(zoomNormalButton);
+    layout->addWidget(zoomOutButton);
     layout->addWidget(mSlider);
-    layout->addWidget(mZoomInButton);
+    layout->addWidget(zoomInButton);
 
-    connect(mZoomOutButton, &QAbstractButton::clicked,
-            this, &ZoomSlider::zoomOut);
-    connect(mZoomInButton, &QAbstractButton::clicked,
-            this, &ZoomSlider::zoomIn);
     connect(mSlider, &QSlider::valueChanged,
             this, &ZoomSlider::onSliderValueChanged);
     connect(mSlider, &QSlider::sliderMoved,
             this, &ZoomSlider::onSliderMoved);
 
     setFixedWidth(ZoomSliderWidth);
-
-    setTargetModel(nullptr);
+    clearDisplay();
 }
 
 ZoomSlider::~ZoomSlider() = default;
 
 void ZoomSlider::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const zoomableModel = model ? model->findBaseModelWithInterface<If::Zoomable*>() : nullptr;
+    if (zoomableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::Zoomable*>() : nullptr;
+    mModel = zoomableModel;
     mZoomControl = mModel ? qobject_cast<If::Zoomable*>(mModel) : nullptr;
+    m_zoomLevelsControl = nullptr;
 
     const bool hasView = (mZoomControl != nullptr);
     if (hasView) {
-        mSlider->setSingleStep(1);   // mZoomControl->zoomLevelSingleStep()?
-        mSlider->setPageStep(5);   // mZoomControl->zoomLevelPageStep()?
+        const auto children = mModel->findChildren<QObject*>(QString(), Qt::FindDirectChildrenOnly);
+        for (auto* child : children) {
+            m_zoomLevelsControl = qobject_cast<If::ZoomLevelsQueryable*>(child);
+            if (m_zoomLevelsControl) {
+                connect(child, SIGNAL(zoomLevelsChanged()),
+                        this, SLOT(onZoomLevelsChanged()));
+                break;
+            }
+        }
 
-        const int min = 0; // mZoomControl->minimumZoomLevel();
-        const int max = 99; // mZoomControl->maximumZoomLevel();
-        mSlider->setRange(min, max);
+        onZoomLevelsChanged();
 
-        onZoomLevelChange(mZoomControl->zoomLevel());
+        onZoomScaleChange(mZoomControl->zoomScale());
         const int sliderValue = mSlider->value();
-        mZoomOutButton->setEnabled(sliderValue > mSlider->minimum());
-        mZoomInButton->setEnabled(sliderValue < mSlider->maximum());
-        connect(mModel, SIGNAL(zoomLevelChanged(double)), SLOT(onZoomLevelChange(double)));
+        const bool isZoomed = (sliderValue != 0);
+        m_zoomNormalAction->setEnabled(isZoomed);
+        m_zoomOutAction->setEnabled(sliderValue > mSlider->minimum());
+        m_zoomInAction->setEnabled(sliderValue < mSlider->maximum());
+        connect(mModel, SIGNAL(zoomLevelChanged(double)), SLOT(onZoomScaleChange(double)));
     } else {
-        mZoomOutButton->setEnabled(false);
-        mZoomInButton->setEnabled(false);
-        // put slider in the middle
-        mSlider->setRange(0, 99);
-        mSlider->setValue(50);
+        m_zoomNormalAction->setEnabled(false);
+        m_zoomOutAction->setEnabled(false);
+        m_zoomInAction->setEnabled(false);
+        clearDisplay();
     }
 
     mSlider->setEnabled(hasView);
 }
 
+void ZoomSlider::clearDisplay()
+{
+    // put slider in the middle
+    mSlider->setRange(-DefaultZoomSliderZoomInLevelsSize, DefaultZoomSliderZoomOutLevelsSize);
+    mSlider->setValue(0);
+}
+
 void ZoomSlider::updateToolTip(int sliderValue)
 {
-    const float zoomLevel = 50.0 / (100 - sliderValue);
-    const int zoomPercent = static_cast<int>(zoomLevel * 100 + 0.5);
+    if (m_toolTipSliderValue == sliderValue) {
+        return;
+    }
+
+    m_toolTipSliderValue = sliderValue;
+
+    const float zoomScale = m_zoomLevelsControl ? m_zoomLevelsControl->zoomScaleForLevel(m_toolTipSliderValue) : 50.0f / (50 - m_toolTipSliderValue);
+    const int zoomPercent = static_cast<int>(zoomScale * 100 + 0.5f);
     mSlider->setToolTip(i18nc("@info:tooltip", "Zoom: %1%", zoomPercent));
-// TODO: get the text by a signal toolTipNeeded( int zoomLevel, QString* toolTipText ); ?
+// TODO: get the text by a signal toolTipNeeded( int zoomScale, QString* toolTipText ); ?
 }
 
 void ZoomSlider::zoomOut()
@@ -120,24 +163,39 @@ void ZoomSlider::zoomIn()
     mSlider->setValue(newValue);
 }
 
+void ZoomSlider::zoomNormal()
+{
+    mSlider->setValue(0);
+}
+
 void ZoomSlider::onSliderValueChanged(int sliderValue)
 {
     updateToolTip(sliderValue);
-    mZoomOutButton->setEnabled(sliderValue > mSlider->minimum());
-    mZoomInButton->setEnabled(sliderValue < mSlider->maximum());
+    const bool isZoomed = (sliderValue != 0);
+    m_zoomNormalAction->setEnabled(isZoomed);
+    m_zoomOutAction->setEnabled(sliderValue > mSlider->minimum());
+    m_zoomInAction->setEnabled(sliderValue < mSlider->maximum());
+
+    if (m_isUpdatingSlider) {
+        return;
+    }
 
     if (mZoomControl) {
-        mZoomControl->setZoomLevel(50.0 / (100 - sliderValue));
+        const double zoomScale = m_zoomLevelsControl ? m_zoomLevelsControl->zoomScaleForLevel(sliderValue) : 50.0 / (50 - sliderValue);
+
+        mZoomControl->setZoomScale(zoomScale);
     }
 }
 
-// TODO: which signal comes first, valueChanged or sliderMoved?
-// ensure correct calculation of zoomLevel, best by model
+// ensure correct calculation of zoom scale, best by model
 // but can be timeconsuming?
 // use timer to delay resize, so that sliding is not delayed by resizing
 void ZoomSlider::onSliderMoved(int sliderValue)
 {
-    Q_UNUSED(sliderValue)
+    // QSlider::sliderMoved gets emitted before valueChanged
+    // so we have to make sure the tooltip text is updated
+    // before sending synchronously the tooltip event next
+    updateToolTip(sliderValue);
 
     QPoint toolTipPoint = mSlider->rect().topLeft();
     toolTipPoint.ry() += mSlider->height() / 2;
@@ -147,18 +205,23 @@ void ZoomSlider::onSliderMoved(int sliderValue)
     QApplication::sendEvent(mSlider, &toolTipEvent);
 }
 
-void ZoomSlider::onZoomLevelChange(double level)
+void ZoomSlider::onZoomScaleChange(double zoomScale)
 {
-    mZoomLevel = level;
-    const int newSliderValue = 100 - static_cast<int>(50.0 / mZoomLevel + 0.5);
-    if (newSliderValue != mSlider->value()) {
-        disconnect(mSlider, &QSlider::valueChanged,
-                   this, &ZoomSlider::onSliderValueChanged);
-        mSlider->setSliderPosition(newSliderValue);
-        updateToolTip(mSlider->value());
-        connect(mSlider, &QSlider::valueChanged,
-                this, &ZoomSlider::onSliderValueChanged);
-    }
+    m_isUpdatingSlider = true;
+
+    const int newSliderValue = m_zoomLevelsControl ? m_zoomLevelsControl->zoomLevelForScale(zoomScale) : 50 - static_cast<int>(50.0 / zoomScale + 0.5);
+    mSlider->setValue(newSliderValue);
+
+    m_isUpdatingSlider = false;
+}
+
+void ZoomSlider::onZoomLevelsChanged()
+{
+    const int zoomOutLevelsSize = m_zoomLevelsControl ? m_zoomLevelsControl->zoomOutLevelsSize() : DefaultZoomSliderZoomOutLevelsSize;
+    const int zoomInLevelsSize = m_zoomLevelsControl ? m_zoomLevelsControl->zoomInLevelsSize() : DefaultZoomSliderZoomInLevelsSize;
+    mSlider->setRange(-zoomOutLevelsSize, zoomInLevelsSize);
 }
 
 }
+
+#include "moc_zoomslider.cpp"

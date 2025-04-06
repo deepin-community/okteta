@@ -9,8 +9,6 @@
 #ifndef KASTEN_BYTEARRAYSOURCECODESTREAMENCODERCONFIGEDITORFACTORY_HPP
 #define KASTEN_BYTEARRAYSOURCECODESTREAMENCODERCONFIGEDITORFACTORY_HPP
 
-// lib
-#include "oktetakastengui_export.hpp"
 // Kasten gui
 #include <Kasten/AbstractModelStreamEncoderConfigEditorFactory>
 
@@ -20,7 +18,11 @@ class ByteArraySourceCodeStreamEncoderConfigEditorFactory : public AbstractModel
 {
 public:
     ByteArraySourceCodeStreamEncoderConfigEditorFactory();
+    ByteArraySourceCodeStreamEncoderConfigEditorFactory(const ByteArraySourceCodeStreamEncoderConfigEditorFactory&) = delete;
+
     ~ByteArraySourceCodeStreamEncoderConfigEditorFactory() override;
+
+    ByteArraySourceCodeStreamEncoderConfigEditorFactory& operator=(const ByteArraySourceCodeStreamEncoderConfigEditorFactory&) = delete;
 
 public:
     AbstractModelStreamEncoderConfigEditor* tryCreateConfigEditor(AbstractModelStreamEncoder* encoder) const override;

@@ -3,14 +3,14 @@
 # Budiman Jojo <budimanjojo@gmail.com>, 2014.
 # Rendiyono Wahyu Saputro <rendi.7936@gmail.com>, 2015.
 # wantoyo <inactive+wantoyo@transifex.com>, 2015.
-# Wantoyo <wantoyek@gmail.com>, 2019.
+# Wantoyo <wantoyek@gmail.com>, 2019, 2022.
 #
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE Frameworks 5 Applications\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-03-21 08:06+0100\n"
+"POT-Creation-Date: 2025-03-25 03:24+0000\n"
 "PO-Revision-Date: 2017-09-23 20:12+0000\n"
 "Last-Translator: wantoyo <inactive+wantoyo@transifex.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -19,50 +19,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 21.12.3\n"
 
-#: controller/clipboardcontroller.cpp:57
+#: controller/clipboardcontroller.cpp:79
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "&Copy"
 msgstr ""
 
-#: controller/clipboardcontroller.cpp:67
+#: controller/clipboardcontroller.cpp:89
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Cu&t"
 msgstr ""
 
-#: controller/clipboardcontroller.cpp:74
+#: controller/clipboardcontroller.cpp:96
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "&Paste"
 msgstr ""
 
-#: controller/keynavigator.cpp:143
+#: controller/keynavigator.cpp:304
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Select &All"
 msgstr ""
 
-#: controller/undoredocontroller.cpp:64
+#: controller/undoredocontroller.cpp:83
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "&Undo"
 msgstr ""
 
-#: controller/undoredocontroller.cpp:70
+#: controller/undoredocontroller.cpp:89
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Re&do"
 msgstr ""
 
-#: controller/valueeditor.cpp:159
+#: controller/valueeditor.cpp:238
 #, kde-format
 msgctxt "name of the change"
 msgid "Insert"
 msgstr "Sisipkan"
 
-#: controller/valueeditor.cpp:200
+#: controller/valueeditor.cpp:276
 #, kde-format
 msgctxt "name of the change"
 msgid "Replace"

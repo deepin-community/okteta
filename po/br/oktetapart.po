@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: all2.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2004-09-20 15:44+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud@mandriva.com>\n"
 "Language-Team: br <LL@li.org>\n"
@@ -83,3 +83,85 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "Oberour"
+
+#, fuzzy
+#~| msgid "&Values Column"
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "Bann ar gwerzhioù"
+
+#, fuzzy
+#~| msgid "&Decimal"
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "&Dre zegoù"
+
+#, fuzzy
+#~| msgid "&Decimal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "&Dre zegoù"
+
+#, fuzzy
+#~| msgid "&Octal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "&Dre eizhoù"
+
+#, fuzzy
+#~| msgid "&Binary"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "&Binarel"
+
+#, fuzzy
+#~| msgid "&Char Encoding"
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "Kodadur an &arouezennoù"
+
+#, fuzzy
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "Bann ar gwerzhioù"
+
+#, fuzzy
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "Bann an &arouezennoù"
+
+#, fuzzy
+#~| msgid "&Resize Style"
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "&Adventañ ar c'hiz"
+
+#, fuzzy
+#~| msgid "&No Resize"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "&Adventañ ebet"
+
+#, fuzzy
+#~| msgid "&Lock Groups"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "&Krouilhiñ ar strolladoù"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "&Bannoù"
+
+#, fuzzy
+#~| msgid "&Both Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "An &daou bannoù"
+
+#~ msgid "KHexEdit2Part"
+#~ msgstr "KHexEdit2Part"

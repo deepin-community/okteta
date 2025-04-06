@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2009, 2023 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -10,6 +10,10 @@
 
 // controller
 #include "replacejob.hpp"
+// libconfigentries
+#include <casesensitivityconfigentry.hpp>
+// libbytearraysearch
+#include <bytearraysearchutils.hpp>
 // Okteta Kasten gui
 #include <Kasten/Okteta/ByteArrayView>
 // Okteta Kasten core
@@ -17,13 +21,30 @@
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 
+
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char ReplaceTool::ConfigGroupId[];
+
+constexpr char ReplaceTool::CaseSensitivityConfigKey[];
+constexpr char ReplaceTool::PromptConfigKey[];
+
+constexpr Qt::CaseSensitivity ReplaceTool::DefaultCaseSensitivity;
+constexpr bool ReplaceTool::DefaultDoPrompt;
+
 
 ReplaceTool::ReplaceTool()
 {
     setObjectName(QStringLiteral("Replace"));
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    mCaseSensitivity = configGroup.readEntry(CaseSensitivityConfigKey, DefaultCaseSensitivity);
+    mDoPrompt = configGroup.readEntry(PromptConfigKey, DefaultDoPrompt);
 }
 
 ReplaceTool::~ReplaceTool() = default;
@@ -44,6 +65,11 @@ QString ReplaceTool::charCodingName() const { return mByteArrayView->charCodingN
 
 void ReplaceTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     const bool oldIsApplyable = isApplyable();
 
     if (mByteArrayView) {
@@ -53,7 +79,7 @@ void ReplaceTool::setTargetModel(AbstractModel* model)
         mByteArrayModel->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -99,9 +125,16 @@ void ReplaceTool::setReplaceData(const QByteArray& replaceData)
 
 void ReplaceTool::setCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
 {
+    if (mCaseSensitivity == caseSensitivity) {
+        return;
+    }
+
 //     const bool oldIsApplyable = isApplyable();
 
     mCaseSensitivity = caseSensitivity;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(CaseSensitivityConfigKey, mCaseSensitivity);
 
 //     const bool newIsApplyable = isApplyable();
 //     if( oldIsApplyable != newIsApplyable )
@@ -110,7 +143,14 @@ void ReplaceTool::setCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
 
 void ReplaceTool::setDoPrompt(bool doPrompt)
 {
+    if (mDoPrompt == doPrompt) {
+        return;
+    }
+
     mDoPrompt = doPrompt;
+
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(PromptConfigKey, mDoPrompt);
 }
 
 void ReplaceTool::replace(FindDirection direction, bool fromCursor, bool inSelection)
@@ -118,28 +158,17 @@ void ReplaceTool::replace(FindDirection direction, bool fromCursor, bool inSelec
     Okteta::Address replaceRangeStartIndex;
     Okteta::Address replaceRangeEndIndex;
 
-    if (inSelection) {
-        const Okteta::AddressRange selection = mByteArrayView->selection();
-        if (!selection.isValid()) {
-            mReplaceJob = nullptr;
-            // nothing selected, so skip any search and finish now
-            emit finished(false, 0);
-            return;
-        }
-
-        replaceRangeStartIndex = selection.start();
-        replaceRangeEndIndex =  selection.end();
-        // TODO: support finding following selection direction
-        direction = FindForward;
-    } else {
-        const Okteta::Address cursorPosition = mByteArrayView->cursorPosition();
-        if (fromCursor && (cursorPosition != 0)) {
-            replaceRangeStartIndex = cursorPosition;
-            replaceRangeEndIndex =  cursorPosition - 1;
-        } else {
-            replaceRangeStartIndex = 0;
-            replaceRangeEndIndex =  mByteArrayModel->size() - 1;
-        }
+    if (!ByteArraySearchUtils::getSearchIndexes(&replaceRangeStartIndex, &replaceRangeEndIndex,
+                                                mByteArrayModel,
+                                                mByteArrayView->selection(),
+                                                mByteArrayView->cursorPosition(),
+                                                mSearchData,
+                                                direction,
+                                                fromCursor, inSelection)) {
+        // no search doable, so skip any search and finish now
+        mReplaceJob = nullptr;
+        emit finished(false, 0);
+        return;
     }
 
     mReplaceJob = new ReplaceJob(mByteArrayView, mByteArrayModel, mUserQueryAgent, this);
@@ -173,3 +202,5 @@ void ReplaceTool::onJobFinished(bool previousFound, int noOfReplacements)
 }
 
 }
+
+#include "moc_replacetool.cpp"

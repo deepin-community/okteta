@@ -29,19 +29,23 @@ ReadOnlyController::ReadOnlyController(KXMLGUIClient* guiClient)
     mSetReadOnlyAction->setCheckedState(checkedState);
     connect(mSetReadOnlyAction, &QAction::triggered,
             this, &ReadOnlyController::setReadOnly);
+    mSetReadOnlyAction->setEnabled(false);
 
     guiClient->actionCollection()->addAction(QStringLiteral("isreadonly"), mSetReadOnlyAction);
-
-    setTargetModel(nullptr);
 }
 
 void ReadOnlyController::setTargetModel(AbstractModel* model)
 {
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
+        return;
+    }
+
     if (mDocument) {
         mDocument->disconnect(mSetReadOnlyAction);
     }
 
-    mDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    mDocument = document;
 
     if (mDocument) {
         mSetReadOnlyAction->setChecked(mDocument->isReadOnly());
@@ -61,3 +65,5 @@ void ReadOnlyController::setReadOnly(bool isReadOnly)
 }
 
 }
+
+#include "moc_readonlycontroller.cpp"

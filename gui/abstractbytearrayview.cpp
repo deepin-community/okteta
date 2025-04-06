@@ -10,8 +10,6 @@
 #include "abstractbytearrayview_p.hpp"
 
 // lib
-#include "controller/abstractcontroller.hpp"
-#include "controller/abstractwheelcontroller.hpp"
 #include "bytearraytablelayout.hpp"
 
 namespace Okteta {
@@ -54,8 +52,29 @@ bool AbstractByteArrayView::isModified() const
 double AbstractByteArrayView::zoomLevel() const
 {
     Q_D(const AbstractByteArrayView);
-    return d->zoomLevel();
+    return d->zoomScale();
 }
+int AbstractByteArrayView::zoomInLevelsSize() const
+{
+    Q_D(const AbstractByteArrayView);
+    return d->zoomInLevelsSize();
+}
+int AbstractByteArrayView::zoomOutLevelsSize() const
+{
+    Q_D(const AbstractByteArrayView);
+    return d->zoomOutLevelsSize();
+}
+double AbstractByteArrayView::zoomScaleForLevel(int zoomLevel) const
+{
+    Q_D(const AbstractByteArrayView);
+    return d->zoomScaleForLevel(zoomLevel);
+}
+int AbstractByteArrayView::zoomLevelForScale(double zoomScale) const
+{
+    Q_D(const AbstractByteArrayView);
+    return d->zoomLevelForScale(zoomScale);
+}
+
 ByteArrayTableLayout* AbstractByteArrayView::layout() const
 {
     Q_D(const AbstractByteArrayView);
@@ -431,10 +450,10 @@ void AbstractByteArrayView::unZoom()
     Q_D(AbstractByteArrayView);
     d->unZoom();
 }
-void AbstractByteArrayView::setZoomLevel(double zoomLevel)
+void AbstractByteArrayView::setZoomLevel(double zoomScale)
 {
     Q_D(AbstractByteArrayView);
-    d->setZoomLevel(zoomLevel);
+    d->setZoomScale(zoomScale);
 }
 
 void AbstractByteArrayView::setNoOfLines(int newNoOfLines)
@@ -540,9 +559,7 @@ void AbstractByteArrayView::focusOutEvent(QFocusEvent* focusEvent)
 void AbstractByteArrayView::keyPressEvent(QKeyEvent* keyEvent)
 {
     Q_D(AbstractByteArrayView);
-    if (!d->controller()->handleKeyPress(keyEvent)) {
-        ColumnsView::keyPressEvent(keyEvent);
-    }
+    d->keyPressEvent(keyEvent);
 }
 
 void AbstractByteArrayView::mousePressEvent(QMouseEvent* mouseEvent)
@@ -573,9 +590,7 @@ void AbstractByteArrayView::mouseDoubleClickEvent(QMouseEvent* mouseEvent)
 void AbstractByteArrayView::wheelEvent(QWheelEvent* wheelEvent)
 {
     Q_D(AbstractByteArrayView);
-    if (!d->wheelController()->handleWheelEvent(wheelEvent)) {
-        ColumnsView::wheelEvent(wheelEvent);
-    }
+    d->wheelEvent(wheelEvent);
 }
 
 void AbstractByteArrayView::dragEnterEvent(QDragEnterEvent* dragEnterEvent)

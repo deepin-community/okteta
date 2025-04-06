@@ -124,7 +124,7 @@ void StatusBarLayout::addWidget(QWidget* widget)
 #if 0
 void StatusBarLayout::updateMarginAndSpacing()
 {
-    Statusbar* statusBar = qobject_cast<Statusbar*>(parentWidget());
+    auto* statusBar = qobject_cast<Statusbar*>(parentWidget());
     if (!statusBar) {
         return;
     }
@@ -211,9 +211,7 @@ void StatusBarLayout::updateLayoutStructs() const
     QSize sizeHint(0, 0);
 
     int visibleCount = 0;
-    for (int i = 0; i < mWidgetList.count(); ++i) {
-        QWidgetItem* item = mWidgetList.at(i);
-
+    for (QWidgetItem* const item : mWidgetList) {
         if (!item->isEmpty()) {
             const QSize itemSizeHint = item->sizeHint();
 
@@ -231,3 +229,5 @@ void StatusBarLayout::updateLayoutStructs() const
 }
 
 }
+
+#include "moc_statusbarlayout.cpp"

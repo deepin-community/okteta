@@ -20,10 +20,13 @@ class OKTETAKASTENCONTROLLERS_EXPORT StructuresToolViewFactory : public Abstract
 {
 public:
     StructuresToolViewFactory();
+    StructuresToolViewFactory(const StructuresToolViewFactory&) = delete;
+
     ~StructuresToolViewFactory() override;
 
-public:
-    // AbstractToolViewFactory API
+    StructuresToolViewFactory& operator=(const StructuresToolViewFactory&) = delete;
+
+public: // AbstractToolViewFactory API
     AbstractToolView* create(AbstractTool* tool) const override;
 
     QString iconName() const override;

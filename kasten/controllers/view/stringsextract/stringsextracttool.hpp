@@ -20,7 +20,6 @@
 
 namespace Okteta {
 class AbstractByteArrayModel;
-class CharCodec;
 }
 
 namespace Kasten {
@@ -32,6 +31,12 @@ class ByteArrayView;
 class StringsExtractTool : public AbstractTool
 {
     Q_OBJECT
+
+private:
+    static constexpr int DefaultMinLength = 3;
+
+    static constexpr char ConfigGroupId[] = "StringsExtractTool";
+    static constexpr char MinimumLengthConfigKey[] = "MinimumLength";
 
 public:
     StringsExtractTool();

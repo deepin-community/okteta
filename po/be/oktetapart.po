@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oktetapart\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2007-06-25 11:13+0300\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -16,8 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
+"%100>=11 && n%100<=14 ? 2 : 3);\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -88,3 +89,85 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "Аўтар"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "Сістэма злічэння"
+
+#, fuzzy
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "Шаснаццатковая"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "Дзесятковая"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "Васьмерычная"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "Двайковая"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "Кадыроўка знакаў"
+
+#, fuzzy
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "Паказваць недрукавальныя знакі (<32)"
+
+#, fuzzy
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "Водступ радка"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "Значэнні"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "Знакі"
+
+#, fuzzy
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "Змена памеру"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "Не змяняць памер"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "Фіксаваць памер груп"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "На ўсю шырыню"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "Кало&нак"
+
+#, fuzzy
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "Абодва слупка"

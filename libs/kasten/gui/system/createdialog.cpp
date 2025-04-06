@@ -13,7 +13,7 @@
 // KF
 #include <KLocalizedString>
 // Qt
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QIcon>
@@ -35,15 +35,15 @@ CreateDialog::CreateDialog(AbstractModelDataGeneratorConfigEditor* configEditor,
     setWindowTitle(i18nc("@title:window", "Create"));
 
     // editor
-    QLabel* editorLabel = new QLabel(mConfigEditor->name());
+    auto* editorLabel = new QLabel(mConfigEditor->name());
     QFont font = editorLabel->font();
     font.setBold(true);
     editorLabel->setFont(font);
 
     // dialog buttons
     auto* dialogButtonBox = new QDialogButtonBox;
-    QPushButton* createButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-new")),
-                                                i18nc("@action:button create the new document", "&Create"));
+    auto* createButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-new")),
+                                         i18nc("@action:button create the new document", "&Create"));
     createButton->setToolTip(i18nc("@info:tooltip",
                                    "Create a new document with the generated data."));
     createButton->setWhatsThis(xi18nc("@info:whatsthis",
@@ -84,3 +84,5 @@ void CreateDialog::onFinished(int result)
 }
 
 }
+
+#include "moc_createdialog.cpp"

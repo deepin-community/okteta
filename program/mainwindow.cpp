@@ -7,6 +7,7 @@
 */
 
 #include "mainwindow.hpp"
+#include "mainwindow-config.hpp"
 
 // program
 #include "program.hpp"
@@ -41,8 +42,10 @@
 #include <Kasten/FileSystemBrowserToolFactory>
 #include <Kasten/DocumentsToolViewFactory>
 #include <Kasten/DocumentsToolFactory>
+#if KASTEN_BUILD_TERMINALTOOL
 #include <Kasten/TerminalToolViewFactory>
 #include <Kasten/TerminalToolFactory>
+#endif
 // controllers
 // #include <Kasten/Okteta/OverwriteOnlyControllerFactory>
 #include <Kasten/Okteta/OverwriteModeControllerFactory>
@@ -75,6 +78,7 @@
 #include <Kasten/ZoomControllerFactory>
 #include <Kasten/ZoomBarControllerFactory>
 #include <Kasten/SelectControllerFactory>
+#include <Kasten/ViewAreaContextMenuControllerFactory>
 #include <Kasten/SwitchViewControllerFactory>
 #include <Kasten/ViewListMenuControllerFactory>
 #include <Kasten/ViewAreaSplitControllerFactory>
@@ -119,21 +123,26 @@ OktetaMainWindow::OktetaMainWindow(OktetaProgram* program)
             this, &OktetaMainWindow::onDataOffered);
     connect(viewArea(), &MultiViewAreas::dataDropped,
             this, &OktetaMainWindow::onDataDropped);
+    connect(viewArea(), &MultiViewAreas::newDocumentRequested,
+            this, &OktetaMainWindow::onNewDocumentRequested);
     connect(viewArea(), &AbstractGroupedViews::closeRequest,
             this, &OktetaMainWindow::onCloseRequest);
 
+// Using State value as generated with Qt 5.15.11-KDE
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 11)
     // XXX: Workaround for Qt 4.4's lacking of proper handling of the initial layout of dock widgets
     //      This state is taken from an oktetarc where the docker constellation was configured by hand.
     //      Setting this state if none is present seems to work, but there's
     //      still the versioning problem to be accounted for.
     //      Hack borrowed from trunk/koffice/krita/ui/kis_view2.cpp:
     const QString mainWindowState = QStringLiteral(
-        "AAAA/wAAAAD9AAAAAwAAAAAAAADPAAACg/wCAAAAAvsAAAAiAEYAaQBsAGUAUwB5AHMAdABlAG0AQgByAG8AdwBzAGUAcgAAAABJAAACgwAAAB4BAAAF+wAAABIARABvAGMAdQBtAGUAbgB0AHMAAAAASQAAAmMAAABeAQAABQAAAAEAAAGcAAACXPwCAAAACPsAAAAUAFAATwBEAEQAZQBjAG8AZABlAHIAAAAAQgAAARMAAAB9AQAABfsAAAAUAFMAdAByAHUAYwB0AFQAbwBvAGwAAAAAQgAAAlwAAAB9AQAABfsAAAAQAFYAZQByAHMAaQBvAG4AcwAAAABNAAAAVgAAAF4BAAAF+wAAABgAQgBpAG4AYQByAHkARgBpAGwAdABlAHIAAAABegAAAM0AAAC8AQAABfsAAAAQAEMAaABlAGMAawBzAHUAbQAAAAF8AAAAywAAAL0BAAAF/AAAAREAAADlAAAAAAD////6AAAAAAEAAAAE+wAAABAAQwBoAGUAYwBrAFMAdQBtAQAAAAD/////AAAAAAAAAAD7AAAAEgBCAG8AbwBrAG0AYQByAGsAcwIAAALBAAAAPQAAAT8AAAFk+wAAAA4AUwB0AHIAaQBuAGcAcwAAAAAA/////wAAAQ8BAAAF+wAAAAgASQBuAGYAbwAAAAGRAAABTAAAAIUBAAAF+wAAABIAQgB5AHQAZQBUAGEAYgBsAGUAAAAAUwAAAjkAAAB9AQAABfsAAAAYAEQAbwBjAHUAbQBlAG4AdABJAG4AZgBvAAAAAEkAAAJjAAAA+wEAAAUAAAADAAAAAAAAAAD8AQAAAAH7AAAAEABUAGUAcgBtAGkAbgBhAGwAAAAAAP////8AAABPAQAABQAABBUAAAGLAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAAAAAEBgAAAAAAAAAA");
+        "AAAA/wAAAAD9AAAAAwAAAAAAAAEVAAACLvwCAAAAAfwAAABLAAACLgAAAI8BAAAd+gAAAAABAAAAAvsAAAAiAEYAaQBsAGUAUwB5AHMAdABlAG0AQgByAG8AdwBzAGUAcgEAAAAA/////wAAAGQA////+wAAABIARABvAGMAdQBtAGUAbgB0AHMBAAAAAP////8AAABcAP///wAAAAEAAAHhAAACLvwCAAAABfsAAAAUAFMAdAByAHUAYwB0AFQAbwBvAGwDAAACjQAAAPwAAAIyAAABT/sAAAAQAFYAZQByAHMAaQBvAG4AcwAAAAA2AAAAiQAAAAAAAAAA/AAAAEsAAAEqAAABKgEAAB36AAAAAQEAAAAH+wAAABgARABvAGMAdQBtAGUAbgB0AEkAbgBmAG8BAAAAAP////8AAACMAP////sAAAASAEIAeQB0AGUAVABhAGIAbABlAQAAAAD/////AAAAXAD////7AAAADgBTAHQAcgBpAG4AZwBzAQAAAAD/////AAAAiQD////7AAAAEABDAGgAZQBjAGsAcwB1AG0BAAAAAP////8AAAEFAP////sAAAAcAFMAdAByAHUAYwB0AHUAcgBlAHMAVABvAG8AbAEAAAAA/////wAAAJkA////+wAAABQAUwB0AHIAdQBjAHQAVABvAG8AbAMAAAKNAAAA/AAAAjIAAAFP+wAAABQAUABPAEQARABlAGMAbwBkAGUAcgEAAAAA/////wAAAJQA/////AAAAQsAAADsAAAAAAD////6AAAAAAEAAAAB+wAAABAAQwBoAGUAYwBrAFMAdQBtAQAAAAD/////AAAAAAAAAAD8AAABdgAAAQMAAAEDAQAAHfoAAAAAAQAAAAT7AAAAGABCAGkAbgBhAHIAeQBGAGkAbAB0AGUAcgEAAAAA/////wAAAVMA////+wAAACIAQwBoAGEAcgBzAGUAdABDAG8AbgB2AGUAcgBzAGkAbwBuAQAAAAD/////AAABRAD////7AAAACABJAG4AZgBvAQAAAAD/////AAAAiQD////7AAAAEgBCAG8AbwBrAG0AYQByAGsAcwEAAAAA/////wAAAFwA////AAAAAwAABVYAAABC/AEAAAAB+wAAABAAVABlAHIAbQBpAG4AYQBsAAAAAAAAAAVWAAAAXAD///8AAADlAAACLgAAAAQAAAAEAAAACAAAAAj8AAAAAQAAAAIAAAABAAAAFgBtAGEAaQBuAFQAbwBvAGwAQgBhAHIBAAAAAAAABAYAAAAAAAAAAA==");
     const char mainWindowStateKey[] = "State";
     KConfigGroup group(KSharedConfig::openConfig(), QStringLiteral("MainWindow"));
     if (!group.hasKey(mainWindowStateKey)) {
         group.writeEntry(mainWindowStateKey, mainWindowState);
     }
+#endif
 
     setStatusBar(new Kasten::StatusBar(this));
 
@@ -170,6 +179,7 @@ void OktetaMainWindow::setupControllers()
     addXmlGuiControllerFromFactory(CloseControllerFactory(documentStrategy));
     addXmlGuiControllerFromFactory(VersionControllerFactory());
     addXmlGuiControllerFromFactory(ReadOnlyControllerFactory());
+    addXmlGuiControllerFromFactory(ViewAreaContextMenuControllerFactory(viewArea, syncManager));
     addXmlGuiControllerFromFactory(SwitchViewControllerFactory(viewArea));
     addXmlGuiControllerFromFactory(ViewAreaSplitControllerFactory(viewManager, viewArea));
     addXmlGuiControllerFromFactory(FullScreenControllerFactory(this));
@@ -186,7 +196,9 @@ void OktetaMainWindow::setupControllers()
 
     addToolFromFactory(FileSystemBrowserToolViewFactory(), FileSystemBrowserToolFactory(syncManager));
     addToolFromFactory(DocumentsToolViewFactory(), DocumentsToolFactory(documentManager));
+#if KASTEN_BUILD_TERMINALTOOL
     addToolFromFactory(TerminalToolViewFactory(), TerminalToolFactory(syncManager));
+#endif
 #ifndef NDEBUG
     addToolFromFactory(VersionViewToolViewFactory(), VersionViewToolFactory());
 #endif
@@ -301,6 +313,11 @@ void OktetaMainWindow::onDataDropped(const QMimeData* mimeData)
     }
 }
 
+void OktetaMainWindow::onNewDocumentRequested()
+{
+    mProgram->documentManager()->createManager()->createNew();
+}
+
 void OktetaMainWindow::onCloseRequest(const QVector<Kasten::AbstractView*>& views)
 {
     // group views per document
@@ -336,3 +353,5 @@ void OktetaMainWindow::onCloseRequest(const QVector<Kasten::AbstractView*>& view
 }
 
 }
+
+#include "moc_mainwindow.cpp"

@@ -11,10 +11,12 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
 // Qt
 #include <QString>
+// Std
+#include <array>
+
+class KConfigGroup;
 
 class QTextStream;
 
@@ -27,11 +29,31 @@ public:
     {
         FourBytes = 0,
         ThreeBytes = 1,
-        TwoBytes = 2
+        TwoBytes = 2,
+        _Count,
     };
+
+    static constexpr int AddressSizeCount = static_cast<int>(AddressSizeId::_Count);
+    static const std::array<QString, AddressSizeCount> addressSizeConfigValueList;
+
+private:
+    static constexpr AddressSizeId DefaultAddressSize = AddressSizeId::FourBytes;
+
+    static constexpr char AddressSizeConfigKey[] = "AddressSize";
 
 public:
     SRecStreamEncoderSettings();
+    SRecStreamEncoderSettings(const SRecStreamEncoderSettings&) = default;
+
+    ~SRecStreamEncoderSettings() = default;
+
+    SRecStreamEncoderSettings& operator=(const SRecStreamEncoderSettings&) = default;
+
+    bool operator==(const SRecStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     AddressSizeId addressSizeId = AddressSizeId::FourBytes;
@@ -61,6 +83,8 @@ private:
     static constexpr int addressLineOffset = byteCountLineOffset + byteCountLineSize;
 
     static const char hexDigits[16];
+
+    static constexpr char ConfigGroupId[] = "ByteArraySRecordStreamEncoder";
 
 private:
     static RecordType dataSequenceRecordType(SRecStreamEncoderSettings::AddressSizeId id);
@@ -96,11 +120,6 @@ private:
 };
 
 inline SRecStreamEncoderSettings ByteArraySRecStreamEncoder::settings() const { return mSettings; }
-inline void ByteArraySRecStreamEncoder::setSettings(const SRecStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 inline char ByteArraySRecStreamEncoder::charOfRecordType(RecordType type)
 { return static_cast<char>('0' + static_cast<int>(type)); }

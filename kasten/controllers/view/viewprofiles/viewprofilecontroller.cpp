@@ -17,7 +17,6 @@
 // KF
 #include <kwidgetsaddons_version.h>
 #include <KXMLGUIClient>
-#include <KXMLGUIFactory>
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -29,8 +28,7 @@ namespace Kasten {
 ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewProfileManager,
                                              QWidget* parentWidget,
                                              KXMLGUIClient* guiClient)
-    : mGuiClient(guiClient)
-    , mViewProfileManager(viewProfileManager)
+    : mViewProfileManager(viewProfileManager)
     , mParentWidget(parentWidget)
 {
     mViewProfileActionMenu =
@@ -42,6 +40,7 @@ ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewPr
 #else
     mViewProfileActionMenu->setDelayed(false);
 #endif
+    mViewProfileActionMenu->setEnabled(false);
 
     mCreateNewAction =
         new QAction(QIcon::fromTheme(QStringLiteral("document-new")),
@@ -49,6 +48,7 @@ ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewPr
                           "Create New..."),
                     this);
     connect(mCreateNewAction, &QAction::triggered, this, &ViewProfileController::onCreateNewActionTriggered);
+    mCreateNewAction->setEnabled(false);
 
     mSaveChangesAction =
         new QAction(QIcon::fromTheme(QStringLiteral("document-save")),
@@ -56,6 +56,7 @@ ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewPr
                           "Save Changes"),
                     this);
     connect(mSaveChangesAction, &QAction::triggered, this, &ViewProfileController::onSaveChangesActionTriggered);
+    mSaveChangesAction->setEnabled(false);
 
     mResetChangesAction =
         new QAction(QIcon::fromTheme(QStringLiteral("document-revert")),
@@ -63,6 +64,7 @@ ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewPr
                           "Reset Changes"),
                     this);
     connect(mResetChangesAction, &QAction::triggered, this, &ViewProfileController::onResetChangesActionTriggered);
+    mResetChangesAction->setEnabled(false);
 
     mViewProfileActionMenu->addAction(mCreateNewAction);
     mViewProfileActionMenu->addSeparator();
@@ -82,17 +84,20 @@ ViewProfileController::ViewProfileController(ByteArrayViewProfileManager* viewPr
             this, &ViewProfileController::onViewProfilesChanged);
 
     onViewProfilesChanged();
-
-    setTargetModel(nullptr);
 }
 
 void ViewProfileController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const  byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayViewProfileSynchronizer) {
         mByteArrayViewProfileSynchronizer->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
     mByteArrayViewProfileSynchronizer = mByteArrayView ? mByteArrayView->synchronizer() : nullptr;
 
     const bool hasSynchronizer = (mByteArrayViewProfileSynchronizer != nullptr);
@@ -226,3 +231,5 @@ void ViewProfileController::onSaveChangesActionTriggered()
 }
 
 }
+
+#include "moc_viewprofilecontroller.cpp"

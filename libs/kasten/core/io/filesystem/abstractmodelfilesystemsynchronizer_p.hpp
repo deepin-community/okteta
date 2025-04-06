@@ -16,6 +16,7 @@
 // Qt
 #include <QDateTime>
 
+class KDirWatch;
 class QNetworkConfigurationManager;
 
 namespace Kasten {
@@ -24,7 +25,6 @@ class AbstractModelFileSystemSynchronizerPrivate : public AbstractModelSynchroni
 {
 public:
     explicit AbstractModelFileSystemSynchronizerPrivate(AbstractModelFileSystemSynchronizer* parent);
-    AbstractModelFileSystemSynchronizerPrivate() = delete;
 
     ~AbstractModelFileSystemSynchronizerPrivate() override;
 

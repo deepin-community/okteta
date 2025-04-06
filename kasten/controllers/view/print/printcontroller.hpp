@@ -9,8 +9,6 @@
 #ifndef KASTEN_PRINTCONTROLLER_HPP
 #define KASTEN_PRINTCONTROLLER_HPP
 
-// lib
-#include "oktetakastencontrollers_export.hpp"
 // Kasten gui
 #include <Kasten/AbstractXmlGuiController>
 
@@ -21,7 +19,7 @@ namespace Kasten {
 
 class PrintTool;
 
-class OKTETAKASTENCONTROLLERS_EXPORT PrintController : public AbstractXmlGuiController
+class PrintController : public AbstractXmlGuiController
 {
     Q_OBJECT
 
@@ -37,6 +35,7 @@ public: // TODO: this is a hack to enable the browser extension of the KPart to 
 
 private:
     QAction* mPrintAction;
+    QAction* mPrintPreviewAction;
 
     PrintTool* mPrintTool;
 };

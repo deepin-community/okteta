@@ -16,12 +16,11 @@
 #include <Kasten/AbstractModelExporterConfigEditor>
 // Kasten core
 #include <Kasten/ModelCodecManager>
-#include <Kasten/AbstractDocument>
+#include <Kasten/AbstractModel>
 #include <Kasten/AbstractModelExporter>
 #include <Kasten/AbstractModelSelection>
 // KF
 #include <KXMLGUIClient>
-#include <KXMLGUIFactory>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KSelectAction>
@@ -45,16 +44,21 @@ ExportController::ExportController(ModelCodecViewManager* modelCodecViewManager,
 
     guiClient->actionCollection()->addAction(QStringLiteral("export"), mExportSelectAction);
 
-    setTargetModel(nullptr);
+    updateActions();
 }
 
 void ExportController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const dataSelectableModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    if (dataSelectableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    mModel = dataSelectableModel;
     mSelectionControl = mModel ? qobject_cast<If::DataSelectable*>(mModel) : nullptr;
 
     if (mSelectionControl) {
@@ -84,7 +88,7 @@ void ExportController::updateActions()
             mExportSelectAction->addAction(action);
         }
     } else {
-        QAction* noneAction = new QAction(i18nc("@item There are no exporters.", "Not available."), mExportSelectAction);
+        auto* noneAction = new QAction(i18nc("@item There are no exporters.", "Not available."), mExportSelectAction);
         noneAction->setEnabled(false);
         mExportSelectAction->addAction(noneAction);
     }
@@ -102,8 +106,8 @@ void ExportController::onActionTriggered(QAction* action)
         mModelCodecViewManager->createConfigEditor(exporter);
 
     if (configEditor) {
-        ExportDialog* dialog = new ExportDialog(exporter->remoteTypeName(), configEditor, exporter,
-                                                QApplication::activeWindow());
+        auto* dialog = new ExportDialog(exporter->remoteTypeName(), configEditor, exporter,
+                                        QApplication::activeWindow());
         dialog->setData(mModel, selection);
         connect(dialog, &ExportDialog::exportAccepted, this, &ExportController::triggerExecution);
         dialog->open();
@@ -120,3 +124,5 @@ void ExportController::triggerExecution(AbstractModelExporter* exporter,
 }
 
 }
+
+#include "moc_exportcontroller.cpp"

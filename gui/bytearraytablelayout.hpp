@@ -46,9 +46,12 @@ class OKTETAGUI_EXPORT ByteArrayTableLayout
 {
 public:
     ByteArrayTableLayout(Size noOfBytesPerLine, Address firstLineOffset, Address startOffset, Address byteArrayOffset, Size byteArrayLength);
-    // ByteArrayTableLayout();
+    ByteArrayTableLayout() = delete;
+    ByteArrayTableLayout(const ByteArrayTableLayout&) = delete;
 
     ~ByteArrayTableLayout();
+
+    ByteArrayTableLayout& operator=(const ByteArrayTableLayout&) = delete;
 
 public: // given values
     /** */
@@ -157,9 +160,9 @@ public: // modification access; return true if changes
 
 private:
     /** calculates the start coord by startoffset and number of bytes per line */
-    void calcStart();
+    OKTETAGUI_NO_EXPORT void calcStart();
     /** calculates the final coord by startoffset, length, and number of bytes per line */
-    void calcEnd();
+    OKTETAGUI_NO_EXPORT void calcEnd();
 
 private:
     /** how many chars per line */

@@ -14,11 +14,11 @@
 
 class AbstractByteArrayFilterParameterSet;
 
-class QPushButton;
 class KComboBox;
 
 class QStackedWidget;
 class QString;
+class QAction;
 
 namespace Kasten {
 
@@ -42,17 +42,19 @@ private: // separation
     void addFilters();
 
 private Q_SLOTS:
+    void onFilterChanged(int filterId);
     void onFilterClicked();
     void onOperationChange(int index);
     void onHasWriteableChanged(bool hasWriteable);
     void onCharCodecChanged(const QString& charCodecName);
+    void onValuesChanged();
     void onValidityChanged(bool isValid);
 
 private:
     FilterTool* mTool;
     KComboBox* mOperationComboBox;
     QStackedWidget* mParameterSetEditStack;
-    QPushButton* mFilterButton;
+    QAction* mFilterAction;
 };
 
 inline FilterTool* FilterView::tool() const { return mTool; }

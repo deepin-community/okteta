@@ -17,7 +17,6 @@
 #include <Kasten/Okteta/ByteArrayDocument>
 // Okteta core
 #include <Okteta/AbstractByteArrayModel>
-#include <Okteta/ArrayChangeMetricsList>
 // KF
 #include <KLocalizedString>
 // Qt
@@ -50,12 +49,17 @@ bool InfoTool::isStatisticUptodate() const
 
 void InfoTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(mStatisticTableModel);
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -144,3 +148,5 @@ void InfoTool::updateStatistic()
 }
 
 }
+
+#include "moc_infotool.cpp"

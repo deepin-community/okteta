@@ -1,10 +1,9 @@
-# Weng Xuetian <wengxt@gmail.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
-"PO-Revision-Date: 2021-03-27 17:31\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
+"PO-Revision-Date: 2024-03-30 19:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -76,7 +75,7 @@ msgstr "嵌入的十六进制编辑器"
 #: partfactory.cpp:37
 #, kde-format
 msgid "Copyright 2003-%1 Friedrich W. H. Kossebau"
-msgstr ""
+msgstr "版权所有 2003-%1 Friedrich W. H. Kossebau"
 
 #: partfactory.cpp:39
 #, kde-format

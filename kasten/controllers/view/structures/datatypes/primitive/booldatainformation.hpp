@@ -21,6 +21,7 @@ public:
     static QString staticValueString(T val, int base = Kasten::StructureViewPreferences::unsignedDisplayBase());
     static PrimitiveDataType staticType();
     static T fromVariant(const QVariant& value, bool* ok);
+    static QVariant staticToQVariant(T value);
 
     static QWidget* staticCreateEditWidget(QWidget* parent);
     static QVariant staticDataFromWidget(const QWidget* w);
@@ -52,9 +53,15 @@ template <typename T>
 inline QScriptValue BoolDataInformationMethods<T>::asScriptValue(T value, QScriptEngine* engine,
                                                                  ScriptHandlerInfo* handler)
 {
-    Q_UNUSED(engine);
-    Q_UNUSED(handler);
+    Q_UNUSED(engine)
+    Q_UNUSED(handler)
     return {(value != 0)};
+}
+
+template <typename T>
+inline QVariant BoolDataInformationMethods<T>::staticToQVariant(T value)
+{
+    return UIntDataInformationMethods<T>::staticToQVariant(value);
 }
 
 template <typename T>

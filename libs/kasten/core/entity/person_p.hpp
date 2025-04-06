@@ -21,13 +21,12 @@ class PersonPrivate : public QSharedData
 {
 public:
     PersonPrivate(const QString& name, const QIcon& faceIcon);
-    PersonPrivate() = delete;
 
     ~PersonPrivate();
 
 public:
-    QString name() const;
-    QIcon faceIcon() const;
+    const QString& name() const;
+    const QIcon& faceIcon() const;
 
 private:
     QString mName;
@@ -41,8 +40,8 @@ inline PersonPrivate::PersonPrivate(const QString& name, const QIcon& faceIcon)
 
 inline PersonPrivate::~PersonPrivate() = default;
 
-inline QString PersonPrivate::name()   const { return mName; }
-inline QIcon PersonPrivate::faceIcon() const { return mFaceIcon; }
+inline const QString& PersonPrivate::name()   const { return mName; }
+inline const QIcon& PersonPrivate::faceIcon() const { return mFaceIcon; }
 
 }
 

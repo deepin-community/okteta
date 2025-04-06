@@ -32,8 +32,6 @@
 #include <Okteta/Versionable>
 #include <Okteta/TextByteArrayAnalyzer>
 #include <Okteta/Bookmark>
-// KF
-#include <KLocalizedString>
 // Qt
 #include <QScroller>
 #include <QPainter>
@@ -45,7 +43,9 @@
 #include <QGestureEvent>
 #include <QTapGesture>
 #include <QPinchGesture>
+#include <QStyle>
 #include <QStyleHints>
+#include <QInputMethod>
 #include <QApplication>
 #include <QToolTip>
 #include <QMimeData>
@@ -61,8 +61,6 @@ static constexpr Address DefaultFirstLineOffset = 0;
 
 // zooming is done in steps of font size points
 static constexpr int DefaultZoomStep = 1;
-static constexpr int MinFontPointSize = 4;
-static constexpr int MaxFontPointSize = 128;
 
 static constexpr AbstractByteArrayView::ValueCoding DefaultValueCoding =  AbstractByteArrayView::HexadecimalCoding;
 static constexpr AbstractByteArrayView::CharCoding DefaultCharCoding = AbstractByteArrayView::LocalEncoding;
@@ -143,11 +141,10 @@ AbstractByteArrayViewPrivate::AbstractByteArrayViewPrivate(AbstractByteArrayView
     , mReadOnly(false)
     , mOverWriteOnly(false)
     , mOverWrite(true)
-    , mInZooming(false)
     , mCursorPaused(false)
     , mBlinkCursorVisible(false)
     , mCursorVisible(false)
-    // , mDefaultFontSize( p->font().pointSize() ) crashes in font()
+    , m_wasFocussedByMouseClick(false)
     , mResizeStyle(DefaultResizeStyle)
 {
 }
@@ -186,6 +183,10 @@ void AbstractByteArrayViewPrivate::init()
 {
     Q_Q(AbstractByteArrayView);
 
+    // TODO: check if the crash noted with the constructor of FontScalingZoomState still holds
+    // if not, move to constructor init
+    m_fontScalingZoomState.initFont(q->font());
+
     // initialize layout
     mTableLayout->setLength(mByteArrayModel->size());
     mTableLayout->setNoOfLinesPerPage(q->noOfLinesPerPage());
@@ -194,6 +195,8 @@ void AbstractByteArrayViewPrivate::init()
 
     mOffsetColumn =
         new OffsetColumnRenderer(mStylist, mTableLayout, OffsetFormat::Hexadecimal);
+    const int headerMargin = q->style()->pixelMetric(QStyle::PM_HeaderMargin);
+    mOffsetColumn->setMargin(headerMargin);
     mOffsetBorderColumn =
         new BorderColumnRenderer(mStylist, false);
 
@@ -220,8 +223,11 @@ void AbstractByteArrayViewPrivate::init()
 
     setWheelController(mZoomWheelController);
 
+    q->setAttribute(Qt::WA_InputMethodEnabled);
+    q->setInputMethodHints(Qt::ImhNoAutoUppercase | Qt::ImhNoPredictiveText);
+
     QObject::connect(QGuiApplication::styleHints(), &QStyleHints::cursorFlashTimeChanged,
-                     q, [&](int flashTime) { onCursorFlashTimeChanged(flashTime); });
+                     q, [this](int flashTime) { onCursorFlashTimeChanged(flashTime); });
 
     q->setAcceptDrops(true);
 
@@ -266,18 +272,18 @@ void AbstractByteArrayViewPrivate::setByteArrayModel(AbstractByteArrayModel* byt
     }
 
     QObject::connect(mByteArrayModel, &AbstractByteArrayModel::readOnlyChanged,
-                     q, [&](bool isReadOnly) { onByteArrayReadOnlyChange(isReadOnly); });
+                     q, [this](bool isReadOnly) { onByteArrayReadOnlyChange(isReadOnly); });
     QObject::connect(mByteArrayModel, &AbstractByteArrayModel::contentsChanged,
-                     q, [&](const Okteta::ArrayChangeMetricsList& changeList) { onContentsChanged(changeList); });
+                     q, [this](const Okteta::ArrayChangeMetricsList& changeList) { onContentsChanged(changeList); });
 
-    Bookmarkable* bookmarks = qobject_cast<Bookmarkable*>(mByteArrayModel);
+    auto* bookmarks = qobject_cast<Bookmarkable*>(mByteArrayModel);
     if (bookmarks) {
         QObject::connect(mByteArrayModel, SIGNAL(bookmarksAdded(QVector<Okteta::Bookmark>)),
                          q, SLOT(onBookmarksChange(QVector<Okteta::Bookmark>)));
         QObject::connect(mByteArrayModel, SIGNAL(bookmarksRemoved(QVector<Okteta::Bookmark>)),
                          q, SLOT(onBookmarksChange(QVector<Okteta::Bookmark>)));
     }
-    Versionable* versionControl = qobject_cast<Versionable*>(mByteArrayModel);
+    auto* versionControl = qobject_cast<Versionable*>(mByteArrayModel);
     if (versionControl) {
         QObject::connect(mByteArrayModel, SIGNAL(revertedToVersionIndex(int)),
                          q, SLOT(onRevertedToVersionIndex(int)));
@@ -334,12 +340,46 @@ void AbstractByteArrayViewPrivate::changeEvent(QEvent* event)
 
     q->ColumnsView::changeEvent(event);
 
-    if (event->type() == QEvent::FontChange
-        && !mInZooming) {
-        mDefaultFontSize = q->font().pointSize();
-        // TODO: why reset zoomlevel here? should this not rather recalculate the new applied font size?
-        mZoomLevel = 1.0;
+    switch (event->type()) {
+    case QEvent::FontChange: {
+        // update rendering font to new font, using current scaling
+        m_fontScalingZoomState.setFont(q->font());
+
+        adjustTToScaledFont();
+
+        // might this need atomic signalling rather?
+        emit q->zoomLevelChanged(m_fontScalingZoomState.scale());
+        emit q->zoomLevelsChanged();
+        break;
     }
+    case QEvent::StyleChange: {
+        // get new values
+        const int headerMargin = q->style()->pixelMetric(QStyle::PM_HeaderMargin);
+        mOffsetColumn->setMargin(headerMargin);
+
+        // update all dependent structures
+        mTableLayout->setNoOfLinesPerPage(q->noOfLinesPerPage());
+
+        updateViewByWidth();
+
+        if (mCursorVisible) {
+            updateCursors();
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+double AbstractByteArrayViewPrivate::zoomScaleForLevel(int level)   const
+{
+    return m_fontScalingZoomState.scaleForLevel(level);
+}
+
+int AbstractByteArrayViewPrivate::zoomLevelForScale(double zoomScale) const
+{
+    return m_fontScalingZoomState.levelForScale(zoomScale);
 }
 
 void AbstractByteArrayViewPrivate::zoomIn()  { zoomIn(DefaultZoomStep); }
@@ -349,105 +389,53 @@ void AbstractByteArrayViewPrivate::zoomIn(int pointIncrement)
 {
     Q_Q(AbstractByteArrayView);
 
-    QFont newFont(q->font());
-    int newPointSize = QFontInfo(newFont).pointSize() + pointIncrement;
-    if (newPointSize > MaxFontPointSize) {
-        newPointSize = MaxFontPointSize;
-    }
+    m_fontScalingZoomState.zoomIn(pointIncrement);
 
-    mZoomLevel = (double)newPointSize / mDefaultFontSize;
-    newFont.setPointSize(newPointSize);
+    adjustTToScaledFont();
 
-    mInZooming = true;
-    q->setFont(newFont);
-    mInZooming = false;
-
-    emit q->zoomLevelChanged(mZoomLevel);
+    emit q->zoomLevelChanged(m_fontScalingZoomState.scale());
 }
 
 void AbstractByteArrayViewPrivate::zoomOut(int pointDecrement)
 {
     Q_Q(AbstractByteArrayView);
 
-    QFont newFont(q->font());
-    int newPointSize = QFontInfo(newFont).pointSize() - pointDecrement;
-    if (newPointSize < MinFontPointSize) {
-        newPointSize = MinFontPointSize;
-    }
+    m_fontScalingZoomState.zoomOut(pointDecrement);
 
-    mZoomLevel = (double)newPointSize / mDefaultFontSize;
-    newFont.setPointSize(newPointSize);
+    adjustTToScaledFont();
 
-    mInZooming = true;
-    q->setFont(newFont);
-    mInZooming = false;
-
-    emit q->zoomLevelChanged(mZoomLevel);
+    emit q->zoomLevelChanged(m_fontScalingZoomState.scale());
 }
 
 void AbstractByteArrayViewPrivate::zoomTo(int newPointSize)
 {
     Q_Q(AbstractByteArrayView);
 
-    if (newPointSize < MinFontPointSize) {
-        newPointSize = MinFontPointSize;
-    } else if (newPointSize > MaxFontPointSize) {
-        newPointSize = MaxFontPointSize;
-    }
-
-    QFont newFont(q->font());
-    if (QFontInfo(newFont).pointSize() == newPointSize) {
+    if (!m_fontScalingZoomState.zoomTo(newPointSize)) {
         return;
     }
 
-    newFont.setPointSize(newPointSize);
-    mZoomLevel = (double)newPointSize / mDefaultFontSize;
+    adjustTToScaledFont();
 
-    mInZooming = true;
-    q->setFont(newFont);
-    mInZooming = false;
-
-    emit q->zoomLevelChanged(mZoomLevel);
+    emit q->zoomLevelChanged(m_fontScalingZoomState.scale());
 }
 
 void AbstractByteArrayViewPrivate::unZoom()
 {
-    zoomTo(mDefaultFontSize);
+    zoomTo(m_fontScalingZoomState.defaultFontSize());
 }
 
-void AbstractByteArrayViewPrivate::setZoomLevel(double zoomLevel)
+void AbstractByteArrayViewPrivate::setZoomScale(double zoomScale)
 {
     Q_Q(AbstractByteArrayView);
 
-    const int currentPointSize = q->fontInfo().pointSize();
-
-    // TODO: here we catch any new zoomlevels which are out of bounds and the zoom already at that bound
-    if ((currentPointSize <= MinFontPointSize && zoomLevel < (double)MinFontPointSize / mDefaultFontSize)
-        || (MaxFontPointSize <= currentPointSize && (double)MaxFontPointSize / mDefaultFontSize < zoomLevel)) {
+    if (!m_fontScalingZoomState.setScale(zoomScale)) {
         return;
     }
 
-    int newPointSize = (int)(zoomLevel * mDefaultFontSize);
-    if (newPointSize < MinFontPointSize) {
-        newPointSize = MinFontPointSize;
-    } else if (newPointSize > MaxFontPointSize) {
-        newPointSize = MaxFontPointSize;
-    }
+    adjustTToScaledFont();
 
-    QFont newFont(q->font());
-
-    // other than in zoomTo(), where the new zoomlevel is calculated from the integers, here
-    // use the passed zoomlevel value, to avoid getting trapped inside a small integer value,
-    // if the zoom tool operates relatively
-    // think about, if this is the right approach
-    mZoomLevel = zoomLevel;
-    newFont.setPointSize(newPointSize);
-
-    mInZooming = true;
-    q->setFont(newFont);
-    mInZooming = false;
-
-    emit q->zoomLevelChanged(mZoomLevel);
+    emit q->zoomLevelChanged(m_fontScalingZoomState.scale());
 }
 
 void AbstractByteArrayViewPrivate::setStartOffset(Address startOffset)
@@ -660,8 +648,6 @@ void AbstractByteArrayViewPrivate::setMarking(const AddressRange& _marking)
 // TODO: make this use select( start, end )
 bool AbstractByteArrayViewPrivate::selectWord(Address index)
 {
-    Q_Q(AbstractByteArrayView);
-
     bool result = false;
 
     if (0 <= index && index < mTableLayout->length()) {
@@ -685,8 +671,6 @@ bool AbstractByteArrayViewPrivate::selectWord(Address index)
 // TODO: make this use select( start, end )
 void AbstractByteArrayViewPrivate::selectAll(bool select)
 {
-    Q_Q(AbstractByteArrayView);
-
     pauseCursor();
     finishByteEditor();
 
@@ -702,8 +686,6 @@ void AbstractByteArrayViewPrivate::selectAll(bool select)
 
 void AbstractByteArrayViewPrivate::setCursorPosition(Address index, bool behind)
 {
-    Q_Q(AbstractByteArrayView);
-
     pauseCursor();
     finishByteEditor();
 
@@ -723,8 +705,6 @@ void AbstractByteArrayViewPrivate::setCursorPosition(Address index, bool behind)
 
 void AbstractByteArrayViewPrivate::setSelectionCursorPosition(Address index)
 {
-    Q_Q(AbstractByteArrayView);
-
     pauseCursor();
     finishByteEditor();
 
@@ -742,8 +722,6 @@ void AbstractByteArrayViewPrivate::setSelectionCursorPosition(Address index)
 
 void AbstractByteArrayViewPrivate::setSelection(const AddressRange& _selection)
 {
-    Q_Q(AbstractByteArrayView);
-
     AddressRange selection(_selection);
     selection.restrictEndTo(mTableLayout->length() - 1);
 
@@ -1052,12 +1030,12 @@ void AbstractByteArrayViewPrivate::initPainterFromWidget(QPainter* painter) cons
     const QPalette& palette = q->palette();
     painter->setPen(QPen(palette.brush(q->foregroundRole()), 1));
     painter->setBrush(palette.brush(q->backgroundRole()));
-    painter->setFont(q->font());
+    painter->setFont(renderingFont());
 }
 
 QMenu* AbstractByteArrayViewPrivate::createStandardContextMenu(QPoint position)
 {
-    Q_UNUSED(position);
+    Q_UNUSED(position)
 
     Q_Q(AbstractByteArrayView);
 
@@ -1074,6 +1052,15 @@ QMenu* AbstractByteArrayViewPrivate::createStandardContextMenu(QPoint position)
     mKeyNavigator->addContextMenuActions(menu);
 
     return menu;
+}
+
+void AbstractByteArrayViewPrivate::keyPressEvent(QKeyEvent* keyEvent)
+{
+    Q_Q(AbstractByteArrayView);
+
+    if (!controller()->handleKeyPress(keyEvent)) {
+        q->ColumnsView::keyPressEvent(keyEvent);
+    }
 }
 
 void AbstractByteArrayViewPrivate::mousePressEvent(QMouseEvent* mouseEvent)
@@ -1098,6 +1085,13 @@ void AbstractByteArrayViewPrivate::mouseMoveEvent(QMouseEvent* mouseEvent)
     }
 }
 
+bool isStyleRequestingSoftwareInputPanelOnMouseClick(QWidget* widget)
+{
+    const auto behavior = QStyle::RequestSoftwareInputPanel(
+                    widget->style()->styleHint(QStyle::SH_RequestSoftwareInputPanel));
+    return (behavior == QStyle::RSIP_OnMouseClick);
+}
+
 void AbstractByteArrayViewPrivate::mouseReleaseEvent(QMouseEvent* mouseEvent)
 {
     Q_Q(AbstractByteArrayView);
@@ -1107,6 +1101,16 @@ void AbstractByteArrayViewPrivate::mouseReleaseEvent(QMouseEvent* mouseEvent)
     } else {
         q->ColumnsView::mouseReleaseEvent(mouseEvent);
     }
+
+    if (!isEffectiveReadOnly() && q->rect().contains(mouseEvent->pos())) {
+        if (mouseEvent->button() == Qt::LeftButton && qApp->autoSipEnabled()) {
+            if (!m_wasFocussedByMouseClick || isStyleRequestingSoftwareInputPanelOnMouseClick(q)) {
+                QGuiApplication::inputMethod()->show();
+            }
+        }
+    }
+
+    m_wasFocussedByMouseClick = false;
 }
 
 // gets called after press and release instead of a plain press event (?)
@@ -1121,12 +1125,22 @@ void AbstractByteArrayViewPrivate::mouseDoubleClickEvent(QMouseEvent* mouseEvent
     }
 }
 
+void AbstractByteArrayViewPrivate::wheelEvent(QWheelEvent* wheelEvent)
+{
+    Q_Q(AbstractByteArrayView);
+
+    if (!wheelController()->handleWheelEvent(wheelEvent)) {
+        q->ColumnsView::wheelEvent(wheelEvent);
+    }
+}
+
 bool AbstractByteArrayViewPrivate::event(QEvent* event)
 {
     Q_Q(AbstractByteArrayView);
 
     //
-    if (event->type() == QEvent::KeyPress) {
+    switch (event->type()) {
+    case QEvent::KeyPress: {
         auto* keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab) {
             q->keyPressEvent(keyEvent);
@@ -1134,37 +1148,53 @@ bool AbstractByteArrayViewPrivate::event(QEvent* event)
                 return true;
             }
         }
-    } else if ((event->type() == QEvent::MouseMove) ||
-               (event->type() == QEvent::MouseButtonPress) ||
-               (event->type() == QEvent::MouseButtonRelease)) {
+        break;
+    }
+    case QEvent::ShortcutOverride: {
+        auto* const keyEvent = static_cast<QKeyEvent*>(event);
+        controller()->handleShortcutOverrideEvent(keyEvent);
+        break;
+    }
+    case QEvent::MouseMove:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease: {
         // discard any events synthesized from touch input
         auto* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->source() == Qt::MouseEventSynthesizedByQt) {
             event->accept();
             return true;
         }
-    } else if ((event->type() == QEvent::PaletteChange)) {
+        break;
+    }
+    case QEvent::PaletteChange: {
         if (mCursorVisible) {
             updateCursors();
         }
-    } else if ((event->type() == QEvent::ContextMenu) &&
-               (static_cast<QContextMenuEvent*>(event)->reason() == QContextMenuEvent::Keyboard)) {
-        ensureCursorVisible();
+        break;
+    }
+    case QEvent::ContextMenu: {
+        auto* const contextMenuEvent = static_cast<QContextMenuEvent*>(event);
+        if (contextMenuEvent->reason() == QContextMenuEvent::Keyboard) {
+            ensureCursorVisible();
 
-        const QPoint cursorPos = cursorRect().center();
-        QContextMenuEvent adaptedContextMenuEvent(QContextMenuEvent::Keyboard, cursorPos,
-                                                  q->viewport()->mapToGlobal(cursorPos));
-        adaptedContextMenuEvent.setAccepted(event->isAccepted());
+            const QPoint cursorPos = cursorRect().center();
+            QContextMenuEvent adaptedContextMenuEvent(QContextMenuEvent::Keyboard, cursorPos,
+                                                    q->viewport()->mapToGlobal(cursorPos));
+            adaptedContextMenuEvent.setAccepted(event->isAccepted());
 
-        const bool result = q->ColumnsView::event(&adaptedContextMenuEvent);
-        event->setAccepted(adaptedContextMenuEvent.isAccepted());
+            const bool result = q->ColumnsView::event(&adaptedContextMenuEvent);
+            event->setAccepted(adaptedContextMenuEvent.isAccepted());
 
-        return result;
-    } else if (event->type() == QEvent::Gesture) {
+            return result;
+        }
+        break;
+    }
+    case QEvent::Gesture: {
         auto* gestureEvent = static_cast<QGestureEvent*>(event);
         if (auto* tapGesture = static_cast<QTapGesture*>(gestureEvent->gesture(Qt::TapGesture))) {
             return mTapNavigator->handleTapGesture(tapGesture);
-        } else if (auto* tapAndHoldGesture = static_cast<TouchOnlyTapAndHoldGesture*>(gestureEvent->gesture(touchOnlyTapAndHoldGestureType()))) {
+        }
+        if (auto* tapAndHoldGesture = static_cast<TouchOnlyTapAndHoldGesture*>(gestureEvent->gesture(touchOnlyTapAndHoldGestureType()))) {
             if (tapAndHoldGesture->state() == Qt::GestureFinished) {
                 const QPoint viewPortPos = tapAndHoldGesture->position().toPoint();
                 const QPoint pos = viewPortPos + q->viewport()->pos();
@@ -1188,6 +1218,10 @@ bool AbstractByteArrayViewPrivate::event(QEvent* event)
         } else if (auto* pinchGesture = static_cast<QPinchGesture*>(gestureEvent->gesture(Qt::PinchGesture))) {
             return mZoomPinchController->handlePinchGesture(pinchGesture);
         };
+        break;
+    }
+    default:
+        break;
     }
 
     return q->ColumnsView::event(event);
@@ -1197,12 +1231,13 @@ bool AbstractByteArrayViewPrivate::viewportEvent(QEvent* event)
 {
     Q_Q(AbstractByteArrayView);
 
-    if (event->type() == QEvent::ToolTip) {
+    switch (event->type()) {
+    case QEvent::ToolTip: {
         auto* helpEvent = static_cast<QHelpEvent*>(event);
 
         QString toolTip;
 
-        Bookmarkable* bookmarks = qobject_cast<Bookmarkable*>(mByteArrayModel);
+        auto* bookmarks = qobject_cast<Bookmarkable*>(mByteArrayModel);
         if (bookmarks) {
             const Address index = indexByPoint(q->viewportToColumns(helpEvent->pos()));
             if (index != -1) {
@@ -1220,15 +1255,19 @@ bool AbstractByteArrayViewPrivate::viewportEvent(QEvent* event)
         }
 
         return true;
-    } else if ((event->type() == QEvent::MouseMove) ||
-               (event->type() == QEvent::MouseButtonPress) ||
-               (event->type() == QEvent::MouseButtonRelease)) {
+    }
+    case QEvent::MouseMove:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease: {
         // discard any events synthesized from touch input
         auto* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->source() == Qt::MouseEventSynthesizedByQt) {
             event->accept();
             return true;
         }
+    }
+    default:
+        break;
     }
 
     return q->ColumnsView::viewportEvent(event);
@@ -1255,10 +1294,14 @@ void AbstractByteArrayViewPrivate::focusInEvent(QFocusEvent* focusEvent)
 {
     Q_Q(AbstractByteArrayView);
 
+    const Qt::FocusReason focusReason = focusEvent->reason();
+    if (focusReason == Qt::MouseFocusReason) {
+        m_wasFocussedByMouseClick = true;
+    }
+
     q->ColumnsView::focusInEvent(focusEvent);
     startCursor();
 
-    const Qt::FocusReason focusReason = focusEvent->reason();
     if (focusReason != Qt::ActiveWindowFocusReason
         && focusReason != Qt::PopupFocusReason) {
         emit q->focusChanged(true);

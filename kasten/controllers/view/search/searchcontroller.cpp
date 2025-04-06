@@ -12,6 +12,7 @@
 #include "searchdialog.hpp"
 #include "searchtool.hpp"
 // KF
+#include <kwidgetsaddons_version.h>
 #include <KXMLGUIClient>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -67,7 +68,12 @@ void SearchController::setTargetModel(AbstractModel* model)
 
 void SearchController::find()
 {
-    showDialog(FindForward);
+    // ensure dialog
+    if (!mSearchDialog) {
+        mSearchDialog = new SearchDialog(mTool, mParentWidget);
+    }
+
+    mSearchDialog->show();
 }
 
 void SearchController::findNext()
@@ -104,7 +110,7 @@ void SearchController::showDialog(FindDirection direction)
 void SearchController::onDataNotFound()
 {
     const QString messageBoxTitle = i18nc("@title:window", "Find");
-    KMessageBox::sorry(mParentWidget, i18nc("@info", "Search key not found in byte array."), messageBoxTitle);
+    KMessageBox::information(mParentWidget, i18nc("@info", "Search key not found in byte array."), messageBoxTitle);
 }
 
 bool SearchController::queryContinue(FindDirection direction) const
@@ -114,12 +120,24 @@ bool SearchController::queryContinue(FindDirection direction) const
                              xi18nc("@info", "End of byte array reached.<nl/>Continue from the beginning?") :
                              xi18nc("@info", "Beginning of byte array reached.<nl/>Continue from the end?");
 
-    const int answer = KMessageBox::questionYesNo(mParentWidget, question, messageBoxTitle,
-                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel());
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const int answer = KMessageBox::questionTwoActions(mParentWidget,
+#else
+    const int answer = KMessageBox::questionYesNo(mParentWidget,
+#endif
+                                                  question, messageBoxTitle,
+                                                  KStandardGuiItem::cont(),
+                                                  KStandardGuiItem::cancel());
 
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const bool result = (answer != KMessageBox::SecondaryAction);
+#else
     const bool result = (answer != KMessageBox::No);
+#endif
 
     return result;
 }
 
 }
+
+#include "moc_searchcontroller.cpp"

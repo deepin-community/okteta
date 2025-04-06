@@ -24,7 +24,8 @@
 // Qt
 #include <QPushButton>
 #include <QListWidgetItem>
-#include <QLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QSizePolicy>
 
 StructuresManagerView::StructuresManagerView(Kasten::StructuresTool* tool, QWidget* parent)
@@ -43,8 +44,14 @@ StructuresManagerView::StructuresManagerView(Kasten::StructuresTool* tool, QWidg
     auto* buttonsLayout = new QHBoxLayout();
     pageLayout->addLayout(buttonsLayout);
 
+    // silence deprecation warning
+    // porting away would need new dep on library KNSWidgets
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+    QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
     mGetNewStructuresButton = new KNS3::Button(i18n("Get New Structures..."),
                                                QStringLiteral("okteta-structures.knsrc"), this);
+    QT_WARNING_POP
     connect(mGetNewStructuresButton, &KNS3::Button::dialogFinished,
             this, &StructuresManagerView::onGetNewStructuresClicked);
     buttonsLayout->addWidget(mGetNewStructuresButton);
@@ -159,7 +166,13 @@ void StructuresManagerView::rebuildPluginSelectorEntries()
         layoutObj->removeWidget(mStructuresSelector);
         delete mStructuresSelector;
     }
+    // silence deprecation warning
+    // porting away would need a too big rework for a bugfix branch
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+    QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
     mStructuresSelector = new KPluginSelector(this);
+    QT_WARNING_POP
     connect(mStructuresSelector, &KPluginSelector::changed,
             this, &StructuresManagerView::onPluginSelectorChange);
     layoutObj->insertWidget(0, mStructuresSelector);
@@ -175,3 +188,5 @@ void StructuresManagerView::rebuildPluginSelectorEntries()
     mRebuildingPluginsList = false;
     reloadSelectedItems();
 }
+
+#include "moc_structuresmanagerview.cpp"

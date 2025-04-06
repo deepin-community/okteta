@@ -12,8 +12,7 @@
 // Kasten core
 #include <Kasten/AbstractModelDataGenerator>
 // Qt
-#include <QObject>
-#include <QString>
+#include <QByteArray>
 
 namespace Kasten {
 
@@ -21,6 +20,11 @@ class ByteArraySequenceGeneratorSettings
 {
 public:
     ByteArraySequenceGeneratorSettings();
+    ByteArraySequenceGeneratorSettings(const ByteArraySequenceGeneratorSettings&) = default;
+
+    ~ByteArraySequenceGeneratorSettings() = default;
+
+    ByteArraySequenceGeneratorSettings& operator=(const ByteArraySequenceGeneratorSettings&) = default;
 
 public:
     QByteArray pattern;

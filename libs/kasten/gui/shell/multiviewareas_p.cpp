@@ -9,8 +9,6 @@
 #include "multiviewareas_p.hpp"
 
 // lib
-#include "viewbox.hpp"
-#include "toolinlineviewwidget.hpp"
 #include <abstracttoolinlineview.hpp>
 #include <abstractview.hpp>
 // Kasten core
@@ -32,31 +30,44 @@ MultiViewAreasPrivate::~MultiViewAreasPrivate()
     delete mMainSplitter;
 }
 
-void MultiViewAreasPrivate::init()
+TabbedViews* MultiViewAreasPrivate::createViewArea(QSplitter* splitter)
 {
     Q_Q(MultiViewAreas);
 
-    mMainSplitter = new QSplitter();
-
-    // create start view area
     auto* viewArea = new TabbedViews();
+
     QObject::connect(viewArea, &AbstractViewArea::focusChanged,
-                     q, [&](bool hasFocus) { onViewAreaFocusChanged(hasFocus); });
+                     q, [this](bool hasFocus) { onViewAreaFocusChanged(hasFocus); });
     QObject::connect(viewArea, &AbstractGroupedViews::viewFocusChanged,
                      q, &AbstractGroupedViews::viewFocusChanged);
     QObject::connect(viewArea, &AbstractGroupedViews::closeRequest,
                      q, &AbstractGroupedViews::closeRequest);
     QObject::connect(viewArea, &AbstractGroupedViews::removing,
-                     q, [&]() { onViewsRemoved(); });
+                     q, [this]() { onViewsRemoved(); });
+
+    QObject::connect(viewArea, &TabbedViews::contextMenuRequested,
+                     q, [this](AbstractView* view, QPoint pos) { onContextMenuRequested(view, pos); });
     QObject::connect(viewArea, &TabbedViews::dataOffered,
                      q, &MultiViewAreas::dataOffered);
     QObject::connect(viewArea, &TabbedViews::dataDropped,
                      q, &MultiViewAreas::dataDropped);
+    QObject::connect(viewArea, &TabbedViews::newDocumentRequested,
+                     q, &MultiViewAreas::newDocumentRequested);
 
     mViewAreaList.append(viewArea);
     mCurrentViewArea = viewArea;
 
-    mMainSplitter->addWidget(viewArea->widget());
+    splitter->addWidget(viewArea->widget());
+
+    return viewArea;
+}
+
+void MultiViewAreasPrivate::init()
+{
+    mMainSplitter = new QSplitter();
+
+    // create start view area
+    createViewArea(mMainSplitter);
 }
 
 AbstractViewArea* MultiViewAreasPrivate::splitViewArea(AbstractViewArea* _viewArea, Qt::Orientation orientation)
@@ -79,25 +90,10 @@ AbstractViewArea* MultiViewAreasPrivate::splitViewArea(AbstractViewArea* _viewAr
         baseSplitter->setSizes(baseSplitterSizes);
     }
 
-    auto* secondViewArea = new TabbedViews();
-    QObject::connect(secondViewArea, &AbstractViewArea::focusChanged,
-                     q, [&](bool hasFocus) { onViewAreaFocusChanged(hasFocus); });
-    QObject::connect(secondViewArea, &AbstractGroupedViews::viewFocusChanged,
-                     q, &AbstractGroupedViews::viewFocusChanged);
-    QObject::connect(secondViewArea, &AbstractGroupedViews::closeRequest,
-                     q, &AbstractGroupedViews::closeRequest);
-    QObject::connect(secondViewArea, &AbstractGroupedViews::removing,
-                     q, [&]() { onViewsRemoved(); });
-    QObject::connect(secondViewArea, &TabbedViews::dataOffered,
-                     q, &MultiViewAreas::dataOffered);
-    QObject::connect(secondViewArea, &TabbedViews::dataDropped,
-                     q, &MultiViewAreas::dataDropped);
-
-    mViewAreaList.append(secondViewArea);
-    mCurrentViewArea = secondViewArea;
-
     splitter->setOrientation(orientation == Qt::Horizontal ? Qt::Vertical : Qt::Horizontal);
-    splitter->addWidget(secondViewArea->widget());
+
+    TabbedViews* secondViewArea = createViewArea(splitter);
+
     // set to equal sizes
     QList<int> splitterSizes = splitter->sizes();
     // TODO: check if there are more, style-dependent spaces
@@ -198,11 +194,21 @@ void MultiViewAreasPrivate::onViewAreaFocusChanged(bool hasFocus)
     }
 }
 
+void MultiViewAreasPrivate::onContextMenuRequested(AbstractView* view, QPoint pos)
+{
+    Q_Q(MultiViewAreas);
+
+    auto* viewArea = qobject_cast<TabbedViews*>(q->sender());
+
+    auto* viewAreaWidget = viewArea->widget();
+    emit q->contextMenuRequested(viewArea, view, viewAreaWidget->mapTo(mMainSplitter, pos));
+}
+
 #if 0
 void MultiViewAreasPrivate::onModifiedChanged(AbstractDocument::SyncStates newStates)
 {
     Q_UNUSED(newStates)
-    AbstractView * view = qobject_cast<AbstractView*>(sender());
+    auto* view = qobject_cast<AbstractView*>(sender());
     if (view) {
         const int index = indexOf(view);
         if (index != -1) {

@@ -14,7 +14,6 @@
 #include <KLocalizedString>
 // Qt
 #include <QFormLayout>
-#include <QLabel>
 #include <QLineEdit>
 
 namespace Kasten {
@@ -55,3 +54,5 @@ void ByteArrayXxencodingStreamEncoderConfigEditor::onSettingsChanged()
 }
 
 }
+
+#include "moc_bytearrayxxencodingstreamencoderconfigeditor.cpp"

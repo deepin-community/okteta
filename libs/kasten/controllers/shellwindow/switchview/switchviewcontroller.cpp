@@ -14,8 +14,6 @@
 // KF
 #include <KXMLGUIClient>
 #include <KActionCollection>
-// Qt
-#include <QActionGroup>
 
 namespace Kasten {
 
@@ -85,3 +83,5 @@ void SwitchViewController::backward()
 }
 
 }
+
+#include "moc_switchviewcontroller.cpp"

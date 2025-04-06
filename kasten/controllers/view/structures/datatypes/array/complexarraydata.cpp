@@ -96,6 +96,11 @@ QString ComplexArrayData::typeName() const
     return i18nc("type name, then array length", "%1[%2]", type, QString::number(length()));
 }
 
+QString ComplexArrayData::valueString() const
+{
+    return QString();
+}
+
 void ComplexArrayData::setNewParentForChildren()
 {
     for (auto* child : qAsConst(mChildren)) {
@@ -139,7 +144,7 @@ QScriptValue ComplexArrayData::toScriptValue(uint index, QScriptEngine* engine,
     return mChildren.at(index)->toScriptValue(engine, handlerInfo);
 }
 
-qint64 ComplexArrayData::readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining)
+qint64 ComplexArrayData::readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address, BitCount64 bitsRemaining)
 {
     qint64 readBits = 0;
     TopLevelDataInformation* top = mParent->topLevelDataInformation();

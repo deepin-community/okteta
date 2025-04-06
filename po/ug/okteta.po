@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: okteta\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-02-02 09:50+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -27,44 +27,44 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
 
-#: about.cpp:16
+#: about.cpp:17
 #, kde-format
 msgid "Okteta"
 msgstr "Okteta"
 
-#: about.cpp:18
+#: about.cpp:19
 #, kde-format
 msgid "Hex editor"
 msgstr ""
 
-#: about.cpp:20
+#: about.cpp:21
 #, fuzzy, kde-format
 #| msgid "Friedrich W. H. Kossebau"
 msgid "2006-%1 Friedrich W. H. Kossebau"
 msgstr "Friedrich W. H. Kossebau"
 
-#: about.cpp:21
+#: about.cpp:22
 #, kde-format
 msgid "Edit the raw data of files"
 msgstr "ھۆججەتنىڭ خام سانلىق-مەلۇماتلىرىنى تەھرىرلەش"
 
-#: about.cpp:26
+#: about.cpp:27
 #, kde-format
 msgid "Friedrich W. H. Kossebau"
 msgstr "Friedrich W. H. Kossebau"
 
-#: about.cpp:27
+#: about.cpp:28
 #, kde-format
 msgid "Author"
 msgstr "ئاپتور"
 
-#: about.cpp:29
+#: about.cpp:30
 #, kde-format
 msgctxt "Author"
 msgid "Alexander Richardson"
 msgstr "Alexander Richardson"
 
-#: about.cpp:30
+#: about.cpp:31
 #, kde-format
 msgctxt "Task description"
 msgid "Structures tool"
@@ -78,19 +78,24 @@ msgid "Permissions"
 msgstr "ئىمتىيازلار"
 
 #. i18n: ectx: Menu (windows)
-#: oktetaui.rc:69
+#: oktetaui.rc:65
 #, kde-format
 msgid "&Windows"
 msgstr "كۆزنەكلەر(&W)"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: oktetaui.rc:82
+#: oktetaui.rc:78
 #, kde-format
 msgid "Main Toolbar"
 msgstr "ئاساسىي قورال بالداق"
 
-#: program.cpp:90
+#: program.cpp:91
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "ئوقۇيدىغان ھۆججەتلەر"
+
+#, fuzzy
+#~| msgid "Friedrich W. H. Kossebau"
+#~ msgid "SPDX-FileCopyrightText: 2006-2020 Friedrich W. H. Kossebau "
+#~ msgstr "Friedrich W. H. Kossebau"

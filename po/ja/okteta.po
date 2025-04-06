@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: okteta\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-02-02 09:50+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2011-04-08 21:22-0700\n"
 "Last-Translator: Fumiaki Okushi <okushi@kde.gr.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 "X-Generator: Lokalize 1.0\n"
@@ -34,44 +34,44 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ybando@k6.dion.ne.jp,democtezuma@gmail.com"
 
-#: about.cpp:16
+#: about.cpp:17
 #, kde-format
 msgid "Okteta"
 msgstr "Okteta"
 
-#: about.cpp:18
+#: about.cpp:19
 #, kde-format
 msgid "Hex editor"
 msgstr "バイナリエディタ"
 
-#: about.cpp:20
+#: about.cpp:21
 #, fuzzy, kde-format
 #| msgid "Friedrich W. H. Kossebau"
 msgid "2006-%1 Friedrich W. H. Kossebau"
 msgstr "Friedrich W. H. Kossebau"
 
-#: about.cpp:21
+#: about.cpp:22
 #, kde-format
 msgid "Edit the raw data of files"
 msgstr "ファイルの生データを編集"
 
-#: about.cpp:26
+#: about.cpp:27
 #, kde-format
 msgid "Friedrich W. H. Kossebau"
 msgstr "Friedrich W. H. Kossebau"
 
-#: about.cpp:27
+#: about.cpp:28
 #, kde-format
 msgid "Author"
 msgstr "作者"
 
-#: about.cpp:29
+#: about.cpp:30
 #, kde-format
 msgctxt "Author"
 msgid "Alexander Richardson"
 msgstr "Alexander Richardson"
 
-#: about.cpp:30
+#: about.cpp:31
 #, kde-format
 msgctxt "Task description"
 msgid "Structures tool"
@@ -86,18 +86,18 @@ msgid "Permissions"
 msgstr "パーミッション(&M)"
 
 #. i18n: ectx: Menu (windows)
-#: oktetaui.rc:69
+#: oktetaui.rc:65
 #, kde-format
 msgid "&Windows"
 msgstr "ウィンドウ(&W)"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: oktetaui.rc:82
+#: oktetaui.rc:78
 #, kde-format
 msgid "Main Toolbar"
 msgstr "メインツールバー"
 
-#: program.cpp:90
+#: program.cpp:91
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."

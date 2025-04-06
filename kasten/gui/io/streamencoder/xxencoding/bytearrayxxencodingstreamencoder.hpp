@@ -11,17 +11,33 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
 // Qt
 #include <QString>
+
+class KConfigGroup;
 
 namespace Kasten {
 
 class XxencodingStreamEncoderSettings
 {
+private:
+    static const QString DefaultFileName;
+
+    static constexpr char FileNameConfigKey[] = "FileName";
+
 public:
     XxencodingStreamEncoderSettings();
+    XxencodingStreamEncoderSettings(const XxencodingStreamEncoderSettings&) = default;
+
+    ~XxencodingStreamEncoderSettings() = default;
+
+    XxencodingStreamEncoderSettings& operator=(const XxencodingStreamEncoderSettings&) = default;
+
+    bool operator==(const XxencodingStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     QString fileName;
@@ -38,6 +54,13 @@ public:
         Second,
         Third
     };
+private:
+    static constexpr int defaultxxInputLineLength = 45;
+    static constexpr int xxInputLineLength = defaultxxInputLineLength;
+    static constexpr int xxInputGroupLength = 3;
+    static constexpr int maxXxInputGroupsPerLine = xxInputLineLength / xxInputGroupLength;
+
+    static constexpr char ConfigGroupId[] = "ByteArrayXxencodingStreamEncoder";
 
 public:
     ByteArrayXxencodingStreamEncoder();
@@ -58,11 +81,6 @@ private:
 };
 
 inline XxencodingStreamEncoderSettings ByteArrayXxencodingStreamEncoder::settings() const { return mSettings; }
-inline void ByteArrayXxencodingStreamEncoder::setSettings(const XxencodingStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 }
 

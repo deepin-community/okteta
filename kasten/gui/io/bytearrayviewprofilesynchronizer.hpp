@@ -65,28 +65,28 @@ Q_SIGNALS:
     void viewProfileChanged(const Kasten::ByteArrayViewProfile::Id& viewProfileId);
 
 private Q_SLOTS:
-    void onViewProfilesChanged(const QVector<Kasten::ByteArrayViewProfile>& viewProfiles);
-    void onViewProfilesRemoved(const QVector<Kasten::ByteArrayViewProfile::Id>& viewProfileIds);
+    OKTETAKASTENGUI_NO_EXPORT void onViewProfilesChanged(const QVector<Kasten::ByteArrayViewProfile>& viewProfiles);
+    OKTETAKASTENGUI_NO_EXPORT void onViewProfilesRemoved(const QVector<Kasten::ByteArrayViewProfile::Id>& viewProfileIds);
 
     // TODO: turn to one signal/slot with enum parameter for property and QVariant as new value
-    void onShowsNonprintingChanged();
-    void onOffsetCodingChanged();
-    void onValueCodingChanged();
-    void onCharCodecChanged();
-    void onSubstituteCharChanged();
-    void onUndefinedCharChanged();
-    void onVisibleByteArrayCodingsChanged();
-    void onOffsetColumnVisibleChanged();
-    void onNoOfBytesPerLineChanged();
-    void onNoOfGroupedBytesChanged();
-    void onLayoutStyleChanged();
-    void onViewModusChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onShowsNonprintingChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onOffsetCodingChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onValueCodingChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onCharCodecChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onSubstituteCharChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onUndefinedCharChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onVisibleByteArrayCodingsChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onOffsetColumnVisibleChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onNoOfBytesPerLineChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onNoOfGroupedBytesChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onLayoutStyleChanged();
+    OKTETAKASTENGUI_NO_EXPORT void onViewModusChanged();
 
 private:
-    void updateView(const ByteArrayViewProfile& viewProfile);
-    void updateViewProfile(ByteArrayViewProfile& viewProfile);
-    void setDirtyFlag(int dirtyFlag);
-    void connectViewSignals();
+    OKTETAKASTENGUI_NO_EXPORT void updateView(const ByteArrayViewProfile& viewProfile);
+    OKTETAKASTENGUI_NO_EXPORT void updateViewProfile(ByteArrayViewProfile& viewProfile);
+    OKTETAKASTENGUI_NO_EXPORT void setDirtyFlag(int dirtyFlag);
+    OKTETAKASTENGUI_NO_EXPORT void connectViewSignals();
 
 private:
     ByteArrayView* mView = nullptr;

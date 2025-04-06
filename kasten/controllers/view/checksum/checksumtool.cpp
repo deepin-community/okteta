@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2009, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -9,7 +9,7 @@
 // QCA
 // need to have this first, as QCA needs QT_NO_CAST_FROM_ASCII disabled when included
 #include <config-qca2.hpp> // krazy:excludeall=includes
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
 // disable QT_NO_CAST_FROM_ASCII
 #ifdef QT_NO_CAST_FROM_ASCII
 #undef QT_NO_CAST_FROM_ASCII
@@ -33,11 +33,19 @@
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/ArrayChangeMetricsList>
 // KF
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <KLocalizedString>
 // Qt
 #include <QApplication>
 
+
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+constexpr char ChecksumTool::ConfigGroupId[];
+constexpr char ChecksumTool::AlgorithmConfigKey[];
+
 
 ChecksumTool::ChecksumTool()
     : mChecksumUptodate(false)
@@ -46,18 +54,34 @@ ChecksumTool::ChecksumTool()
     setObjectName(QStringLiteral("Checksum"));
 
 // TODO: find a better place to do and store the initialization
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
     mQcaInitializer = new QCA::Initializer(QCA::Practical, 64);
     qCDebug(LOG_OKTETA_KASTEN_CONTROLLER_CHECKSUM) << QCA::supportedFeatures();// Hash::supportedTypes();
 #endif
 
     mAlgorithmList = ByteArrayChecksumAlgorithmFactory::createAlgorithms();
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    for (auto *algorithm : qAsConst(mAlgorithmList)) {
+        algorithm->loadConfig(configGroup);
+    }
+
+    mAlgorithmId = 0;
+    const QString algorithmId = configGroup.readEntry(AlgorithmConfigKey);
+    if (!algorithmId.isEmpty()) {
+        for (int i = 0; i < mAlgorithmList.size(); ++i) {
+            if (mAlgorithmList[i]->id() == algorithmId) {
+                mAlgorithmId = i;
+                break;
+            }
+        }
+    }
 }
 
 ChecksumTool::~ChecksumTool()
 {
     qDeleteAll(mAlgorithmList);
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
     delete mQcaInitializer;
 #endif
 }
@@ -80,11 +104,16 @@ AbstractByteArrayChecksumParameterSet* ChecksumTool::parameterSet()
 
 void ChecksumTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -147,8 +176,20 @@ void ChecksumTool::calculateChecksum()
 
 void ChecksumTool::setAlgorithm(int algorithmId)
 {
+    if (mAlgorithmId == algorithmId) {
+        return;
+    }
+
     mAlgorithmId = algorithmId;
     checkUptoDate();
+
+    AbstractByteArrayChecksumAlgorithm* algorithm = mAlgorithmList.at(mAlgorithmId);
+    if (algorithm) {
+        KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+        configGroup.writeEntry(AlgorithmConfigKey, algorithm->id());
+    }
+
+    emit algorithmChanged(mAlgorithmId);
     emit uptodateChanged(mChecksumUptodate);
     emit isApplyableChanged(isApplyable());
 }
@@ -159,6 +200,12 @@ void ChecksumTool::setAlgorithm(int algorithmId)
 void ChecksumTool::resetSourceTool()
 {
     mSourceAlgorithmId = -1;
+
+    AbstractByteArrayChecksumAlgorithm* algorithm = mAlgorithmList.at(mAlgorithmId);
+    if (algorithm) {
+        KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+        algorithm->saveConfig(configGroup);
+    }
 
     checkUptoDate();
     emit uptodateChanged(mChecksumUptodate);
@@ -187,3 +234,5 @@ void ChecksumTool::onSourceDestroyed()
 }
 
 }
+
+#include "moc_checksumtool.cpp"

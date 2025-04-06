@@ -12,8 +12,6 @@
 #include <oktetakastengui.hpp>
 // Okteta core
 #include <Okteta/ValueCodec>
-// KF
-#include <KLocalizedString>
 // Qt
 #include <QString>
 #include <QRegExp>
@@ -141,3 +139,5 @@ QString AddressValidator::toString(Address address, AddressType addressType) con
 }
 
 }
+
+#include "moc_addressvalidator.cpp"

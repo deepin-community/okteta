@@ -9,7 +9,6 @@
 #include "part.hpp"
 
 // part
-#include "partfactory.hpp"
 #include "browserextension.hpp"
 // Okteta Kasten controllers
 // #include <Kasten/Okteta/OverwriteOnlyControllerFactory>
@@ -18,12 +17,12 @@
 #include <Kasten/Okteta/SelectRangeControllerFactory>
 #include <Kasten/Okteta/SearchControllerFactory>
 #include <Kasten/Okteta/ReplaceControllerFactory>
-#include <Kasten/Okteta/BookmarksControllerFactory>
+// #include <Kasten/Okteta/BookmarksControllerFactory>
 #include <Kasten/Okteta/PrintControllerFactory>
 #include <Kasten/Okteta/ViewConfigControllerFactory>
 #include <Kasten/Okteta/ViewModeControllerFactory>
 #include <Kasten/Okteta/ViewContextMenuControllerFactory>
-#include <Kasten/Okteta/ViewStatusControllerFactory>
+// #include <Kasten/Okteta/ViewStatusControllerFactory>
 #include <Kasten/Okteta/ViewProfileControllerFactory>
 // Okteta Kasten
 #include <Kasten/Okteta/ByteArrayDocument>
@@ -55,7 +54,7 @@
 #endif
 // Qt
 #include <QWidget>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QUrl>
 
 static constexpr const char* UIFileName[] =
@@ -85,7 +84,7 @@ OktetaPart::OktetaPart(QObject* parent,
     setComponentData(componentData);
 #endif
 
-    QWidget* widget = new QWidget();
+    auto* widget = new QWidget();
     mLayout = new QVBoxLayout(widget);
     mLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -185,11 +184,11 @@ bool OktetaPart::openFile()
     Kasten::AbstractLoadJob* loadJob = synchronizer->startLoad(QUrl::fromLocalFile(localFilePath()));
     connect(loadJob, &Kasten::AbstractLoadJob::documentLoaded,
             this, &OktetaPart::onDocumentLoaded);
-    Kasten::JobManager::executeJob(loadJob);
+    const bool loadSuccess = Kasten::JobManager::executeJob(loadJob);
 
     delete synchronizerFactory;
 
-    return true;
+    return loadSuccess;
 }
 
 bool OktetaPart::saveFile()
@@ -239,3 +238,5 @@ void OktetaPart::onModified(Kasten::LocalSyncState state)
     const bool isModified = (state != Kasten::LocalInSync);
     setModified(isModified);
 }
+
+#include "moc_part.cpp"

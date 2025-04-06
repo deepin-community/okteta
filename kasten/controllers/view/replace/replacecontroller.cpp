@@ -13,7 +13,8 @@
 #include "replaceprompt.hpp"
 #include "replacetool.hpp"
 // KF
-#include <KXmlGuiWindow>
+#include <kwidgetsaddons_version.h>
+#include <KXMLGUIClient>
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
@@ -76,7 +77,7 @@ void ReplaceController::onFinished(bool previousFound, int noOfReplacements)
                                       i18ncp("@info", "1 replacement made.", "%1 replacements made.", noOfReplacements);
 
     if (!previousFound) {
-        KMessageBox::sorry(mParentWidget, i18nc("@info", "Replace pattern not found in byte array."), messageBoxTitle);
+        KMessageBox::information(mParentWidget, i18nc("@info", "Replace pattern not found in byte array."), messageBoxTitle);
     } else {
         KMessageBox::information(mParentWidget, replacementReport, messageBoxTitle);
     }
@@ -93,10 +94,19 @@ void ReplaceController::queryContinue(FindDirection direction, int noOfReplaceme
                              xi18nc("@info", "Beginning of byte array reached.<nl/>Continue from the end?");
 
     const QString message = replacementReport + QLatin1String("<br /><br />") + question;
-    const int answer = KMessageBox::questionYesNo(mParentWidget, message, messageBoxTitle,
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const int answer = KMessageBox::questionTwoActions(mParentWidget,
+#else
+    const int answer = KMessageBox::questionYesNo(mParentWidget,
+#endif
+                                                  message, messageBoxTitle,
                                                   KStandardGuiItem::cont(), KStandardGuiItem::cancel());
 
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const bool result = (answer != KMessageBox::SecondaryAction);
+#else
     const bool result = (answer != KMessageBox::No);
+#endif
 
     emit queryContinueFinished(result);
 }
@@ -121,3 +131,5 @@ void ReplaceController::onPromptReply(ReplaceBehaviour behaviour)
 }
 
 }
+
+#include "moc_replacecontroller.cpp"

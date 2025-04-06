@@ -15,8 +15,6 @@
 // Okteta Kasten core
 #include <Kasten/Okteta/ByteArrayDocument>
 // Okteta core
-#include <Okteta/Character>
-#include <Okteta/CharCodec>
 #include <Okteta/AbstractByteArrayModel>
 #include <Okteta/ChangesDescribable>
 // KF
@@ -41,12 +39,17 @@ bool ByteTableTool::hasWriteable() const
 
 void ByteTableTool::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? qobject_cast<ByteArrayView*>(model) : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(mByteTableModel);
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? qobject_cast<ByteArrayView*>(model) : nullptr;
+    mByteArrayView = byteArrayView;
 
     ByteArrayDocument* document =
         mByteArrayView ? qobject_cast<ByteArrayDocument*>(mByteArrayView->baseModel()) : nullptr;
@@ -79,10 +82,9 @@ void ByteTableTool::setTargetModel(AbstractModel* model)
 
 void ByteTableTool::insert(unsigned char byte, int count)
 {
-    const QByteArray data(count, byte);
+    const QByteArray data(count, static_cast<char>(byte));
 
-    Okteta::ChangesDescribable* changesDescribable =
-        qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
+    auto* changesDescribable = qobject_cast<Okteta::ChangesDescribable*>(mByteArrayModel);
 
     if (changesDescribable) {
         // TODO: how to note the byte? charcoding might change...
@@ -113,3 +115,5 @@ void ByteTableTool::onReadOnlyChanged(bool isReadOnly)
 }
 
 }
+
+#include "moc_bytetabletool.cpp"

@@ -12,9 +12,9 @@
 // Kasten gui
 #include <Kasten/AbstractToolWidget>
 
-class QPushButton;
 class QSpinBox;
 class QTreeView;
+class QAction;
 class QModelIndex;
 
 namespace Kasten {
@@ -24,6 +24,12 @@ class ByteTableTool;
 class ByteTableView : public AbstractToolWidget
 {
     Q_OBJECT
+
+private:
+    static constexpr int DefaultInsertCount = 1;
+
+    static constexpr char ConfigGroupId[] = "ByteTableTool";
+    static constexpr char InsertCountConfigKey[] = "InsertCount";
 
 public:
     explicit ByteTableView(ByteTableTool* tool, QWidget* parent = nullptr);
@@ -37,15 +43,15 @@ public Q_SLOTS:
     void onDoubleClicked(const QModelIndex& index);
 
 private Q_SLOTS:
-    void setFixedFontByGlobalSettings();
     void resizeColumnsWidth();
+    void onInsertCountEditChanged();
 
 private:
     ByteTableTool* mTool;
 
     QSpinBox* mInsertCountEdit;
     QTreeView* mByteTableView;
-    QPushButton* mInsertButton;
+    QAction* mInsertAction;
 };
 
 inline ByteTableTool* ByteTableView::tool() const { return mTool; }

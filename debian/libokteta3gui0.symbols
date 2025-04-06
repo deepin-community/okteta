@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 5:0.26.6 amd64
+# SymbolsHelper-Confirmed: 5:0.26.21 amd64 i386
 libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
 * Build-Depends-Package: okteta-dev
  _ZN6Okteta11ColumnsView10paintEventEP11QPaintEvent@Base 4:14.12.0
@@ -20,9 +20,7 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta11ColumnsView5eventEP6QEvent@Base 4:14.12.0
  _ZN6Okteta11ColumnsView9addColumnEPNS_22AbstractColumnRendererE@Base 4:14.12.0
  _ZN6Okteta11ColumnsViewC1EP7QWidget@Base 4:14.12.0
- _ZN6Okteta11ColumnsViewC1EPNS_18ColumnsViewPrivateEP7QWidget@Base 5:0.26.2
  _ZN6Okteta11ColumnsViewC2EP7QWidget@Base 4:14.12.0
- _ZN6Okteta11ColumnsViewC2EPNS_18ColumnsViewPrivateEP7QWidget@Base 5:0.26.2
  _ZN6Okteta11ColumnsViewD0Ev@Base 4:14.12.0
  _ZN6Okteta11ColumnsViewD1Ev@Base 4:14.12.0
  _ZN6Okteta11ColumnsViewD2Ev@Base 4:14.12.0
@@ -94,8 +92,6 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta20ByteArrayTableLayout18setFirstLineOffsetEi@Base 4:14.12.0
  _ZN6Okteta20ByteArrayTableLayout19setNoOfBytesPerLineEi@Base 4:14.12.0
  _ZN6Okteta20ByteArrayTableLayout19setNoOfLinesPerPageEi@Base 4:14.12.0
- _ZN6Okteta20ByteArrayTableLayout7calcEndEv@Base 4:14.12.0
- _ZN6Okteta20ByteArrayTableLayout9calcStartEv@Base 4:14.12.0
  _ZN6Okteta20ByteArrayTableLayout9setLengthEi@Base 4:14.12.0
  _ZN6Okteta20ByteArrayTableLayoutC1Eiiiii@Base 4:14.12.0
  _ZN6Okteta20ByteArrayTableLayoutC2Eiiiii@Base 4:14.12.0
@@ -127,6 +123,7 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta20OffsetColumnRenderer15renderFirstLineEP8QPainterRKNS_11NumberRangeIiiEEi@Base 5:0.26.2
  _ZN6Okteta20OffsetColumnRenderer17renderEmptyColumnEP8QPainterRKNS_11NumberRangeIiiEES6_@Base 5:0.26.2
  _ZN6Okteta20OffsetColumnRenderer9setFormatENS_12OffsetFormat6FormatERK12QFontMetrics@Base 4:14.12.0
+ _ZN6Okteta20OffsetColumnRenderer9setMarginEi@Base 5:0.26.21
  _ZN6Okteta20OffsetColumnRendererC1EPNS_21AbstractColumnStylistEPNS_20ByteArrayTableLayoutENS_12OffsetFormat6FormatE@Base 4:14.12.0
  _ZN6Okteta20OffsetColumnRendererC2EPNS_21AbstractColumnStylistEPNS_20ByteArrayTableLayoutENS_12OffsetFormat6FormatE@Base 4:14.12.0
  _ZN6Okteta20OffsetColumnRendererD0Ev@Base 4:14.12.0
@@ -184,6 +181,7 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta21AbstractByteArrayView17setByteArrayModelEPNS_22AbstractByteArrayModelE@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView17setCursorPositionEib@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView17setVisibleCodingsEi@Base 4:14.12.0
+ _ZN6Okteta21AbstractByteArrayView17zoomLevelsChangedEv@Base 5:0.26.18
  _ZN6Okteta21AbstractByteArrayView18layoutStyleChangedEi@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView18pasteFromClipboardEN10QClipboard4ModeE@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView18removeSelectedDataEv@Base 4:14.12.0
@@ -224,14 +222,10 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta21AbstractByteArrayView9pasteDataEPK9QMimeData@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView9selectAllEb@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayView9showEventEP10QShowEvent@Base 4:14.12.0
- _ZN6Okteta21AbstractByteArrayViewC1EPNS_28AbstractByteArrayViewPrivateEP7QWidget@Base 4:14.12.0
- _ZN6Okteta21AbstractByteArrayViewC2EPNS_28AbstractByteArrayViewPrivateEP7QWidget@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayViewD0Ev@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayViewD1Ev@Base 4:14.12.0
  _ZN6Okteta21AbstractByteArrayViewD2Ev@Base 4:14.12.0
- _ZN6Okteta21AbstractColumnStylistC1EPNS_28AbstractColumnStylistPrivateE@Base 4:14.12.0
  _ZN6Okteta21AbstractColumnStylistC1Ev@Base 4:14.12.0
- _ZN6Okteta21AbstractColumnStylistC2EPNS_28AbstractColumnStylistPrivateE@Base 4:14.12.0
  _ZN6Okteta21AbstractColumnStylistC2Ev@Base 4:14.12.0
  _ZN6Okteta21AbstractColumnStylistD0Ev@Base 4:14.12.0
  _ZN6Okteta21AbstractColumnStylistD1Ev@Base 4:14.12.0
@@ -245,9 +239,7 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta22AbstractColumnRenderer4setXEi@Base 4:14.12.0
  _ZN6Okteta22AbstractColumnRenderer8setWidthEi@Base 4:14.12.0
  _ZN6Okteta22AbstractColumnRendererC1EPNS_21AbstractColumnStylistE@Base 4:14.12.0
- _ZN6Okteta22AbstractColumnRendererC1EPNS_29AbstractColumnRendererPrivateE@Base 5:0.26.2
  _ZN6Okteta22AbstractColumnRendererC2EPNS_21AbstractColumnStylistE@Base 4:14.12.0
- _ZN6Okteta22AbstractColumnRendererC2EPNS_29AbstractColumnRendererPrivateE@Base 5:0.26.2
  _ZN6Okteta22AbstractColumnRendererD0Ev@Base 4:14.12.0
  _ZN6Okteta22AbstractColumnRendererD1Ev@Base 4:14.12.0
  _ZN6Okteta22AbstractColumnRendererD2Ev@Base 4:14.12.0
@@ -310,8 +302,6 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZN6Okteta31AbstractByteArrayColumnRenderer19setNoOfGroupedBytesEi@Base 4:14.12.0
  _ZN6Okteta31AbstractByteArrayColumnRenderer20setGroupSpacingWidthEi@Base 4:14.12.0
  _ZN6Okteta31AbstractByteArrayColumnRenderer3setEPNS_22AbstractByteArrayModelE@Base 4:14.12.0
- _ZN6Okteta31AbstractByteArrayColumnRendererC1EPNS_38AbstractByteArrayColumnRendererPrivateE@Base 5:0.26.2
- _ZN6Okteta31AbstractByteArrayColumnRendererC2EPNS_38AbstractByteArrayColumnRendererPrivateE@Base 5:0.26.2
  _ZN6Okteta31AbstractByteArrayColumnRendererD0Ev@Base 4:14.12.0
  _ZN6Okteta31AbstractByteArrayColumnRendererD1Ev@Base 4:14.12.0
  _ZN6Okteta31AbstractByteArrayColumnRendererD2Ev@Base 4:14.12.0
@@ -406,6 +396,10 @@ libOkteta3Gui.so.0 libokteta3gui0 #MINVER#
  _ZNK6Okteta21AbstractByteArrayView15isOverwriteOnlyEv@Base 4:14.12.0
  _ZNK6Okteta21AbstractByteArrayView15tabChangesFocusEv@Base 4:14.12.0
  _ZNK6Okteta21AbstractByteArrayView16noOfBytesPerLineEv@Base 4:14.12.0
+ _ZNK6Okteta21AbstractByteArrayView16zoomInLevelsSizeEv@Base 5:0.26.18
+ _ZNK6Okteta21AbstractByteArrayView17zoomLevelForScaleEd@Base 5:0.26.18
+ _ZNK6Okteta21AbstractByteArrayView17zoomOutLevelsSizeEv@Base 5:0.26.18
+ _ZNK6Okteta21AbstractByteArrayView17zoomScaleForLevelEi@Base 5:0.26.18
  _ZNK6Okteta21AbstractByteArrayView19offsetColumnVisibleEv@Base 4:14.12.0
  _ZNK6Okteta21AbstractByteArrayView19selectionAsMimeDataEv@Base 4:14.12.0
  _ZNK6Okteta21AbstractByteArrayView6layoutEv@Base 4:14.12.0

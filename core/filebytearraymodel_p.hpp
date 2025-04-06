@@ -24,7 +24,6 @@ class FileByteArrayModelPrivate : public AbstractByteArrayModelPrivate
 
 public:
     FileByteArrayModelPrivate(FileByteArrayModel* parent, int pageNumber, int pageSize);
-    FileByteArrayModelPrivate() = delete;
 
     ~FileByteArrayModelPrivate() override;
 
@@ -67,7 +66,7 @@ private:
     /** current offset */
     mutable unsigned int mOffsetOfActualPage;
     /** points to the actual page */
-    mutable char* mActualPage;
+    mutable char* mActualPage = nullptr;
 };
 
 inline Size FileByteArrayModelPrivate::size()        const { return mSize; }

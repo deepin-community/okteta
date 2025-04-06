@@ -34,19 +34,19 @@ Copyright: 2008-2011, Alex Richardson <alex.richardson@gmx.de>
            2008-2011, Friedrich W. H. Kossebau <kossebau@kde.org>
 License: GFDL-1.2+
 
-Files: kasten/controllers/test/allprimitivetypestest.cpp
-       kasten/controllers/test/arraydatainformationtest.cpp
-       kasten/controllers/test/basicdatainformationtest.cpp
-       kasten/controllers/test/customtostringtest.cpp
-       kasten/controllers/test/jsparsertest.cpp
-       kasten/controllers/test/locktooffsettest.cpp
-       kasten/controllers/test/osdparsertest.cpp
-       kasten/controllers/test/primitivearraytest.cpp
-       kasten/controllers/test/primitivedatainformationtest.cpp
-       kasten/controllers/test/scriptclassestest.cpp
-       kasten/controllers/test/scriptvalueconvertertest.cpp
-       kasten/controllers/test/testutils.hpp
-       kasten/controllers/test/uniondatainformationtest.cpp
+Files: kasten/controllers/view/structures/tests/allprimitivetypestest.cpp
+       kasten/controllers/view/structures/tests/arraydatainformationtest.cpp
+       kasten/controllers/view/structures/tests/basicdatainformationtest.cpp
+       kasten/controllers/view/structures/tests/customtostringtest.cpp
+       kasten/controllers/view/structures/tests/jsparsertest.cpp
+       kasten/controllers/view/structures/tests/locktooffsettest.cpp
+       kasten/controllers/view/structures/tests/osdparsertest.cpp
+       kasten/controllers/view/structures/tests/primitivearraytest.cpp
+       kasten/controllers/view/structures/tests/primitivedatainformationtest.cpp
+       kasten/controllers/view/structures/tests/scriptclassestest.cpp
+       kasten/controllers/view/structures/tests/scriptvalueconvertertest.cpp
+       kasten/controllers/view/structures/tests/testutils.hpp
+       kasten/controllers/view/structures/tests/uniondatainformationtest.cpp
 Copyright: 2011-2013, Alex Richardson <alex.richardson@gmx.de>
 License: LGPL-2.1+
 
@@ -121,10 +121,6 @@ License: CC0-1.0
  and related and neighboring rights to this software to the public domain
  worldwide. This software is distributed without any warranty.
  .
- You should have received a copy of the CC0 Public Domain Dedication along
- with this software. If not, see
- <https://creativecommons.org/publicdomain/zero/1.0/>.
- --
  On Debian systems, the complete text of the CC0 Public Domain Dedication
  can be found in `/usr/share/common-licenses/CC0-1.0’.
 
@@ -164,14 +160,6 @@ License: GPL-2+
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
  .
- This package is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <http://www.gnu.org/licenses/>
- --
  On Debian systems, the complete text of the GNU General Public License
  version 2 can be found in `/usr/share/common-licenses/GPL-2’.
 
@@ -203,21 +191,12 @@ License: LGPL-2.1+
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
  .
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- .
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- --
  On Debian systems, the complete text of the GNU Lesser General Public License
  versions 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’.
 
 License: LGPL-2+translations
  This file is distributed under the license LGPL version 2 or later.
- --
+ .
  On Debian systems, the complete text of the GNU Lesser General Public License
  versions 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’.
 
@@ -246,7 +225,7 @@ License: LGPL-2.1+3+KDEeV
 License: LGPL-2.1+3+KDEeV-translations
  This file is distributed under the license LGPL version 2.1 or
  version 3 or later versions approved by the membership of KDE e.V.
- --
+ .
  On Debian systems, the complete text of the GNU Lesser General Public
  License version 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1’,
  likewise, the complete text of the GNU Lesser General Public License version

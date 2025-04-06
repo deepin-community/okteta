@@ -21,24 +21,31 @@
 #include "settings/structuresmanagerview.hpp"
 #include "settings/structureaddremovewidget.hpp"
 
-#include "script/scriptutils.hpp"
+#include "datatypes/datainformation.hpp"
 #include "script/scriptloggerview.hpp"
 
 // #include "modeltest.hpp"
 
 // KF
-#include <KComboBox>
+#include <KStandardAction>
 #include <KLocalizedString>
 #include <KConfigDialog>
 // Qt
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QLabel>
-#include <QLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QTreeView>
 #include <QPushButton>
 #include <QHeaderView>
 #include <QFocusEvent>
+#include <QMenu>
+#include <QToolBar>
+#include <QMimeData>
+#include <QApplication>
+#include <QClipboard>
+#include <QAction>
+#include <QIcon>
 
 namespace Kasten {
 
@@ -48,9 +55,11 @@ StructureView::StructureView(StructuresTool* tool, QWidget* parent)
     , mDelegate(new StructureViewItemDelegate(this))
     , mStructTreeViewFocusChild(nullptr)
 {
-    QBoxLayout* baseLayout = new QVBoxLayout(this);
+    auto* baseLayout = new QVBoxLayout(this);
     setLayout(baseLayout);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
+
     // table
     mStructureTreeModel = new StructureTreeModel(mTool, this);
     //  mModeltest = new ModelTest(mStructureTreeModel, this);
@@ -63,62 +72,67 @@ StructureView::StructureView(StructuresTool* tool, QWidget* parent)
     mStructTreeView->setAllColumnsShowFocus(true);
     mStructTreeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     mStructTreeView->setItemDelegate(mDelegate);
-    mStructTreeView->setDragEnabled(false);
+    mStructTreeView->setDragEnabled(true);
+    mStructTreeView->setDragDropMode(QAbstractItemView::DragOnly);
     mStructTreeView->setSortingEnabled(false);
     mStructTreeView->setModel(mStructureTreeModel);
     mStructTreeView->setHeaderHidden(false);
     mStructTreeView->setSortingEnabled(false);
+    mStructTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     mStructTreeView->installEventFilter(this);
     QHeaderView* header = mStructTreeView->header();
     header->setSectionResizeMode(QHeaderView::Interactive);
+    connect(mStructTreeView, &QWidget::customContextMenuRequested,
+            this, &StructureView::onCustomContextMenuRequested);
 
     baseLayout->addWidget(mStructTreeView, 10);
 
     // settings
-    QBoxLayout* settingsLayout = new QHBoxLayout();
-    settingsLayout->setContentsMargins(0, 0, 0, 0);
-
-    baseLayout->addLayout(settingsLayout);
+    auto* actionsToolBar = new QToolBar(this);
+    actionsToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
     QIcon validateIcon = QIcon::fromTheme(QStringLiteral("document-sign"));
-    mValidateButton = new QPushButton(validateIcon, i18nc("@action:button", "Validate"), this);
+    mValidateAction =
+        actionsToolBar->addAction(validateIcon, i18nc("@action:button", "Validate"),
+                                  mTool, &StructuresTool::validateAllStructures);
     const QString validationToolTip = i18nc("@info:tooltip", "Validate all structures.");
-    mValidateButton->setToolTip(validationToolTip);
-    mValidateButton->setEnabled(false); // no point validating without file open
-    connect(mValidateButton, &QPushButton::clicked, mTool, &StructuresTool::validateAllStructures);
+    mValidateAction->setToolTip(validationToolTip);
+    mValidateAction->setEnabled(false); // no point validating without file open
     connect(mTool, &StructuresTool::byteArrayModelChanged,
             this, &StructureView::onByteArrayModelChanged);
     // TODO also disable the button if the structure has no validatable members
-    settingsLayout->addWidget(mValidateButton);
 
-    mLockStructureButton = new QPushButton(this);
-    mLockStructureButton->setCheckable(true);
-    setLockButtonState(false);
-    mLockStructureButton->setEnabled(false); // won't work at beginning
-    connect(mLockStructureButton, &QPushButton::toggled, this, &StructureView::lockButtonToggled);
+    mLockStructureAction =
+        actionsToolBar->addAction(QString(),
+                                  this, &StructureView::onLockButtonClicked);
+    mLockStructureAction->setCheckable(true);
+    mLockStructureAction->setChecked(false);
+    mLockStructureAction->setEnabled(false); // won't work at beginning
+    onLockButtonToggled(false);
+    connect(mLockStructureAction, &QAction::toggled, this, &StructureView::onLockButtonToggled);
 
-    settingsLayout->addWidget(mLockStructureButton);
-
-    settingsLayout->addStretch(); // stretch before the settings button
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    actionsToolBar->addWidget(stretcher);
 
     QIcon console = QIcon::fromTheme(QStringLiteral("utilities-terminal"));
-    mScriptConsoleButton = new QPushButton(console, i18nc("@action:button", "Script console"), this);
-    mScriptConsoleButton->setToolTip(i18nc("@info:tooltip", "Open script console."));
-    connect(mScriptConsoleButton, &QPushButton::pressed, this, &StructureView::openScriptConsole);
-    settingsLayout->addWidget(mScriptConsoleButton);
+    mScriptConsoleAction =
+        actionsToolBar->addAction(console, i18nc("@action:button", "Script console"),
+                                  this, &StructureView::openScriptConsole);
+    mScriptConsoleAction->setToolTip(i18nc("@info:tooltip", "Open script console."));
 
     QIcon settings = QIcon::fromTheme(QStringLiteral("configure"));
-    mSettingsButton = new QPushButton(settings, i18nc("@action:button", "Settings"), this);
+    mSettingsAction =
+        actionsToolBar->addAction(settings, i18nc("@action:button", "Settings"),
+                                  this, &StructureView::openSettingsDlg);
     const QString settingsTooltip = i18nc("@info:tooltip", "Open settings.");
-    mSettingsButton->setToolTip(settingsTooltip);
-    connect(mSettingsButton, &QPushButton::pressed, this, &StructureView::openSettingsDlg);
-    settingsLayout->addWidget(mSettingsButton);
+    mSettingsAction->setToolTip(settingsTooltip);
+
+    baseLayout->addWidget(actionsToolBar);
 
     connect(mStructTreeView->selectionModel(),
             &QItemSelectionModel::currentRowChanged,
             this, &StructureView::onCurrentRowChanged);
-
-    connect(mTool, &StructuresTool::cursorIndexChanged, this, &StructureView::onCursorIndexChange);
 }
 
 StructureView::~StructureView() = default;
@@ -126,14 +140,6 @@ StructureView::~StructureView() = default;
 StructuresTool* StructureView::tool() const
 {
     return mTool;
-}
-
-void StructureView::onCursorIndexChange()
-{
-    QModelIndex idx = mStructTreeView->currentIndex();
-    if (idx.isValid()) {
-        mTool->mark(idx);
-    }
 }
 
 void StructureView::openSettingsDlg()
@@ -146,8 +152,8 @@ void StructureView::openSettingsDlg()
     }
 
     // KConfigDialog didn't find an instance of this dialog, so lets create it :
-    KConfigDialog* dialog = new KConfigDialog(this, QStringLiteral("Structures Tool Settings"),
-                                              StructureViewPreferences::self());
+    auto* dialog = new KConfigDialog(this, QStringLiteral("Structures Tool Settings"),
+                                     StructureViewPreferences::self());
 
     auto* displaySettings = new StructureViewSettingsWidget();
     KPageWidgetItem* displ = dialog->addPage(displaySettings, i18n("Value Display"),
@@ -155,7 +161,7 @@ void StructureView::openSettingsDlg()
 
     // cannot use StructuresManagerView directly as page even if the only element
     // because KConfigDialogManager only scans the children of the page for kcfg_ elements
-    QWidget* structSelectionPage = new QWidget();
+    auto* structSelectionPage = new QWidget();
     auto* hbox = new QHBoxLayout();
     hbox->setContentsMargins(0, 0, 0, 0);
     structSelectionPage->setLayout(hbox);
@@ -184,8 +190,6 @@ bool StructureView::eventFilter(QObject* object, QEvent* event)
             } else {
                 mTool->unmark();
             }
-
-            setLockButtonState(current);
         } else if (event->type() == QEvent::FocusOut) {
             QWidget* treeViewFocusWidget = mStructTreeView->focusWidget();
             const bool subChildHasFocus = (treeViewFocusWidget != mStructTreeView);
@@ -214,10 +218,8 @@ void StructureView::setLockButtonState(const QModelIndex& current)
 {
     // qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "setLockButtonState() for" << current;
 
-    // we don't want the toggled signal here, only when the user clicks the button!
-    QSignalBlocker block(mLockStructureButton);
-    setLockButtonState(mTool->isStructureLocked(current));
-    mLockStructureButton->setEnabled(mTool->canStructureBeLocked(current));
+    mLockStructureAction->setEnabled(mTool->canStructureBeLocked(current));
+    mLockStructureAction->setChecked(mTool->isStructureLocked(current));
 }
 
 void StructureView::onCurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -225,52 +227,67 @@ void StructureView::onCurrentRowChanged(const QModelIndex& current, const QModel
     Q_UNUSED(previous)
     if (current.isValid() && mTool->byteArrayModel()) {
         mTool->mark(current);
-        setLockButtonState(current);
     } else {
         mTool->unmark();
     }
+    setLockButtonState(current);
 }
 
-void StructureView::lockButtonToggled()
+void StructureView::onLockButtonClicked(bool checked)
 {
     // qCDebug(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "Lock button toggled";
 
-    setLockButtonState(mLockStructureButton->isChecked());
     const QModelIndex current = mStructTreeView->selectionModel()->currentIndex();
     if (!current.isValid()) {
         qCWarning(LOG_KASTEN_OKTETA_CONTROLLERS_STRUCTURES) << "it should not be possible to toggle this button when current index is invalid!";
         return;
     }
 
-    if (mLockStructureButton->isChecked()) {
+    if (checked) {
         mTool->lockStructure(current);
     } else {
         mTool->unlockStructure(current);
     }
 }
 
-void StructureView::setLockButtonState(bool structureLocked)
+void StructureView::onLockButtonToggled(bool structureLocked)
 {
     if (structureLocked) {
-        mLockStructureButton->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
-        mLockStructureButton->setText(i18nc("@action:button"
+        mLockStructureAction->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
+        mLockStructureAction->setText(i18nc("@action:button"
                                             " unlock the starting offset of the current structure", "Unlock"));
-        mLockStructureButton->setToolTip(i18nc("@info:tooltip",
+        mLockStructureAction->setToolTip(i18nc("@info:tooltip",
                                                "Unlock selected structure, i.e. the starting offset is"
                                                " always set to the current cursor position."));
     } else {
-        mLockStructureButton->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
-        mLockStructureButton->setText(i18nc("@action:button"
+        mLockStructureAction->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
+        mLockStructureAction->setText(i18nc("@action:button"
                                             " unlock the starting offset of the current structure", "Lock"));
-        mLockStructureButton->setToolTip(i18nc("@info:tooltip",
+        mLockStructureAction->setToolTip(i18nc("@info:tooltip",
                                                "Lock selected structure to current offset."));
     }
-    mLockStructureButton->setChecked(structureLocked);
+}
+
+void StructureView::selectBytesInView()
+{
+    auto* action = static_cast<QAction*>(sender());
+    const QModelIndex index = action->data().toModelIndex();
+
+    mTool->selectBytesInView(index);
+}
+
+void StructureView::copyToClipboard()
+{
+    auto* action = static_cast<QAction*>(sender());
+    const QModelIndex index = action->data().toModelIndex();
+    QMimeData* mimeData = mStructTreeView->model()->mimeData({index});
+
+    QApplication::clipboard()->setMimeData(mimeData);
 }
 
 void StructureView::openScriptConsole()
 {
-    QDialog* dialog = new QDialog(this);
+    auto* dialog = new QDialog(this);
     dialog->setWindowTitle(i18nc("@title:window", "Structures Script Console"));
     auto* layout = new QVBoxLayout;
     auto* dialogButtonBox = new QDialogButtonBox;
@@ -285,10 +302,44 @@ void StructureView::openScriptConsole()
 void StructureView::onByteArrayModelChanged(Okteta::AbstractByteArrayModel* model)
 {
     const bool validModel = (model != nullptr);
-    QModelIndex current = mStructTreeView->currentIndex();
-    mLockStructureButton->setEnabled(mTool->canStructureBeLocked(current));
-    setLockButtonState(mTool->isStructureLocked(current));
-    mValidateButton->setEnabled(validModel);
+    const QModelIndex current = mStructTreeView->currentIndex();
+    setLockButtonState(current);
+    mValidateAction->setEnabled(validModel);
+}
+
+void StructureView::onCustomContextMenuRequested(QPoint pos)
+{
+    const QModelIndex index = mStructTreeView->indexAt(pos);
+    if (!index.isValid()) {
+        return;
+    }
+    const auto* data = index.data(StructureTreeModel::DataInformationRole).value<DataInformation*>();
+    if (!data) {
+        return;
+    }
+    if (!data->wasAbleToRead()) {
+        return;
+    }
+
+    auto* menu = new QMenu(this);
+
+    // TODO: split into explicit "Copy As Data" and "Copy As Text"
+    auto* copyAction =  KStandardAction::copy(this, &StructureView::copyToClipboard,  this);
+    copyAction->setShortcut(QKeySequence());
+    copyAction->setData(index);
+    menu->addAction(copyAction);
+
+    // TODO: reusing string due to string freeze
+    auto* selectAction = new QAction(QIcon::fromTheme(QStringLiteral("select-rectangular")),
+                                     i18nc("@action:button", "&Select"), this);
+    connect(selectAction, &QAction::triggered,
+            this, &StructureView::selectBytesInView);
+    selectAction->setData(index);
+    menu->addAction(selectAction);
+
+    menu->popup(mStructTreeView->viewport()->mapToGlobal(pos));
 }
 
 }
+
+#include "moc_structureview.cpp"

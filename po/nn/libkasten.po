@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-03-23 07:47+0100\n"
+"POT-Creation-Date: 2025-03-07 03:30+0000\n"
 "PO-Revision-Date: 2018-08-25 16:52+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -19,13 +19,13 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:74
+#: controllers/document/modified/modifiedbarcontroller.cpp:76
 #, kde-format
 msgctxt "@tooltip the document is modified"
 msgid "Modified."
 msgstr "Endra."
 
-#: controllers/document/modified/modifiedbarcontroller.cpp:75
+#: controllers/document/modified/modifiedbarcontroller.cpp:77
 #, kde-format
 msgctxt "@tooltip the document is not modified"
 msgid "Not modified."
@@ -55,7 +55,7 @@ msgctxt "@option:check set the document to read-write"
 msgid "Set Read-write"
 msgstr "Gjer les- og skrivbar"
 
-#: controllers/document/terminal/terminaltool.cpp:32
+#: controllers/document/terminal/terminaltool.cpp:31
 #: controllers/document/terminal/terminaltoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
@@ -94,30 +94,32 @@ msgid "Versions"
 msgstr "Versjonar"
 
 #: controllers/documentsystem/close/closecontroller.cpp:40
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:56
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All"
 msgstr "Lukk alle"
 
 #: controllers/documentsystem/close/closecontroller.cpp:47
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:63
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Close All Other"
 msgstr "Lukk alle andre"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:41
+#: controllers/documentsystem/creator/creatorcontroller.cpp:36
 #, kde-format
 msgctxt "@title:menu create new byte arrays from different sources"
 msgid "New"
 msgstr "Ny"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:54
+#: controllers/documentsystem/creator/creatorcontroller.cpp:49
 #, kde-format
 msgctxt "@item:inmenu create a new empty document"
 msgid "Empty"
 msgstr "Tom"
 
-#: controllers/documentsystem/creator/creatorcontroller.cpp:65
+#: controllers/documentsystem/creator/creatorcontroller.cpp:60
 #, kde-format
 msgctxt "@item:inmenu create a new document from data in the clipboard"
 msgid "From Clipboard"
@@ -144,57 +146,57 @@ msgctxt "@title:window"
 msgid "Documents"
 msgstr "Dokument"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:33
+#: controllers/documentsystem/filesystembrowser/filesystembrowsertool.cpp:32
 #: controllers/documentsystem/filesystembrowser/filesystembrowsertoolviewfactory.cpp:24
 #, kde-format
 msgctxt "@title:window"
 msgid "Filesystem"
 msgstr "Filsystem"
 
-#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:79
+#: controllers/documentsystem/filesystembrowser/filesystembrowserview.cpp:99
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Folder of Current Document"
 msgstr "Mappa til dokumentet"
 
-#: controllers/io/copyas/copyascontroller.cpp:44
+#: controllers/io/copyas/copyascontroller.cpp:43
 #, kde-format
 msgctxt "@title:menu"
 msgid "Copy As"
 msgstr "Kopier som"
 
-#: controllers/io/copyas/copyascontroller.cpp:91
+#: controllers/io/copyas/copyascontroller.cpp:95
 #, kde-format
 msgctxt "@item There are no encoders."
 msgid "Not available."
 msgstr "Ikkje tilgjengeleg."
 
-#: controllers/io/copyas/copyasdialog.cpp:39
+#: controllers/io/copyas/copyasdialog.cpp:40
 #, kde-format
 msgctxt "@title:window"
 msgid "Copy As"
 msgstr "Kopier som"
 
-#: controllers/io/copyas/copyasdialog.cpp:61
-#: controllers/io/export/exportdialog.cpp:61
+#: controllers/io/copyas/copyasdialog.cpp:62
+#: controllers/io/export/exportdialog.cpp:62
 #, kde-format
 msgctxt "@title:group"
 msgid "Preview"
 msgstr "Førehandsvising"
 
-#: controllers/io/copyas/copyasdialog.cpp:72
+#: controllers/io/copyas/copyasdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Copy to clipboard"
 msgstr "&Kopier til utklippstavla"
 
-#: controllers/io/copyas/copyasdialog.cpp:74
+#: controllers/io/copyas/copyasdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Copy the selected data to the clipboard."
 msgstr "Kopier merkt data til utklippstavla."
 
-#: controllers/io/copyas/copyasdialog.cpp:76
+#: controllers/io/copyas/copyasdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -205,38 +207,38 @@ msgstr ""
 "Trykk <interface>Kopier til utklippstavla</interface> for å kopiera dei "
 "merkte dataa til utklippstavla med innstillingane over."
 
-#: controllers/io/export/exportcontroller.cpp:40
+#: controllers/io/export/exportcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Export"
 msgstr "Eksporter"
 
-#: controllers/io/export/exportcontroller.cpp:87
+#: controllers/io/export/exportcontroller.cpp:91
 #, kde-format
 msgctxt "@item There are no exporters."
 msgid "Not available."
 msgstr "Ikkje tilgjengeleg."
 
-#: controllers/io/export/exportdialog.cpp:39
-#: core/system/modelcodecmanager_p.cpp:101
+#: controllers/io/export/exportdialog.cpp:40
+#: core/system/modelcodecmanager_p.cpp:102
 #, kde-format
 msgctxt "@title:window"
 msgid "Export"
 msgstr "Eksporter"
 
-#: controllers/io/export/exportdialog.cpp:72
+#: controllers/io/export/exportdialog.cpp:73
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export to File..."
 msgstr "&Eksporter til fil …"
 
-#: controllers/io/export/exportdialog.cpp:74
+#: controllers/io/export/exportdialog.cpp:75
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Export the selected data to a file."
 msgstr "Eksporter dei merkte dataa til ei fil."
 
-#: controllers/io/export/exportdialog.cpp:76
+#: controllers/io/export/exportdialog.cpp:77
 #, kde-kuit-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -246,13 +248,13 @@ msgstr ""
 "Trykk <interface>Eksporter til fil</interface> for å lagra dei merkte dataa "
 "i ei fil med innstillingane over."
 
-#: controllers/io/insert/insertcontroller.cpp:40
+#: controllers/io/insert/insertcontroller.cpp:39
 #, kde-format
 msgctxt "@title:menu"
 msgid "Insert"
 msgstr "Set inn"
 
-#: controllers/io/insert/insertcontroller.cpp:90
+#: controllers/io/insert/insertcontroller.cpp:94
 #, kde-format
 msgctxt "@item There are no generators."
 msgid "Not available."
@@ -288,6 +290,7 @@ msgstr ""
 "ovanfor og setja inn dataa ved skrivemerket i dokumentet."
 
 #: controllers/io/synchronize/synchronizecontroller.cpp:34
+#: controllers/shellwindow/viewareacontextmenu/viewareacontextmenucontroller.cpp:38
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Reloa&d"
@@ -311,7 +314,7 @@ msgctxt "@action:inmenu"
 msgid "Close View Area"
 msgstr "Lukk visingsrute"
 
-#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:77
+#: controllers/shellwindow/viewlistmenu/viewlistmenucontroller.cpp:73
 #, kde-format
 msgctxt "@item There are no windows."
 msgid "None."
@@ -323,51 +326,51 @@ msgctxt "@action:inmenu"
 msgid "Undo"
 msgstr "Angra."
 
-#: controllers/view/version/versioncontroller.cpp:43
+#: controllers/view/version/versioncontroller.cpp:44
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Redo"
 msgstr "Gjer om."
 
-#: controllers/view/version/versioncontroller.cpp:130
+#: controllers/view/version/versioncontroller.cpp:134
 #, kde-format
 msgctxt "@action Undo: [change]"
 msgid "Undo: %1"
 msgstr "Angra: %1"
 
-#: controllers/view/version/versioncontroller.cpp:150
+#: controllers/view/version/versioncontroller.cpp:154
 #, kde-format
 msgctxt "@action Redo: [change]"
 msgid "Redo: %1"
 msgstr "Gjer om: %1"
 
-#: controllers/view/zoom/zoomcontroller.cpp:36
+#: controllers/view/zoom/zoomcontroller.cpp:45
 #, kde-format
 msgid "Zoom"
 msgstr "Forstørring"
 
-#: controllers/view/zoom/zoomcontroller.cpp:45
+#: controllers/view/zoom/zoomcontroller.cpp:54
 #, kde-format
 msgctxt "zoom-factor (percentage)"
 msgid "%1%"
 msgstr "%1 %"
 
-#: controllers/view/zoom/zoomcontroller.cpp:58
+#: controllers/view/zoom/zoomcontroller.cpp:67
 #, kde-format
 msgid "&Fit to Width"
 msgstr "&Tilpass sidebreidd"
 
-#: controllers/view/zoom/zoomcontroller.cpp:60
+#: controllers/view/zoom/zoomcontroller.cpp:69
 #, kde-format
 msgid "&Fit to Height"
 msgstr "&Tilpass sidehøgd"
 
-#: controllers/view/zoom/zoomcontroller.cpp:62
+#: controllers/view/zoom/zoomcontroller.cpp:71
 #, kde-format
 msgid "&Fit to Size"
 msgstr "&Tilpass sidestorleik"
 
-#: controllers/view/zoom/zoomslider.cpp:107
+#: controllers/view/zoom/zoomslider.cpp:150
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Zoom: %1%"
@@ -379,19 +382,19 @@ msgctxt "@title:window"
 msgid "Save As"
 msgstr "Lagra som"
 
-#: core/system/documentsyncmanager_p.cpp:202
+#: core/system/documentsyncmanager_p.cpp:213
 #, kde-format
 msgctxt "@title:window"
 msgid "Close"
 msgstr "Lukk"
 
-#: core/system/documentsyncmanager_p.cpp:237
+#: core/system/documentsyncmanager_p.cpp:248
 #, kde-format
 msgctxt "@title:window"
 msgid "Reload"
 msgstr "Last om att"
 
-#: core/system/modelcodecmanager_p.cpp:110
+#: core/system/modelcodecmanager_p.cpp:112
 #, kde-format
 msgctxt "@action:button"
 msgid "&Export"
@@ -425,7 +428,7 @@ msgstr ""
 "Trykk <interface>Opprett</interface> for å generera data med innstillingane "
 "ovanfor og setja inn dataa i eit nytt dokument."
 
-#: gui/system/dialoghandler.cpp:33
+#: gui/system/dialoghandler.cpp:34
 #, kde-kuit-format
 msgctxt "@info"
 msgid "There is already a file at<nl/><filename>%1</filename>.<nl/>Overwrite?"
@@ -433,7 +436,7 @@ msgstr ""
 "Det finst alt ei fil med namnet<nl/><filename>%1</filename>.<nl/>Vil du "
 "overskriva ho?"
 
-#: gui/system/dialoghandler.cpp:47
+#: gui/system/dialoghandler.cpp:58
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -443,7 +446,7 @@ msgstr ""
 "Det finst ulagra endringar i <filename>%1</filename>. Dei vil gå tapt dersom "
 "du lastar om att dokumentet.<nl/>Vil du forkasta endringane?"
 
-#: gui/system/dialoghandler.cpp:60
+#: gui/system/dialoghandler.cpp:71
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""
@@ -452,7 +455,7 @@ msgid ""
 msgstr ""
 "<filename>%1</filename> er endra.<nl/>Vil du lagra eller forkasta endringane?"
 
-#: gui/system/dialoghandler.cpp:74
+#: gui/system/dialoghandler.cpp:95
 #, kde-kuit-format
 msgctxt "@info \"%title\" has been modified."
 msgid ""

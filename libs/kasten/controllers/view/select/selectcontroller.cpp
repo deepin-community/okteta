@@ -10,10 +10,9 @@
 
 // Kasten gui
 #include <Kasten/DataSelectable>
-#include <Kasten/AbstractView>
+#include <Kasten/AbstractModel>
 // KF
 #include <KXMLGUIClient>
-#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 // Qt
@@ -24,22 +23,27 @@ namespace Kasten {
 SelectController::SelectController(KXMLGUIClient* guiClient)
 {
     mSelectAllAction = KStandardAction::selectAll(this, &SelectController::selectAll, this);
+    mSelectAllAction->setEnabled(false);
     mDeselectAction =  KStandardAction::deselect( this, &SelectController::unselect,  this);
+    mDeselectAction->setEnabled(false);
 
     KActionCollection* actionCollection = guiClient->actionCollection();
     actionCollection->addAction(mSelectAllAction->objectName(), mSelectAllAction);
     actionCollection->addAction(mDeselectAction->objectName(), mDeselectAction);
-
-    setTargetModel(nullptr);
 }
 
 void SelectController::setTargetModel(AbstractModel* model)
 {
+    AbstractModel* const dataSelectableModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    if (dataSelectableModel == mModel) {
+        return;
+    }
+
     if (mModel) {
         mModel->disconnect(this);
     }
 
-    mModel = model ? model->findBaseModelWithInterface<If::DataSelectable*>() : nullptr;
+    mModel = dataSelectableModel;
     mSelectControl = mModel ? qobject_cast<If::DataSelectable*>(mModel) : nullptr;
 
     const bool hasSelectionControl = (mSelectControl != nullptr);
@@ -67,3 +71,5 @@ void SelectController::unselect()
 }
 
 }
+
+#include "moc_selectcontroller.cpp"

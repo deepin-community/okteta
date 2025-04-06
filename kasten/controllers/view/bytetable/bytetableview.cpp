@@ -1,7 +1,7 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2007, 2009 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2007, 2009, 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
     SPDX-FileCopyrightText: 2011 Alex Richardson <alex.richardson@gmx.de>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
@@ -13,20 +13,33 @@
 #include "bytetabletool.hpp"
 #include "bytetablemodel.hpp"
 #include <bytetableviewsettings.h>
+// utils
+#include <labelledtoolbarwidget.hpp>
 // KF
-#include <QPushButton>
 #include <KLocalizedString>
 #include <KStandardGuiItem>
 // Qt
 #include <QApplication>
+#include <QToolBar>
 #include <QSpinBox>
-#include <QFontDatabase>
 #include <QLabel>
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QHeaderView>
 #include <QTreeView>
+#include <QAction>
+#include <QIcon>
+// Std
+#include <limits>
 
 namespace Kasten {
+
+// C++11 needs a definition for static constexpr members
+// TODO: move config store/restore to tool
+constexpr int ByteTableView::DefaultInsertCount;
+
+constexpr char ByteTableView::ConfigGroupId[];
+constexpr char ByteTableView::InsertCountConfigKey[];
+
 
 ByteTableView::ByteTableView(ByteTableTool* tool, QWidget* parent)
     : AbstractToolWidget(parent)
@@ -34,6 +47,7 @@ ByteTableView::ByteTableView(ByteTableTool* tool, QWidget* parent)
 {
     auto* baseLayout = new QVBoxLayout(this);
     baseLayout->setContentsMargins(0, 0, 0, 0);
+    baseLayout->setSpacing(0);
 
     mByteTableView = new QTreeView(this);
     // TODO: find a signal/event emitted when fixedfont changes
@@ -43,7 +57,6 @@ ByteTableView::ByteTableView(ByteTableTool* tool, QWidget* parent)
 //              this, &ByteTableView::resizeColumnsWidth );
 //     connect( KGlobalSettings::self(), &KGlobalSettings::kdisplayStyleChanged,
 //              this, &ByteTableView::resizeColumnsWidth );
-    setFixedFontByGlobalSettings(); // do this before setting model
     mByteTableView->setObjectName(QStringLiteral("ByteTable"));
     mByteTableView->setRootIsDecorated(false);
     mByteTableView->setItemsExpandable(false);
@@ -51,7 +64,6 @@ ByteTableView::ByteTableView(ByteTableTool* tool, QWidget* parent)
     mByteTableView->setAllColumnsShowFocus(true);
     mByteTableView->setSortingEnabled(false);
     QHeaderView* header = mByteTableView->header();
-    header->setFont(font());
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setStretchLastSection(false);
     mByteTableView->setModel(mTool->byteTableModel());
@@ -60,51 +72,66 @@ ByteTableView::ByteTableView(ByteTableTool* tool, QWidget* parent)
 
     baseLayout->addWidget(mByteTableView, 10);
 
-    auto* insertLayout = new QHBoxLayout();
+    auto* insertToolBar = new QToolBar(this);
+    insertToolBar->setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    QLabel* label = new QLabel(i18nc("@label:spinbox number of bytes to insert", "Number (bytes):"), this);
-    insertLayout->addWidget(label);
+    auto* stretcher = new QWidget(this);
+    stretcher->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    insertToolBar->addWidget(stretcher);
+
+    auto* label = new QLabel(i18nc("@label:spinbox number of bytes to insert", "Number (bytes):"), this);
 
     mInsertCountEdit = new QSpinBox(this);
-    mInsertCountEdit->setRange(1, INT_MAX);
-    mInsertCountEdit->setValue(1);
-    label->setBuddy(mInsertCountEdit);
-    insertLayout->addWidget(mInsertCountEdit);
+    mInsertCountEdit->setRange(1, std::numeric_limits<int>::max());
+    auto* labelledInsertCountEdit = new LabelledToolBarWidget(label, mInsertCountEdit, this);
+    insertToolBar->addWidget(labelledInsertCountEdit);
     const QString insertCountToolTip =
         i18nc("@info:tooltip",
               "Number of repeats of the currently selected byte in the table to be inserted.");
     label->setToolTip(insertCountToolTip);
     mInsertCountEdit->setToolTip(insertCountToolTip);
+    connect(mInsertCountEdit, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &ByteTableView::onInsertCountEditChanged);
 
-    insertLayout->addStretch();
-
-    mInsertButton = new QPushButton(this);
-    KGuiItem::assign(mInsertButton, KStandardGuiItem::insert());
-    mInsertButton->setEnabled(mTool->hasWriteable());
-    connect(mTool, &ByteTableTool::hasWriteableChanged, mInsertButton, &QPushButton::setEnabled);
-    connect(mInsertButton, &QPushButton::clicked, this, &ByteTableView::onInsertClicked);
+    const KGuiItem insertGuiItem = KStandardGuiItem::insert();
+    QIcon insertIcon = insertGuiItem.icon();
+    if (insertIcon.isNull()) {
+        insertIcon = QIcon::fromTheme(QStringLiteral("list-add"));
+    }
+    mInsertAction =
+        insertToolBar->addAction(insertIcon, insertGuiItem.text(),
+                                 this, &ByteTableView::onInsertClicked);
     const QString insertButtonToolTip =
         i18nc("@info:tooltip",
               "Insert the currently selected byte in the table repeated the given number of times.");
-    mInsertButton->setToolTip(insertButtonToolTip);
-    addButton(mInsertButton, AbstractToolWidget::Default);
-    insertLayout->addWidget(mInsertButton);
+    mInsertAction->setToolTip(insertButtonToolTip);
+    mInsertAction->setEnabled(mTool->hasWriteable());
+    connect(mTool, &ByteTableTool::hasWriteableChanged, mInsertAction, &QAction::setEnabled);
 
-    baseLayout->addLayout(insertLayout);
+    baseLayout->addWidget(insertToolBar);
 
     // if nothing has changed reuse the old values. This means the bytetable is fully constructed
     // after ~3ms and not 800 as it was before. If the saved values can not be reused it takes ~100ms
     const QList<int> columnsWidth = ByteTableViewSettings::columnsWidth();
     const QString styleName = QApplication::style()->objectName();
-    const QString fixedFontData = QFontDatabase::systemFont(QFontDatabase::FixedFont).toString();
-    if (columnsWidth.size() < ByteTableModel::NoOfIds || styleName != ByteTableViewSettings::style()
-        || fixedFontData != ByteTableViewSettings::fixedFont()) {
+    const QString fontData = mByteTableView->font().toString();
+    const QString fixedFontData = mTool->byteTableModel()->fixedFont().toString();
+    if ((ByteTableModel::NoOfIds > columnsWidth.size()) ||
+        (styleName != ByteTableViewSettings::style()) ||
+        (fontData != ByteTableViewSettings::font()) ||
+        (fixedFontData != ByteTableViewSettings::fixedFont())) {
         resizeColumnsWidth();
     } else {
         for (int i = 0; i < ByteTableModel::NoOfIds; ++i) {
             header->resizeSection(i, columnsWidth.at(i));
         }
     }
+
+    const KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    const int insertCount = configGroup.readEntry(InsertCountConfigKey, DefaultInsertCount);
+
+    mInsertCountEdit->setValue(insertCount);
+
 }
 
 ByteTableView::~ByteTableView()
@@ -118,7 +145,8 @@ ByteTableView::~ByteTableView()
 
     ByteTableViewSettings::setColumnsWidth(columnsWidth);
     ByteTableViewSettings::setStyle(QApplication::style()->objectName());
-    ByteTableViewSettings::setFixedFont(QFontDatabase::systemFont(QFontDatabase::FixedFont).toString());
+    ByteTableViewSettings::setFont(mByteTableView->font().toString());
+    ByteTableViewSettings::setFixedFont(mTool->byteTableModel()->fixedFont().toString());
     ByteTableViewSettings::self()->save();
 }
 
@@ -139,9 +167,10 @@ void ByteTableView::resizeColumnsWidth()
     }
 }
 
-void ByteTableView::setFixedFontByGlobalSettings()
+void ByteTableView::onInsertCountEditChanged()
 {
-    mByteTableView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    KConfigGroup configGroup(KSharedConfig::openConfig(), ConfigGroupId);
+    configGroup.writeEntry(InsertCountConfigKey, mInsertCountEdit->value());
 }
 
 void ByteTableView::onDoubleClicked(const QModelIndex& index)
@@ -161,3 +190,5 @@ void ByteTableView::onInsertClicked()
 }
 
 }
+
+#include "moc_bytetableview.cpp"

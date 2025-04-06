@@ -18,8 +18,8 @@ namespace Okteta {
 class ByteArrayComboBox;
 }
 class KComboBox;
-class QPushButton;
 class QCheckBox;
+class QAction;
 template <class Key, class T> class QMap;
 
 namespace Kasten {
@@ -39,6 +39,7 @@ public:
 
 private Q_SLOTS: // gui
     void onDefaultByteEditChanged(const QByteArray& byteArray);
+    void onDefaultByteEditCodingChanged(int coding);
     void onConvertButtonClicked();
 
 private Q_SLOTS: // tool
@@ -53,7 +54,7 @@ private:
     KComboBox* mOtherCharSetComboBox;
     QCheckBox* mSubstituteMissingCharCheckBox;
     Okteta::ByteArrayComboBox* mSubstituteByteEdit;
-    QPushButton* mConvertButton;
+    QAction* mConvertAction;
 };
 
 inline CharsetConversionTool* CharsetConversionView::tool() const { return mTool; }

@@ -12,7 +12,6 @@
 #include <Kasten/Okteta/ByteArrayViewProfileManager>
 // KF
 #include <KColorScheme>
-#include <KLocalizedString>
 // Qt
 #include <QApplication>
 #include <QVector>
@@ -158,3 +157,5 @@ void ViewProfileTableModel::onViewProfileLocksChanged(const QVector<ByteArrayVie
 }
 
 }
+
+#include "moc_viewprofiletablemodel.cpp"

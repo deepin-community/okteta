@@ -9,7 +9,7 @@
 // QCA
 // need to have this first, as QCA needs QT_NO_CAST_FROM_ASCII disabled when included
 #include <config-qca2.hpp> // krazy:excludeall=includes
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
 // disable QT_NO_CAST_FROM_ASCII
 #ifdef QT_NO_CAST_FROM_ASCII
 #undef QT_NO_CAST_FROM_ASCII
@@ -27,7 +27,7 @@
 #include "algorithm/modsum16bytearraychecksumalgorithm.hpp"
 #include "algorithm/modsum32bytearraychecksumalgorithm.hpp"
 #include "algorithm/modsum64bytearraychecksumalgorithm.hpp"
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
 #include "algorithm/qca2bytearraychecksumalgorithm.hpp"
 #endif
 // NEWCHECKSUM(start)
@@ -40,11 +40,11 @@
 // Qt
 #include <QVector>
 
-#ifdef HAVE_QCA2
-static inline void addQca2Algorithm(QVector<AbstractByteArrayChecksumAlgorithm*>& algorithmList, const QString& name, const char* type)
+#if HAVE_QCA2
+static inline void addQca2Algorithm(QVector<AbstractByteArrayChecksumAlgorithm*>& algorithmList, const QString& name, const QString& id, const char* type)
 {
     if (QCA::isSupported(type)) {
-        algorithmList << new Qca2ByteArrayChecksumAlgorithm(name, QString::fromLatin1(type));
+        algorithmList << new Qca2ByteArrayChecksumAlgorithm(name, id, QString::fromLatin1(type));
     }
 }
 #endif
@@ -66,18 +66,29 @@ QVector<AbstractByteArrayChecksumAlgorithm*> ByteArrayChecksumAlgorithmFactory::
 // NEWCHECKSUM(end)
     };
 
-#ifdef HAVE_QCA2
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-0"),     "sha0");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-1"),     "sha1");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD2"),       "md2");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD4"),       "md4");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD5"),       "md5");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "RIPEMD160"), "ripemd160");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-224"),   "sha224");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-256"),   "sha256");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-384"),   "sha384");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-512"),   "sha512");
-    addQca2Algorithm(result, i18nc("name of the hash algorithm", "Whirlpool"), "whirlpool");
+#if HAVE_QCA2
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-0"),
+                     QStringLiteral("SHA0"),  "sha0");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-1"),
+                     QStringLiteral("SHA1"),  "sha1");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD2"),
+                     QStringLiteral("MD2"),  "md2");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD4"),
+                     QStringLiteral("MD4"),  "md4");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "MD5"),
+                     QStringLiteral("MD5"),  "md5");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "RIPEMD160"),
+                     QStringLiteral("RIPEMD160"),  "ripemd160");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-224"),
+                     QStringLiteral("SHA224"),  "sha224");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-256"),
+                     QStringLiteral("SHA256"),  "sha256");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-384"),
+                     QStringLiteral("SHA384"),  "sha384");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "SHA-512"),
+                     QStringLiteral("SHA512"),  "sha512");
+    addQca2Algorithm(result, i18nc("name of the hash algorithm", "Whirlpool"),
+                     QStringLiteral("Whirlpool"),  "whirlpool");
 #endif
 
     return result;

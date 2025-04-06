@@ -13,7 +13,6 @@
 // KF
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
-#include <KLocalizedString>
 // Qt
 #include <QMenu>
 
@@ -22,16 +21,20 @@ namespace Kasten {
 ViewContextMenuController::ViewContextMenuController(KXMLGUIClient* guiClient)
     : mGuiClient(guiClient)
 {
-    setTargetModel(nullptr);
 }
 
 void ViewContextMenuController::setTargetModel(AbstractModel* model)
 {
+    ByteArrayView* const byteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    if (byteArrayView == mByteArrayView) {
+        return;
+    }
+
     if (mByteArrayView) {
         mByteArrayView->disconnect(this);
     }
 
-    mByteArrayView = model ? model->findBaseModel<ByteArrayView*>() : nullptr;
+    mByteArrayView = byteArrayView;
 
     if (mByteArrayView) {
         connect(mByteArrayView, &ByteArrayView::viewContextMenuRequested,
@@ -50,3 +53,5 @@ void ViewContextMenuController::showContextMenu(QPoint pos)
 }
 
 }
+
+#include "moc_viewcontextmenucontroller.cpp"

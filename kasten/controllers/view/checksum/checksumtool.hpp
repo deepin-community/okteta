@@ -36,6 +36,10 @@ class ChecksumTool : public AbstractTool
 {
     Q_OBJECT
 
+private:
+    static constexpr char ConfigGroupId[] = "ChecksumTool";
+    static constexpr char AlgorithmConfigKey[] = "Algorithm";
+
 public:
     ChecksumTool();
     ~ChecksumTool() override;
@@ -65,6 +69,7 @@ public Q_SLOTS: // actions
     void resetSourceTool();
 
 Q_SIGNALS:
+    void algorithmChanged(int algorithmId);
     void checksumChanged(const QString& checksum);
     void uptodateChanged(bool isUptodate);
     void isApplyableChanged(bool isApplyable); // candidate for AbstractTool API
@@ -84,7 +89,7 @@ private: // created data
 
 private: // settings
     QVector<AbstractByteArrayChecksumAlgorithm*> mAlgorithmList;
-#ifdef HAVE_QCA2
+#if HAVE_QCA2
     QCA::Initializer* mQcaInitializer;
 #endif
     int mAlgorithmId = 0;

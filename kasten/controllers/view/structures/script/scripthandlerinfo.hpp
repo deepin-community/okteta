@@ -9,7 +9,6 @@
 #ifndef KASTEN_SCRIPTHANDLERINFO_HPP
 #define KASTEN_SCRIPTHANDLERINFO_HPP
 
-#include <QtGlobal>
 #include <QScopedPointer>
 
 class EnumScriptClass;
@@ -26,7 +25,11 @@ class ScriptHandlerInfo
 {
 public:
     explicit ScriptHandlerInfo(QScriptEngine* engine, ScriptLogger* logger);
+    ScriptHandlerInfo(const ScriptHandlerInfo&) = delete;
+
     ~ScriptHandlerInfo();
+
+    ScriptHandlerInfo& operator=(const ScriptHandlerInfo&) = delete;
 
     /** The type of function that is being evaluated (most writing is only allowed when updating) */
     enum class Mode
@@ -56,8 +59,6 @@ public:
 private:
     ScriptLogger* mLogger;
     Mode mMode = Mode::None;
-
-    Q_DISABLE_COPY(ScriptHandlerInfo)
 };
 
 #endif // KASTEN_SCRIPTHANDLERINFO_HPP

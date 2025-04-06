@@ -22,7 +22,7 @@ public:
     ~DummyDataInformation() override = default;
     QScriptValue toScriptValue(QScriptEngine* engine, ScriptHandlerInfo* handlerInfo) override;
 
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining, quint8* bitOffset) override;
     bool setData(const QVariant& value, Okteta::AbstractByteArrayModel* out,
                  Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) override;
@@ -35,7 +35,6 @@ public:
     bool isDummy() const override;
     QVariant data(int column, int role) const override;
 
-    bool canHaveChildren() const override { return false; }
     unsigned int childCount() const override { return 0; }
     DataInformation* childAt(unsigned int) const override { Q_ASSERT(false); return nullptr; }
     BitCount64 childPosition(const DataInformation*, Okteta::Address) const override { Q_ASSERT(false); return 0; }
@@ -44,8 +43,11 @@ public:
     inline void setDummyIndex(uint newIndex) { mIndex = newIndex; }
     inline uint dummyIndex() const { return mIndex; }
 
+    inline void setWasAbleToRead(bool wasAbleToRead) { mWasAbleToRead = wasAbleToRead; }
+
 private:
     QScriptClass* scriptClass(ScriptHandlerInfo*) const override { Q_ASSERT(false); return nullptr; }
+    QString valueStringImpl() const override;
     QString typeNameImpl() const override;
 
 private:
@@ -77,6 +79,7 @@ public:
     virtual QVariant dataFromChildWidget(uint index, const QWidget* w) const = 0;
     /** initialize the delegate widget with the correct data */
     virtual void setChildWidgetData(uint index, QWidget* w) const = 0;
+    virtual QString childString(uint index) const = 0;
     virtual QString childTypeName(uint index) const = 0;
     virtual bool setChildData(uint row, const QVariant& value, Okteta::AbstractByteArrayModel* out,
                               Okteta::Address address, BitCount64 bitsRemaining, quint8 bitOffset) = 0;

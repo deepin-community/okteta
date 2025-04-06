@@ -12,7 +12,7 @@
 // KF
 #include <KLocalizedString>
 // Qt
-#include <QLayout>
+#include <QHBoxLayout>
 #include <QLineEdit>
 #include <QAbstractItemView>
 
@@ -43,7 +43,7 @@ void ByteArrayComboBoxPrivate::init()
     mFormatComboBox = new KComboBox(q);
     mFormatComboBox->addItems(formatNames());
     QObject::connect(mFormatComboBox, QOverload<int>::of(&QComboBox::activated),
-                     q, [&](int index) { onFormatChanged(index); });
+                     q, [this](int index) { onFormatChanged(index); });
 
     mValueComboBox = new KComboBox(q);
     mValueComboBox->setEditable(true);
@@ -52,7 +52,7 @@ void ByteArrayComboBoxPrivate::init()
     mValueComboBox->setDuplicatesEnabled(false);
     q->setFocusProxy(mValueComboBox);
     QObject::connect(mValueComboBox->lineEdit(), &QLineEdit::textEdited,
-                     q, [&](const QString& text) { onValueEdited(text); });
+                     q, [this](const QString& text) { onValueEdited(text); });
     QAbstractItemView* formatComboBoxListView = mFormatComboBox->view();
     QObject::connect(formatComboBoxListView, &QAbstractItemView::activated,
                      mValueComboBox, QOverload<>::of(&KComboBox::setFocus));
@@ -66,7 +66,7 @@ void ByteArrayComboBoxPrivate::init()
 
     mValueComboBox->setValidator(mValidator);
     QObject::connect(mValueComboBox, QOverload<int>::of(&QComboBox::activated),
-                     q, [&](int index) { onValueActivated(index); });
+                     q, [this](int index) { onValueActivated(index); });
 
     baseLayout->addWidget(mFormatComboBox);
     baseLayout->addWidget(mValueComboBox, 1);
@@ -76,6 +76,16 @@ void ByteArrayComboBoxPrivate::init()
 void ByteArrayComboBoxPrivate::setByteArray(const QByteArray& byteArray)
 {
     mValueComboBox->setEditText(mValidator->toString(byteArray));
+}
+
+void ByteArrayComboBoxPrivate::setFormat(ByteArrayComboBox::Coding codecId)
+{
+    if (codecId == mFormatComboBox->currentIndex()) {
+        return;
+    }
+
+    mFormatComboBox->setCurrentIndex(codecId);
+    onFormatChanged(codecId);
 }
 
 void ByteArrayComboBoxPrivate::setCharCodec(const QString& charCodecName)
@@ -151,15 +161,12 @@ void ByteArrayComboBoxPrivate::onFormatChanged(int index)
     Q_Q(ByteArrayComboBox);
 
     const QString currentValueText = mValueComboBox->currentText();
-    const bool isCurrentValueTextEmpty = currentValueText.isEmpty();
-    const QByteArray byteArray = isCurrentValueTextEmpty ? QByteArray() : mValidator->toByteArray(currentValueText);
+    const QByteArray byteArray = mValidator->toByteArray(currentValueText);
 
     mValidator->setCodec(static_cast<ByteArrayValidator::Coding>(index));
 
-    if (!isCurrentValueTextEmpty) {
-        const QString convertedValueText = mValidator->toString(byteArray);
-        mValueComboBox->setEditText(convertedValueText);
-    }
+    const QString convertedValueText = mValidator->toString(byteArray);
+    mValueComboBox->setEditText(convertedValueText);
 
     emit q->formatChanged(index);
 }

@@ -10,7 +10,6 @@
 
 // Kasten core
 #include <Kasten/DocumentSyncManager>
-#include <Kasten/Versionable>
 #include <Kasten/AbstractDocument>
 #include <Kasten/AbstractModelSynchronizer>
 
@@ -50,9 +49,14 @@ bool FileSystemBrowserTool::hasCurrentUrl() const
 
 void FileSystemBrowserTool::setTargetModel(AbstractModel* model)
 {
+    AbstractDocument* const document = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    if (document == mDocument) {
+        return;
+    }
+
     const bool oldHasCurrentUrl = hasCurrentUrl();
 
-    mDocument = model ? model->findBaseModel<AbstractDocument*>() : nullptr;
+    mDocument = document;
 
     const bool newHasCurrentUrl = hasCurrentUrl();
 
@@ -67,3 +71,5 @@ void FileSystemBrowserTool::open(const QUrl& url)
 }
 
 }
+
+#include "moc_filesystembrowsertool.cpp"

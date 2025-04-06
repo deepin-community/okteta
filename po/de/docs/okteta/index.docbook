@@ -106,7 +106,7 @@
 >Die Daten werden auf zwei Arten dargestellt: Als numerische Werte der Bytes und als zugehörige Zeichen. Werte und Zeichen können in zwei Spalten (die traditionelle Anzeige von Hexeditoren) oder in Reihen mit der Anzeige der Werte über den Zeichen dargestellt werden. Die Bearbeitung der Daten ist sowohl als Werte wie auch als Zeichen möglich.</para>
 
 <para
->Neben den üblichen Bearbeitungsmöglichkeiten verfügt &okteta; auch über eine kleine Auswahl an Werkzeugen, wie eine Dekodierungs-Tabelle für typische einfache Datentypen, eine Byte-Tabelle mit allen möglichen Zeichen und ihren zugehörigen Werten, eine Informationsansicht mit einer Statistik; eine Prüfsummenberechnung, ein Filterwerkzeug und ein Werkzeug um Zeichenketten herausziehen.</para>
+>Neben den üblichen Bearbeitungsmöglichkeiten verfügt &okteta; auch über eine kleine Auswahl an Werkzeugen, wie eine Dekodierungs-Tabelle für typische einfache Datentypen, eine Byte-Tabelle mit allen möglichen Zeichen und ihren zugehörigen Werten, eine Informationsansicht mit einer Statistik; eine Prüfsummenberechnung, ein Filterwerkzeug und ein Werkzeug um Zeichenfolgen herausziehen.</para>
 
 <para
 >Alle Änderungen an den geladenen Daten  können beliebig oft rückgängig gemacht und wiederhergestellt werden.</para>
@@ -239,12 +239,12 @@ FIXME
 
   <varlistentry>
     <term
->Zeichenketten</term>
+>Zeichenfolgen</term>
     <listitem
 ><para
->Dieses Werkzeug findet die Zeichenketten in den ausgewählten Bytes. Nachdem Sie die minimale Zeichenkettenlänge eingestellt haben, werden die Zeichenketten beim Drücken von <guibutton
+>Dieses Werkzeug findet die Zeichenfolgen in den ausgewählten Bytes. Nachdem Sie die minimale Zeichenfolgenlänge eingestellt haben, werden die Zeichenfolgen beim Drücken von <guibutton
 >Extrahieren</guibutton
-> durchsucht. Der Umfang der angezeigten Zeichenkettenliste kann durch Einstellung eines Filters eingeschränkt werden.</para
+> durchsucht. Der Umfang der angezeigten Zeichenfolgenliste kann durch Einstellung eines Filters eingeschränkt werden.</para
 ></listitem>
   </varlistentry>
 
@@ -641,7 +641,7 @@ Support for strings (various Unicode encodings) in definitions
 ><para
 >Denken Sie daran für „padding“ nach einem <emphasis
 >&lt;bitfield&gt;</emphasis
-> einen Wert anzugeben, sonst beginnt das nächste Element (ausgenommen Zeichenketten (strings) und Felder (arrays), die „padding“ automatisch einfügen) mitten in einem Byte. Ist dieses Verhalten gewünscht, brauchen Sie offensichtlich kein „padding“ anzugeben.</para
+> einen Wert anzugeben, sonst beginnt das nächste Element (ausgenommen Zeichenfolgen (strings) und Felder (arrays), die „padding“ automatisch einfügen) mitten in einem Byte. Ist dieses Verhalten gewünscht, brauchen Sie offensichtlich kein „padding“ anzugeben.</para
 ></note>
                   </listitem>
                 </varlistentry>
@@ -764,7 +764,7 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
                   <listitem
 ><para
->Die Anzahl der Elemente in diesem Feld als Dezimalzahl. Alternativ kann hier auch eine Zeichenkette für das Attribut „Name“ eines bereits definierten Elements  <emphasis
+>Die Anzahl der Elemente in diesem Feld als Dezimalzahl. Alternativ kann hier auch eine Zeichenfolge für das Attribut „Name“ eines bereits definierten Elements  <emphasis
 >&lt;primitive&gt;</emphasis
 >, <emphasis
 >&lt;enum&gt;</emphasis
@@ -786,9 +786,9 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
             <listitem
 ><para
->Zur Definition einer Zeichenkette in verschiedenen Kodierungen. Standard ist eine durch <emphasis
+>Zur Definition einer Zeichenfolge in verschiedenen Kodierungen. Standard ist eine durch <emphasis
 >NULL</emphasis
-> begrenzte C-Zeichenkette. Andere Arten von Zeichenketten können mit folgenden Attributen erzeugt werden:</para>
+> begrenzte C-Zeichenfolge. Andere Arten von Zeichenfolgen können mit folgenden Attributen erzeugt werden:</para>
               <variablelist>
                 <varlistentry>
                   <term
@@ -797,15 +797,15 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
                   <listitem
 ><para
->Dieses Attribut legt fest, welcher Unicode-Codepunkt die Zeichenkette begrenzt. Der Wert muss eine hexadezimale Zahl sein, wahlweise mit führendem <emphasis
+>Dieses Attribut legt fest, welcher Unicode-Codepunkt die Zeichenfolge begrenzt. Der Wert muss eine hexadezimale Zahl sein, wahlweise mit führendem <emphasis
 >0x</emphasis
->. Ist die Zeichenkette in ASCII kodiert, sind nur Werte bis <emphasis
+>. Ist die Zeichenfolge in ASCII kodiert, sind nur Werte bis <emphasis
 >0x7f</emphasis
 > von Bedeutung. Ist weder eine Kodierung, noch die Attribute <emphasis
 >maxCharCount</emphasis
 > oder <emphasis
 >maxByteCount</emphasis
-> angegeben, wird für diesen Wert 0 wie bei einer C-Zeichenkette angenommen.  </para
+> angegeben, wird für diesen Wert 0 wie bei einer C-Zeichenfolge angenommen.  </para
 ></listitem>
                 </varlistentry>
                 <varlistentry>
@@ -815,9 +815,9 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
                   <listitem
 ><para
->Die maximale Anzahl der Zeichen in dieser Zeichenkette. Ist zusätzlich auch <emphasis
+>Die maximale Anzahl der Zeichen in dieser Zeichenfolge. Ist zusätzlich auch <emphasis
 >terminatedBy</emphasis
-> angegeben, begrenzt der kleiner der beiden Werte die Zeichenkette. Die Attribute <emphasis
+> angegeben, begrenzt der kleiner der beiden Werte die Zeichenfolge. Die Attribute <emphasis
 >maxByteCount</emphasis
 > und <emphasis
 >maxCharCount</emphasis
@@ -831,9 +831,9 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
                   <listitem
 ><para
->Die maximale Länge der Zeichenkette in Byte. Ist zusätzlich auch <emphasis
+>Die maximale Länge der Zeichenfolge in Byte. Ist zusätzlich auch <emphasis
 >terminatedBy</emphasis
-> angegeben, begrenzt der kleiner der beiden Werte die Zeichenkette. Die Attribute <emphasis
+> angegeben, begrenzt der kleiner der beiden Werte die Zeichenfolge. Die Attribute <emphasis
 >maxByteCount</emphasis
 > und <emphasis
 >maxCharCount</emphasis
@@ -849,7 +849,7 @@ Support for strings (various Unicode encodings) in definitions
 ></term>
                   <listitem
 ><para
->Die Kodierung dieser Zeichenkette, folgende Kodierungen sind möglich:</para>
+>Die Kodierung dieser Zeichenfolge, folgende Kodierungen sind möglich:</para>
                     <itemizedlist>
                       <listitem
 ><para
@@ -1350,7 +1350,7 @@ Structures Script Console-->
 >Das Menü Bearbeiten</title>
 <variablelist>
 <para
->&klipper; kann in die Zwischenablage ausgeschnittene und eingefügte Daten mit dem Mimetyp <quote
+>&klipper; kann in die Zwischenablage ausgeschnittene und eingefügte Daten mit dem MIME-Typ <quote
 >application/octetstream</quote
 > nicht anzeigen. Fast alle anderen Anwendungen können damit auch nicht umgehen, da dies einfach nur Rohdaten sind. Daher gibt es im Menüeintrag <guisubmenu
 >Kopieren als</guisubmenu

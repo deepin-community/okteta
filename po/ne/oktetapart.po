@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: khexedit2part\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-02 09:07+0100\n"
+"POT-Creation-Date: 2025-01-31 03:26+0000\n"
 "PO-Revision-Date: 2007-08-20 13:27+0545\n"
 "Last-Translator: Nabin Gautam <nabin@mpp.org.np>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -87,3 +87,103 @@ msgstr ""
 #, kde-format
 msgid "Author"
 msgstr "लेखक"
+
+#, fuzzy
+#~| msgid "&Value Coding"
+#~ msgctxt "@title:menu"
+#~ msgid "&Value Coding"
+#~ msgstr "मान सङ्केतन"
+
+#, fuzzy
+#~| msgid "&Hexadecimal"
+#~ msgctxt ""
+#~ "@item:inmenu encoding of the bytes as values in the hexadecimal format"
+#~ msgid "&Hexadecimal"
+#~ msgstr "हेक्साडेसिमल"
+
+#, fuzzy
+#~| msgid "&Decimal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the decimal format"
+#~ msgid "&Decimal"
+#~ msgstr "दशमलब"
+
+#, fuzzy
+#~| msgid "&Octal"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the octal format"
+#~ msgid "&Octal"
+#~ msgstr "ओक्टल"
+
+#, fuzzy
+#~| msgid "&Binary"
+#~ msgctxt "@item:inmenu encoding of the bytes as values in the binary format"
+#~ msgid "&Binary"
+#~ msgstr "बाइनरी"
+
+#, fuzzy
+#~| msgid "&Char Encoding"
+#~ msgctxt "@title:menu"
+#~ msgid "&Char Encoding"
+#~ msgstr "क्यारेक्टर सङ्केतन"
+
+#, fuzzy
+#~| msgid "Show &Unprintable Chars (<32)"
+#~ msgctxt "@option:check"
+#~ msgid "Show &Non-printing Chars"
+#~ msgstr "मुद्रण गर्न अयोग्य चार (<32) देखाउनुहोस्"
+
+#, fuzzy
+#~| msgid "&Line Offset"
+#~ msgctxt "@option:check"
+#~ msgid "&Line Offset"
+#~ msgstr "रेखा अफसेट"
+
+#, fuzzy
+#~| msgid "&Values Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Values"
+#~ msgstr "मान स्तम्भ"
+
+#, fuzzy
+#~| msgid "&Chars Column"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Chars"
+#~ msgstr "क्यारेक्टर स्तम्भ"
+
+#, fuzzy
+#~| msgid "&Resize Style"
+#~ msgctxt "@title:menu"
+#~ msgid "&Resize Style"
+#~ msgstr "शैली रिसाइज गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "&No Resize"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&No Resize"
+#~ msgstr "रिसाइज नगर्नुहोस्"
+
+#, fuzzy
+#~| msgid "&Lock Groups"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Lock Groups"
+#~ msgstr "समूह ताल्चा लगाउनुहोस्"
+
+#, fuzzy
+#~| msgid "&Full Size Usage"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Full Size Usage"
+#~ msgstr "पुरा साइज उपयोग"
+
+#, fuzzy
+#~| msgid "&Columns"
+#~ msgctxt "@title:menu"
+#~ msgid "&Columns"
+#~ msgstr "स्तम्भ"
+
+#, fuzzy
+#~| msgid "&Both Columns"
+#~ msgctxt "@item:inmenu"
+#~ msgid "&Both Columns"
+#~ msgstr "दुवै स्तम्भ"
+
+#~ msgid "KHexEdit2Part"
+#~ msgstr "KHexEdit2Part"

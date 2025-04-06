@@ -9,8 +9,6 @@
 #ifndef KASTEN_BYTEARRAYPATTERNGENERATORCONFIGEDITORFACTORY_HPP
 #define KASTEN_BYTEARRAYPATTERNGENERATORCONFIGEDITORFACTORY_HPP
 
-// lib
-#include "oktetakastengui_export.hpp"
 // Kasten gui
 #include <Kasten/AbstractModelDataGeneratorConfigEditorFactory>
 
@@ -20,8 +18,11 @@ class ByteArrayPatternGeneratorConfigEditorFactory : public AbstractModelDataGen
 {
 public:
     ByteArrayPatternGeneratorConfigEditorFactory();
+    ByteArrayPatternGeneratorConfigEditorFactory(const ByteArrayPatternGeneratorConfigEditorFactory&) = delete;
 
     ~ByteArrayPatternGeneratorConfigEditorFactory() override;
+
+    ByteArrayPatternGeneratorConfigEditorFactory& operator=(const ByteArrayPatternGeneratorConfigEditorFactory&) = delete;
 
 public:
     AbstractModelDataGeneratorConfigEditor* tryCreateConfigEditor(AbstractModelDataGenerator* generator) const override;

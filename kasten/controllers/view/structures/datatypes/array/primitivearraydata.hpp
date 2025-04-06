@@ -18,8 +18,6 @@
 template <PrimitiveDataType type>
 class PrimitiveArrayData : public AbstractArrayData
 {
-    Q_DISABLE_COPY(PrimitiveArrayData)
-
 public:
     using T = typename PrimitiveInfo<type>::valueType;
     using DisplayClass = typename PrimitiveInfo<type>::Methods;
@@ -28,7 +26,8 @@ public:
                                 ArrayDataInformation* parent);
     ~PrimitiveArrayData() override;
 
-    qint64 readData(Okteta::AbstractByteArrayModel* input, Okteta::Address address,
+public:
+    qint64 readData(const Okteta::AbstractByteArrayModel* input, Okteta::Address address,
                     BitCount64 bitsRemaining) override;
     bool setChildData(uint row, const QVariant& value, Okteta::AbstractByteArrayModel* out,
                       Okteta::Address address, BitCount64 bitsRemaining) override;
@@ -47,6 +46,7 @@ public:
 
     QScriptValue toScriptValue(uint index, QScriptEngine* engine, ScriptHandlerInfo* handlerInfo) override;
     QString typeName() const override;
+    QString valueString() const override;
 
     bool isComplex() const override;
 
@@ -54,15 +54,19 @@ public:
     QVariant dataFromChildWidget(uint index, const QWidget* w) const override;
     void setChildWidgetData(uint index, QWidget* w) const override;
 
-    static void writeOneItem(T value, Okteta::Address addr, Okteta::AbstractByteArrayModel* out, bool littleEndian);
+    QString nameAt(uint index) const;
+    QString valueStringAt(uint index); // cannot be const due to calling activateIndex()
+    QString sizeStringAt(uint index); // cannot be const due to calling sizeAt()
+
+    static void writeOneItem(T value, Okteta::Address addr, Okteta::AbstractByteArrayModel* out, QSysInfo::Endian endianness);
 
 protected:
     /** sets mChildType and mDummy as @p index, which must have been checked before calling this method!! */
     void activateIndex(uint index);
     /** reads @p numItems items from the input, sizes must have been checked before calling this method!! */
-    void readDataNativeOrder(uint numItems, Okteta::AbstractByteArrayModel* input, Okteta::Address addr);
+    void readDataNativeOrder(uint numItems, const Okteta::AbstractByteArrayModel* input, Okteta::Address addr);
     /** reads @p numItems items from the input, sizes must have been checked before calling this method!! */
-    void readDataNonNativeOrder(uint numItems, Okteta::AbstractByteArrayModel* input, Okteta::Address addr);
+    void readDataNonNativeOrder(uint numItems, const Okteta::AbstractByteArrayModel* input, Okteta::Address addr);
     void setNewParentForChildren() override;
 
     QVector<T> mData;
@@ -86,7 +90,7 @@ template <PrimitiveDataType type>
 inline DataInformation* PrimitiveArrayData<type>::childAt(unsigned int idx)
 {
     Q_ASSERT(idx < length());
-    Q_UNUSED(idx);
+    Q_UNUSED(idx)
     mDummy.setDummyIndex(idx);
     mDummy.setName(QString::number(idx));
     return &mDummy;

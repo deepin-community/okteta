@@ -11,10 +11,12 @@
 
 // lib
 #include "abstractbytearraystreamencoder.hpp"
-// Okteta core
-#include <Okteta/OktetaCore>
 // Qt
 #include <QString>
+// Std
+#include <array>
+
+class KConfigGroup;
 
 class QTextStream;
 
@@ -27,11 +29,31 @@ public:
     {
         Bits32 = 0,
         Bits16 = 1,
-        Bits8 = 2
+        Bits8 = 2,
+        _Count,
     };
+
+    static constexpr int AddressSizeCount = static_cast<int>(AddressSizeId::_Count);
+    static const std::array<QString, AddressSizeCount> addressSizeConfigValueList;
+
+private:
+    static constexpr char AddressSizeConfigKey[] = "AddressSize";
+
+    static constexpr AddressSizeId DefaultAddressSize = AddressSizeId::Bits32;
 
 public:
     IHexStreamEncoderSettings();
+    IHexStreamEncoderSettings(const IHexStreamEncoderSettings&) = default;
+
+    ~IHexStreamEncoderSettings() = default;
+
+    IHexStreamEncoderSettings& operator=(const IHexStreamEncoderSettings&) = default;
+
+    bool operator==(const IHexStreamEncoderSettings& other) const;
+
+public:
+    void loadConfig(const KConfigGroup& configGroup);
+    void saveConfig(KConfigGroup& configGroup) const;
 
 public:
     AddressSizeId addressSizeId = AddressSizeId::Bits32;
@@ -42,6 +64,8 @@ class ByteArrayIHexStreamEncoder : public AbstractByteArrayStreamEncoder
     Q_OBJECT
 
 private:
+    static constexpr char ConfigGroupId[] = "ByteArrayIntelHexStreamEncoder";
+
     static constexpr unsigned char dataRecordCode = 0x0;
     static constexpr unsigned char endOfFileRecordCode = 0x1;
     static constexpr unsigned char extendedSegmentAddressRecordCode = 0x2;
@@ -91,11 +115,6 @@ private:
 };
 
 inline IHexStreamEncoderSettings ByteArrayIHexStreamEncoder::settings() const { return mSettings; }
-inline void ByteArrayIHexStreamEncoder::setSettings(const IHexStreamEncoderSettings& settings)
-{
-    mSettings = settings;
-    emit settingsChanged();
-}
 
 inline char ByteArrayIHexStreamEncoder::hexValueOfNibble(int nibble)
 { return hexDigits[nibble & 0xF]; }

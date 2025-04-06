@@ -15,6 +15,8 @@
 // Qt
 #include <QSpinBox>
 #include <QFormLayout>
+// Std
+#include <limits>
 
 namespace Kasten {
 
@@ -33,8 +35,10 @@ ByteArrayPatternGeneratorConfigEditor::ByteArrayPatternGeneratorConfigEditor(Byt
               "Pattern:");
     mPatternEdit = new Okteta::ByteArrayComboBox(this);
     mPatternEdit->setByteArray(mSettings.pattern);
+    mPatternEdit->setFormat(static_cast<Okteta::ByteArrayComboBox::Coding>(mSettings.patternCoding));
     connect(mPatternEdit, &Okteta::ByteArrayComboBox::byteArrayChanged, this, &ByteArrayPatternGeneratorConfigEditor::onSettingsChanged);
     connect(mPatternEdit, &Okteta::ByteArrayComboBox::byteArrayChanged, this, &ByteArrayPatternGeneratorConfigEditor::onPatternChanged);
+    connect(mPatternEdit, &Okteta::ByteArrayComboBox::formatChanged, this, &ByteArrayPatternGeneratorConfigEditor::onSettingsChanged);
     const QString inputWhatsThis =
         i18nc("@info:whatsthis",
               "Enter a pattern to search for, or select a previous pattern from the list.");
@@ -47,7 +51,7 @@ ByteArrayPatternGeneratorConfigEditor::ByteArrayPatternGeneratorConfigEditor(Byt
         i18nc("@label:spinbox number of times to insert the pattern",
               "&Number:");
     mNumberInput = new QSpinBox(this);
-    mNumberInput->setRange(1, INT_MAX);
+    mNumberInput->setRange(1, std::numeric_limits<int>::max());
     mNumberInput->setValue(mSettings.count);
     connect(mNumberInput, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &ByteArrayPatternGeneratorConfigEditor::onSettingsChanged);
@@ -79,6 +83,7 @@ void InsertPatternDialog::setCharCodec(const QString& codecName)
 void ByteArrayPatternGeneratorConfigEditor::onSettingsChanged()
 {
     mSettings.pattern = mPatternEdit->byteArray();
+    mSettings.patternCoding = static_cast<ByteArrayPatternGeneratorSettings ::Coding>(mPatternEdit->format());
     mSettings.count = mNumberInput->value();
 
     mGenerator->setSettings(mSettings);
@@ -90,3 +95,5 @@ void ByteArrayPatternGeneratorConfigEditor::onPatternChanged(const QByteArray& p
 }
 
 }
+
+#include "moc_bytearraypatterngeneratorconfigeditor.cpp"

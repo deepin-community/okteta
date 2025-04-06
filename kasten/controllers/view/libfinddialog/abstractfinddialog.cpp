@@ -1,23 +1,20 @@
 /*
     This file is part of the Okteta Kasten module, made within the KDE community.
 
-    SPDX-FileCopyrightText: 2006-2007 Friedrich W. H. Kossebau <kossebau@kde.org>
+    SPDX-FileCopyrightText: 2006-2007, 2023 Friedrich W. H. Kossebau <kossebau@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
 #include "abstractfinddialog.hpp"
 
-// Okteta Kasten gui
-#include <Kasten/Okteta/ByteArrayComboBox>
-// Okteta core
-#include <Okteta/OktetaCore>
 // KF
 #include <KLocalizedString>
 // Qt
 #include <QCheckBox>
 #include <QGroupBox>
-#include <QLayout>
+#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QIcon>
 #include <QPushButton>
 #include <QDialogButtonBox>
@@ -28,7 +25,7 @@ AbstractFindDialog::AbstractFindDialog(QWidget* parent)
     : QDialog(parent)
 {
     // main widget
-    QWidget* mainWidget = new QWidget;
+    auto* mainWidget = new QWidget;
     MainWidgetLayout = new QVBoxLayout(mainWidget);
     MainWidgetLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -71,7 +68,7 @@ void AbstractFindDialog::setFindButtonEnabled(bool enabled)
 void AbstractFindDialog::setupFindBox()
 {
     // find term
-    QGroupBox* findBox = new QGroupBox(i18nc("@title:window", "Find"));
+    auto* findBox = new QGroupBox(i18nc("@title:window", "Find"));
     MainWidgetLayout->addWidget(findBox);
 
     auto* findBoxLayout = new QVBoxLayout;
@@ -101,7 +98,7 @@ void AbstractFindDialog::setupOperationBox(QGroupBox* operationBox)
 void AbstractFindDialog::setupCheckBoxes(QCheckBox* optionCheckBox)
 {
     // options
-    QGroupBox* optionsBox = new QGroupBox(i18nc("@title:group", "Options"));
+    auto* optionsBox = new QGroupBox(i18nc("@title:group", "Options"));
     MainWidgetLayout->addWidget(optionsBox);
 
     auto* optionsBoxLayout = new QGridLayout(optionsBox);
@@ -141,8 +138,14 @@ void AbstractFindDialog::setupCheckBoxes(QCheckBox* optionCheckBox)
     onSearchDataFormatChanged(SearchDataEdit->format());
 }
 
+Okteta::ByteArrayComboBox::Coding AbstractFindDialog::searchDataCoding() const
+{
+    return static_cast<Okteta::ByteArrayComboBox::Coding>(SearchDataEdit->format());
+}
+
 bool AbstractFindDialog::fromCursor()            const { return AtCursorCheckBox->isChecked(); }
-bool AbstractFindDialog::inSelection()           const { return SelectedCheckBox->isChecked(); }
+bool AbstractFindDialog::inSelection()           const { return SelectedCheckBox->isEnabled() && SelectedCheckBox->isChecked(); }
+bool AbstractFindDialog::persistentInSelection() const { return SelectedCheckBox->isEnabled() ? SelectedCheckBox->isChecked() : ShadowInSelection; }
 FindDirection AbstractFindDialog::direction() const
 {
     return BackwardsCheckBox->isChecked() ? FindBackward : FindForward;
@@ -153,9 +156,14 @@ Qt::CaseSensitivity AbstractFindDialog::caseSensitivity() const
            && !CaseSensitiveCheckBox->isChecked() ? Qt::CaseInsensitive : Qt::CaseSensitive;
 }
 
-QByteArray AbstractFindDialog::data()  const
+QByteArray AbstractFindDialog::searchData()  const
 {
     return SearchDataEdit->byteArray();
+}
+
+void AbstractFindDialog::setSearchDataCoding(Okteta::ByteArrayComboBox::Coding coding)
+{
+    SearchDataEdit->setFormat(coding);
 }
 
 void AbstractFindDialog::setDirection(FindDirection Direction)
@@ -165,15 +173,39 @@ void AbstractFindDialog::setDirection(FindDirection Direction)
 
 void AbstractFindDialog::setInSelection(bool InSelection)
 {
-    SelectedCheckBox->setChecked(InSelection);
+    if (SelectedCheckBox->isEnabled()) {
+        SelectedCheckBox->setChecked(InSelection);
+    } else {
+        ShadowInSelection = InSelection;
+    }
 }
 
 void AbstractFindDialog::setInSelectionEnabled(bool inSelectionEnabled)
 {
+    if (SelectedCheckBox->isEnabled() == inSelectionEnabled) {
+        return;
+    }
+
     if (!inSelectionEnabled) {
+        // remember
+        ShadowInSelection = SelectedCheckBox->isChecked();
         SelectedCheckBox->setChecked(false);
     }
     SelectedCheckBox->setEnabled(inSelectionEnabled);
+    if (inSelectionEnabled) {
+        // restore memory
+        SelectedCheckBox->setChecked(ShadowInSelection);
+    }
+}
+
+void AbstractFindDialog::setCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
+{
+    CaseSensitiveCheckBox->setChecked(caseSensitivity == Qt::CaseSensitive);
+}
+
+void AbstractFindDialog::setFromCursor(bool fromCursor)
+{
+    AtCursorCheckBox->setChecked(fromCursor);
 }
 
 void AbstractFindDialog::setCharCodec(const QString& codecName)
@@ -219,3 +251,5 @@ void AbstractFindDialog::showEvent(QShowEvent* showEvent)
 }
 
 }
+
+#include "moc_abstractfinddialog.cpp"

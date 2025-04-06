@@ -34,7 +34,7 @@ encodingDataList[] =
     { ISO8859_6Encoding, "ISO-8859-6" },
     { ISO8859_7Encoding, "ISO-8859-7" },
     { ISO8859_8Encoding, "ISO-8859-8" },
-    { ISO8859_8_IEncoding, "ISO-8859-8-I" },
+//     { ISO8859_8_IEncoding, "ISO-8859-8-I" }, Qt (at least 5.15) delivers this variant already for ISO-8859-8
     { ISO8859_9Encoding, "ISO-8859-9" },
     { ISO8859_10Encoding, "ISO-8859-10" },
     { ISO8859_11Encoding, "TIS-620" }, // was: ISO-8859-11
@@ -53,7 +53,7 @@ encodingDataList[] =
     { CP1258Encoding, "windows-1258" },
     { IBM850Encoding, "IBM850" },
     { IBM866Encoding, "IBM866" },
-    { IBM874Encoding, "IBM874" },
+//     { IBM874Encoding, "IBM874" }, using our own IBM874CharCodec, see docs there
     { KOI8_REncoding, "KOI8-R" },
     { KOI8_UEncoding, "KOI8-U" }
 };
@@ -76,7 +76,13 @@ static bool is8Bit(QTextCodec* codec)
 
 static QTextCodec* createLatin1()
 {
+    // silence deprecation warning
+    // porting away would need a too big rework for a bugfix branch
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+    QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
     return KCharsets::charsets()->codecForName(QLatin1String(encodingDataList[0].name));
+    QT_WARNING_POP
 }
 
 /* heuristic seems to be doomed :(
@@ -160,7 +166,13 @@ TextCharCodec* TextCharCodec::createLocalCodec()
 TextCharCodec* TextCharCodec::createCodec(const QString& codecName)
 {
     bool isOk = false;
+    // silence deprecation warning
+    // porting away would need a too big rework for a bugfix branch
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+    QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
     QTextCodec* codec = KCharsets::charsets()->codecForName(codecName, isOk);
+    QT_WARNING_POP
     if (isOk) {
         isOk = is8Bit(codec);
     }
@@ -177,7 +189,13 @@ const QStringList& TextCharCodec::codecNames()
         for (auto& encodingData : encodingDataList) {
             bool isCodecFound = false;
             const QString codecName = QString::fromLatin1(encodingData.name);
+            // silence deprecation warning
+            // porting away would need a too big rework for a bugfix branch
+            QT_WARNING_PUSH
+            QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+            QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
             QTextCodec* codec = charsets->codecForName(codecName, isCodecFound);
+            QT_WARNING_POP
             if (isCodecFound) {
                 textCodecNames.append(QString::fromLatin1(codec->name()));
             }

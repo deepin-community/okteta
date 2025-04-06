@@ -13,6 +13,8 @@
 #include <bytearrayviewprofilesynchronizer.hpp>
 // Okteta Kasten core
 #include <Kasten/Okteta/ByteArrayDocument>
+// Kasten gui
+#include <Kasten/ZoomLevelsQueryable>
 // Okteta gui
 #include <Okteta/AbstractByteArrayView>
 // Okteta core
@@ -23,41 +25,80 @@
 namespace Kasten {
 
 // TODO: merge into ByteArrayView on next ABI break
-class SelectedDataCutExtension : public QObject, public If::SelectedDataCutable
+class ByteArrayViewExtensions : public QObject
+                              , public If::SelectedDataCutable
+                              , public If::ZoomLevelsQueryable
 {
     Q_OBJECT
     Q_INTERFACES(
         Kasten::If::SelectedDataCutable
+        Kasten::If::ZoomLevelsQueryable
     )
 
 public:
-    explicit SelectedDataCutExtension(ByteArrayView* view);
+    explicit ByteArrayViewExtensions(ByteArrayView* view);
 
 public: // If::SelectedDataCutable API
     bool canCutSelectedData() const override;
 Q_SIGNALS:
     void canCutSelectedDataChanged(bool canCutSelectedData) override;
 
+public: // If::ZoomLevelsQueryable API
+    int zoomInLevelsSize() const override;
+    int zoomOutLevelsSize() const override;
+    double zoomScaleForLevel(int zoomLevel) const override;
+    int zoomLevelForScale(double zoomScale) const override;
+Q_SIGNALS:
+    void zoomLevelsChanged() override;
+
 private Q_SLOTS:
     void onOverwriteModeChanged(bool overwriteMode);
+
+private:
+    Okteta::ByteArrayJanusView* view() const;
 };
 
-SelectedDataCutExtension::SelectedDataCutExtension(ByteArrayView* view)
+ByteArrayViewExtensions::ByteArrayViewExtensions(ByteArrayView* view)
     : QObject(view)
 {
-    connect(view, &ByteArrayView::overwriteModeChanged, this, &SelectedDataCutExtension::onOverwriteModeChanged);
+    connect(view, &ByteArrayView::overwriteModeChanged, this, &ByteArrayViewExtensions::onOverwriteModeChanged);
+    connect(view, &ByteArrayView::zoomLevelsChanged, this, &ByteArrayViewExtensions::zoomLevelsChanged);
 }
 
-bool SelectedDataCutExtension::canCutSelectedData() const
+bool ByteArrayViewExtensions::canCutSelectedData() const
 {
     return !static_cast<ByteArrayView*>(parent())->isOverwriteMode();
 }
 
-void SelectedDataCutExtension::onOverwriteModeChanged(bool overwriteMode)
+void ByteArrayViewExtensions::onOverwriteModeChanged(bool overwriteMode)
 {
     emit canCutSelectedDataChanged(!overwriteMode);
 }
 
+int ByteArrayViewExtensions::zoomInLevelsSize() const
+{
+    return view()->zoomInLevelsSize();
+}
+
+int ByteArrayViewExtensions::zoomOutLevelsSize() const
+{
+    return view()->zoomOutLevelsSize();
+}
+
+double ByteArrayViewExtensions::zoomScaleForLevel(int zoomLevel) const
+{
+    return view()->zoomScaleForLevel(zoomLevel);
+}
+
+int ByteArrayViewExtensions::zoomLevelForScale(double zoomScale) const
+{
+    return view()->zoomLevelForScale(zoomScale);
+}
+
+Okteta::ByteArrayJanusView* ByteArrayViewExtensions::view() const
+{
+    return static_cast<Okteta::ByteArrayJanusView*>(static_cast<ByteArrayView*>(parent())->widget());
+}
 
 ByteArrayView::ByteArrayView(ByteArrayDocument* document, ByteArrayViewProfileSynchronizer* synchronizer)
     : AbstractView(document)
@@ -100,7 +141,7 @@ ByteArrayView::ByteArrayView(ByteArrayView* other, ByteArrayViewProfileSynchroni
 
     const Okteta::AddressRange selection = other->selection();
     setSelection(selection.start(), selection.end());
-    setZoomLevel(other->zoomLevel());
+    setZoomScale(other->zoomScale());
     setCursorPosition(other->cursorPosition());
 
     setOverwriteMode(other->isOverwriteMode());
@@ -169,12 +210,13 @@ void ByteArrayView::init()
     connect(mWidget, &ByteArrayJanusView::substituteCharChanged, this, &ByteArrayView::substituteCharChanged);
     connect(mWidget, &ByteArrayJanusView::undefinedCharChanged, this, &ByteArrayView::undefinedCharChanged);
     connect(mWidget, &ByteArrayJanusView::noOfGroupedBytesChanged, this, &ByteArrayView::noOfGroupedBytesChanged);
-    connect(mWidget, &ByteArrayJanusView::zoomLevelChanged, this, &ByteArrayView::zoomLevelChanged);
+    connect(mWidget, &ByteArrayJanusView::zoomScaleChanged, this, &ByteArrayView::zoomLevelChanged);
+    connect(mWidget, &ByteArrayJanusView::zoomLevelsChanged, this, &ByteArrayView::zoomLevelsChanged);
     connect(mWidget, &ByteArrayJanusView::viewModusChanged, this, &ByteArrayView::viewModusChanged);
 
     connect(mWidget, &ByteArrayJanusView::viewContextMenuRequested, this, &ByteArrayView::viewContextMenuRequested);
 
-    new SelectedDataCutExtension(this);
+    new ByteArrayViewExtensions(this);
 }
 
 ByteArrayViewProfileSynchronizer* ByteArrayView::synchronizer() const { return mByteArrayViewProfileSynchronizer; }
@@ -195,14 +237,14 @@ void ByteArrayView::setFocus()
 
 void ByteArrayView::setReadOnly(bool isReadOnly) { mWidget->setReadOnly(isReadOnly); }
 
-void ByteArrayView::setZoomLevel(double Level)
+void ByteArrayView::setZoomLevel(double zoomScale)
 {
-    mWidget->setZoomLevel(Level);
+    mWidget->setZoomScale(zoomScale);
 }
 
 double ByteArrayView::zoomLevel() const
 {
-    return mWidget->zoomLevel();
+    return mWidget->zoomScale();
 }
 
 void ByteArrayView::selectAllData(bool selectAll)
@@ -451,5 +493,6 @@ void ByteArrayView::setFontByGlobalSettings()
 
 }
 
-// needed for SelectedDataCutExtension
+// needed for ByteArrayViewExtensions
 #include "bytearrayview.moc"
+#include "moc_bytearrayview.cpp"

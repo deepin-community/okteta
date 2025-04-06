@@ -12,7 +12,6 @@
 // lib
 #include "abstractmodelsynchronizer.hpp"
 
-class KDirWatch;
 class QDateTime;
 
 namespace Kasten {
@@ -29,7 +28,7 @@ class KASTENCORE_EXPORT AbstractModelFileSystemSynchronizer : public AbstractMod
     friend class AbstractFileSystemSyncToRemoteJobPrivate;
 
 protected:
-    explicit AbstractModelFileSystemSynchronizer(AbstractModelFileSystemSynchronizerPrivate* d);
+    KASTENCORE_NO_EXPORT explicit AbstractModelFileSystemSynchronizer(AbstractModelFileSystemSynchronizerPrivate* d);
 
 public:
     AbstractModelFileSystemSynchronizer();
