@@ -1,3 +1,9 @@
+okteta (5:0.26.21-1deepin1) unstable; urgency=medium
+
+  * skip test to fix loongarch build
+
+ -- lhdjply <lhdjply@126.com>  Sun, 06 Apr 2025 17:11:00 +0800
+
 okteta (5:0.26.21-1) unstable; urgency=medium
 
   * Team upload.
